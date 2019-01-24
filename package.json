@@ -1,0 +1,27 @@
+{
+  "name": "fsm-shell",
+  "version": "0.1.0",
+  "description": "client library for FSM shell",
+  "main": "release/FSMShellClient.js",
+  "types": "release/FSMShellClient.d.ts",
+  "scripts": {
+    "build": "tsc -p . --pretty",
+    "clean": "rm -rf release",
+    "test": "nyc mocha --opts mocha.opts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coresystemsFSM/fsm-shell.git"
+  },
+  "author": "SAP SE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coresystemsFSM/fsm-shell/issues"
+  },
+  "homepage": "https://github.com/coresystemsFSM/fsm-shell#readme",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "typescript": "^3.2.4"
+  }
+}
