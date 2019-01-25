@@ -1,11 +1,14 @@
 {
   "name": "fsm-shell",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "client library for FSM shell",
-  "main": "release/FSMShellClient.js",
-  "types": "release/FSMShellClient.d.ts",
+  "main": "release/fsm-shell-client.js",
+  "module": "release/fsm-shell-client.es.js",
+  "types": "release/index.d.ts",
+  "typings": "release/index.d.ts",
+  "files": ["release"],
   "scripts": {
-    "build": "tsc -p . --pretty",
+    "build": "rollup -c",
     "prebuild": "npm run clean",
     "clean": "rm -rf release",
     "test": "nyc mocha --opts mocha.opts"
@@ -23,6 +26,9 @@
   "devDependencies": {
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-filesize": "^6.0.1",
+    "rollup-plugin-typescript2": "^0.19.2",
     "typescript": "^3.2.4"
   }
 }
