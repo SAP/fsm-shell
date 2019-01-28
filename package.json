@@ -6,11 +6,14 @@
   "module": "release/fsm-shell-client.es.js",
   "types": "release/index.d.ts",
   "typings": "release/index.d.ts",
-  "files": ["release"],
+  "files": [
+    "release"
+  ],
   "scripts": {
     "build": "rollup -c",
     "prebuild": "npm run clean",
     "clean": "rm -rf release",
+    "version": "node ./scripts/version.js > ./version.txt",
     "test": "nyc mocha --opts mocha.opts"
   },
   "repository": {
@@ -24,6 +27,7 @@
   },
   "homepage": "https://github.com/coresystemsFSM/fsm-shell#readme",
   "devDependencies": {
+    "git-rev": "^0.2.1",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "rollup": "^1.1.2",
