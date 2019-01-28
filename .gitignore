@@ -65,3 +65,6 @@ release
 
 # temporary files
 .rpt2_cache
+
+# version output
+version.txt
