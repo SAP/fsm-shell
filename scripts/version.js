@@ -14,7 +14,7 @@ function getVersion() {
     const version = packageJson.version;
     const timestamp = Math.round(new Date().getTime()/1000).toString(10);
 
-    return `${version}-rc0-${sha}-t${timestamp}`;
+    return `${version}-${sha}-t${timestamp}`;
   });
 }
 
