@@ -38,7 +38,7 @@ export class ShellClient {
   }
 
 
-  public on(type: string, subscriber: Function): Function {
+  public on = (type: string, subscriber: Function): Function => {
     if (!this.subscribersMap.has(type)) {
       this.subscribersMap.set(type, []);
     }
@@ -47,6 +47,10 @@ export class ShellClient {
     return () => {
       this.removeSubscriber(type, subscriber);
     };
+  }
+
+  public off = (type: string, subscriber: Function): void => {
+    this.removeSubscriber(type, subscriber);
   }
 
   public emit<T>(type: string, value: T) {
