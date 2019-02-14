@@ -1,5 +1,5 @@
 
-import { ShellSdk } from './ShellClient';
+import { ShellSdk } from './ShellSdk';
 export { ShellSdk };
 
 import { SHELL_EVENTS, EventType } from './ShellEvents';
