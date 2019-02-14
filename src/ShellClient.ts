@@ -1,11 +1,13 @@
 
-export class ShellClient {
+import { EventType } from './ShellEvents';
 
-  private static _instance: ShellClient;
+export class ShellSdk {
 
-  private postMessageHandler: ((type: string, value: any) => void) | undefined;
+  private static _instance: ShellSdk;
 
-  private subscribersMap: Map<string, Function[]>
+  private postMessageHandler: (<T>(type: EventType, value: T) => void) | undefined;
+
+  private subscribersMap: Map<EventType, Function[]>
 
   private constructor(
     private target: Window,
@@ -15,18 +17,18 @@ export class ShellClient {
     this.initMessageApi();
   }
 
-  public static init(target: Window, origin: string): ShellClient {
-    if (!ShellClient._instance) {
-      ShellClient._instance = new ShellClient(target, origin);
+  public static init(target: Window, origin: string): ShellSdk {
+    if (!ShellSdk._instance) {
+      ShellSdk._instance = new ShellSdk(target, origin);
     }
-    return ShellClient.instance;
+    return ShellSdk.instance;
   }
 
-  public static get instance(): ShellClient {
-    if (!ShellClient._instance) {
-      throw new Error('ShellClient wasn\'t initialized.');
+  public static get instance(): ShellSdk {
+    if (!ShellSdk._instance) {
+      throw new Error('ShellSdk wasn\'t initialized.');
     }
-    return ShellClient._instance;
+    return ShellSdk._instance;
   }
 
   public setTarget(target: Window, origin: string) {
@@ -38,7 +40,7 @@ export class ShellClient {
   }
 
 
-  public on = (type: string, subscriber: Function): Function => {
+  public on = (type: EventType, subscriber: Function): Function => {
     if (!this.subscribersMap.has(type)) {
       this.subscribersMap.set(type, []);
     }
@@ -49,19 +51,19 @@ export class ShellClient {
     };
   }
 
-  public off = (type: string, subscriber: Function): void => {
+  public off = (type: EventType, subscriber: Function): void => {
     this.removeSubscriber(type, subscriber);
   }
 
-  public emit<T>(type: string, value: T) {
+  public emit<T>(type: EventType, value: T) {
     if (!this.postMessageHandler) {
-      throw new Error('ShellClient wasn\'t initialized, message handler not set.');
+      throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
     }
     this.postMessageHandler(type, value);
   }
 
 
-  private removeSubscriber(type: string, subscriber: Function) {
+  private removeSubscriber(type: EventType, subscriber: Function) {
     const subscribers = this.subscribersMap.get(type);
     if (!!subscribers) {
       this.subscribersMap.set(type, subscribers.filter(it => it !== subscriber));
@@ -69,17 +71,17 @@ export class ShellClient {
   }
 
   private initMessageApi() {
-    this.postMessageHandler = (type: string, value: string) => {
+    this.postMessageHandler = (<T>(type: EventType, value: T) => {
       if (!this.target || !this.origin) {
-        throw new Error('ShellClient wasn\'t initialized, target is missing.');
+        throw new Error('ShellSdk wasn\'t initialized, target is missing.');
       }
       this.target.postMessage({ type, value }, this.origin);
-    }
+    });
     window.addEventListener('message', this.onMessage);
   }
 
   private onMessage = (event: MessageEvent) => {
-    const payload = event.data as { type: string, value: any };
+    const payload = event.data as { type: EventType, value: any };
     const subscribers = this.subscribersMap.get(payload.type);
     if (!!subscribers) {
       for (const subscriber of subscribers) {
