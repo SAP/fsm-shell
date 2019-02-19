@@ -11,17 +11,16 @@ export class ShellSdk {
 
   private constructor(
     private target: Window,
-    private origin: string
+    private origin: string,
+    private winRef: Window
   ) {
     this.subscribersMap = new Map();
     this.initMessageApi();
   }
 
-  public static init(target: Window, origin: string): ShellSdk {
-    if (!ShellSdk._instance) {
-      ShellSdk._instance = new ShellSdk(target, origin);
-    }
-    return ShellSdk.instance;
+  public static init(target: Window, origin: string, winRef: Window = window): ShellSdk {
+    ShellSdk._instance = new ShellSdk(target, origin, winRef);
+    return ShellSdk._instance;
   }
 
   public static get instance(): ShellSdk {
@@ -72,12 +71,15 @@ export class ShellSdk {
 
   private initMessageApi() {
     this.postMessageHandler = (<T>(type: EventType, value: T) => {
-      if (!this.target || !this.origin) {
+      if (!this.target) {
         throw new Error('ShellSdk wasn\'t initialized, target is missing.');
+      }
+      if (!this.origin) {
+        throw new Error('ShellSdk wasn\'t initialized, origin is missing.');
       }
       this.target.postMessage({ type, value }, this.origin);
     });
-    window.addEventListener('message', this.onMessage);
+    this.winRef.addEventListener('message', this.onMessage);
   }
 
   private onMessage = (event: MessageEvent) => {

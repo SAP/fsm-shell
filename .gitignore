@@ -68,3 +68,6 @@ release
 
 # version output
 version.txt
+
+# bamboo reporter output
+mocha.json
