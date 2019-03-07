@@ -1,10 +1,12 @@
 
 
-export type EventType = 'V1.REQUIRE_CONTEXT' | string;
+export type EventType = 'V1.REQUIRE_CONTEXT' | 'V1.CLOSE' | 'V1.REQUIRE_PERMISSIONS' | string;
 
 export const SHELL_EVENTS = {
   Version1: {
-    REQUIRE_CONTEXT: 'V1.REQUIRE_CONTEXT'
+    REQUIRE_CONTEXT: 'V1.REQUIRE_CONTEXT',
+    CLOSE: 'V1.CLOSE',
+    REQUIRE_PERMISSIONS: 'V1.REQUIRE_PERMISSIONS'
   },
   ERROR: 'ERROR'
 };
