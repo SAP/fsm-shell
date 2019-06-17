@@ -1,5 +1,12 @@
 
-import { EventType } from './ShellEvents';
+import { EventType, SHELL_EVENTS } from './ShellEvents';
+import { ActionType } from './ShellActions';
+
+import {
+  Deferred,
+  Action,
+  ActionResult
+} from './models/index';
 
 export class ShellSdk {
 
@@ -7,7 +14,8 @@ export class ShellSdk {
 
   private postMessageHandler: (<T>(type: EventType, value: T) => void) | undefined;
 
-  private subscribersMap: Map<EventType, Function[]>
+  private subscribersMap: Map<EventType, Function[]>;
+  private defferedMap: Map<string, Deferred>;
 
   private constructor(
     private target: Window,
@@ -15,6 +23,7 @@ export class ShellSdk {
     private winRef: Window
   ) {
     this.subscribersMap = new Map();
+    this.defferedMap = new Map();
     this.initMessageApi();
   }
 
@@ -61,12 +70,54 @@ export class ShellSdk {
     this.postMessageHandler(type, value);
   }
 
+  public action<T>(type: ActionType, value: T): Promise<any> {
+    const actionId = this.generateUUID();
+    return new Promise((resolve, reject) => {
+      this.defferedMap.set(actionId, {
+        resolve,
+        reject
+      });
+      this.sendAction<T>({
+        id: actionId,
+        type,
+        payload: value
+      });
+    });
+  }
+
+  public actionSuccess<T>(actionId: string, value: T) {
+    this.sendActionResult({
+      id: actionId,
+      payload: value
+    });
+  }
+
+  public actionFail(actionId: string, error: any) {
+    this.sendActionResult({
+      id: actionId,
+      error
+    });
+  }
 
   private removeSubscriber(type: EventType, subscriber: Function) {
     const subscribers = this.subscribersMap.get(type);
     if (!!subscribers) {
       this.subscribersMap.set(type, subscribers.filter(it => it !== subscriber));
     }
+  }
+
+  private sendAction<T>(action: Action<T>) {
+    if (!this.postMessageHandler) {
+      throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
+    }
+    this.postMessageHandler(SHELL_EVENTS.Version1.SEND_ACTION, action);
+  }
+
+  private sendActionResult<T>(result: ActionResult<T>) {
+    if (!this.postMessageHandler) {
+      throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
+    }
+    this.postMessageHandler(SHELL_EVENTS.Version1.SEND_ACTION_RESULT, result);
   }
 
   private initMessageApi() {
@@ -90,6 +141,32 @@ export class ShellSdk {
         subscriber(payload.value);
       }
     }
+    if (payload.type === SHELL_EVENTS.Version1.SEND_ACTION_RESULT) {
+      this.onActionDone(payload.value as ActionResult<any>);
+    }
+  }
+
+  private onActionDone(result: ActionResult<any>) {
+    const deferred = this.defferedMap.get(result.id);
+    if (!!deferred) {
+      if (!!result.error) {
+        deferred.reject(result.error);
+      } else {
+        deferred.resolve(result.payload);
+      }
+      this.defferedMap.delete(result.id);
+    }
+  }
+
+  private generateUUID(): string {
+    const pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+    return pattern.replace(/[xy]/g, source => {
+      // tslint:disable
+      const random = Math.random() * 16 | 0;
+      const digit = source === 'x' ? random : (random & 0x3 | 0x8);
+      // tslint:enable
+      return digit.toString(16);
+    });
   }
 
 }
