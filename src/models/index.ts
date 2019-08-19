@@ -8,3 +8,5 @@ export { GetItemResponse } from './cloud-storage/get-item-response.model';
 export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
 export { SettingsResponse } from './settings/settings-response.model';
+
+export { StartFlowRequest } from './flow-runtime/start-flow-request.model';

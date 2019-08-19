@@ -7,6 +7,7 @@ export type EventType = 'V1.REQUIRE_CONTEXT' |
   'V1.GET_SETTINGS' |
   'V1.GET_STORAGE_ITEM' |
   'V1.SET_STORAGE_ITEM' |
+  'V1.START_FLOW' |
   string;
 
 export const SHELL_EVENTS = {
@@ -18,6 +19,7 @@ export const SHELL_EVENTS = {
     GET_SETTINGS: 'V1.GET_SETTINGS',
     GET_STORAGE_ITEM: 'V1.GET_STORAGE_ITEM',
     SET_STORAGE_ITEM: 'V1.SET_STORAGE_ITEM',
+    START_FLOW: 'V1.START_FLOW'
   },
   ERROR: 'ERROR'
 };
