@@ -23,6 +23,14 @@
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
 - [Generic events](#generic-events)
   - [ERROR](#error)
+- [Library usage sample](#library-usage-sample)
+  - [Library initialization](#library-initialization)
+  - [Sending event to the shell host](#sending-event-to-the-shell-host)
+  - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
+  - [Unsubscribing from event](#unsubscribing-from-event)
+  - [Reactive approach to subscribe for shell host events](#reactive-approach-to-subscribe-for-shell-host-events)
+
+
 
 ### SHELL-SDK Version1 events
 
@@ -211,7 +219,75 @@
   - #### ERROR  
     Will be emitted in response to any of request events in case if error occurs during handling the event.
 
-    - Payload
+    - Payload  Event to the shell host can be sent by using *emit* method from *ShellSdk*
+    ```typescript
+    this.shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+      clientIdentifier: '<your-app-client-identifier>',
+      cleintSecret: '<your-app-client-secret>'
+    });
+    ```
+
 
       type: string  
       string representation of the error object
+
+  ### Library usage sample
+
+  - #### Library initialization  
+
+    import library and available events from *fsm-shell* package
+    ```typescript
+    import { ShellSdk, SHELL_EVENTS } from 'fsm-shell';
+    ```
+
+    initialize the library
+    ```typescript
+    const shellSdk = ShellSdk.init(parent, origin);
+    ```
+    where
+      - *parent* - reference to the parent window (window.parent) containing shell host application
+      - *origin* - origin for the shell host which loading your microfrontend
+
+  - #### Sending event to the shell host application
+
+    event to the shell host should be sent by using *emit* method from *ShellSdk*
+    ```typescript
+    shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+      clientIdentifier: '<your-app-client-identifier>',
+      cleintSecret: '<your-app-client-secret>'
+    });
+    ```
+
+  - #### Subscribing to event coming from shell host application
+
+    to subscribe on shell host event *on* method from *ShellSdk* should be used
+    ```typescript
+    const handler = context => {
+      // handle received context
+    };
+    shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+    ```
+
+  - #### Unsubscribing from event
+
+    to unsibscribe use *off* method from *ShellSdk*
+    ```typescript
+    shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+    ```
+
+  - #### Reactive approach to subscribe for shell host events
+
+    rxjs *fromEventPattern* method can be used to create reactive stream from events coming from the ShellSdk. 
+    ```typescript
+    import { fromEventPattern } from 'rxjs';
+    ...
+    const ctxStream$ = fromEventPattern<string>(
+      handler => this.shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler),
+      handler => this.shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler)
+    );
+
+    ctxStream$.subscribe(context => {
+      // handle received context
+    });
+    ```
+
