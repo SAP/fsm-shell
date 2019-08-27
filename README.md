@@ -32,7 +32,7 @@
   - Request payload
 
     type: object
-    ```
+    ```typescript
     {
       clientIdentifier: string;
       clientSecret: string;
@@ -43,7 +43,7 @@
   - Response payload
 
     type: object
-    ```
+    ```typescript
     {
       authToken: string;
       cloudHost: string;
@@ -65,7 +65,7 @@
   - Request payload
 
     type: PermissionRequest  
-    ```
+    ```typescript
     {
       objectName: string;
       owners?: string[];
@@ -75,7 +75,7 @@
   - Response payload
 
     type: Permission  
-    ```
+    ```typescript
     {
       CREATE: boolean;
       READ: boolean;
@@ -97,7 +97,7 @@
 
     type: SettingsResponse\<T\>  
     settings value which was read from requested key
-    ```
+    ```typescript
     {
       key: string;
       value: T;
@@ -116,7 +116,7 @@
 
     type: GetItemResponse\<T\>  
     object containing key name and value which was read from requested key  
-    ```
+    ```typescript
     {
       key: string;
       value: T;
@@ -130,7 +130,7 @@
 
     type: SetItemRequest\<T\>  
     object containing key name and value to store under that key  
-    ```
+    ```typescript
     {
       key: string;
       value: T;
@@ -149,7 +149,7 @@
 
     type: StartFlowRequest  
     object containing flow trigger id and initial context  
-    ```
+    ```typescript
     {
       triggerId: string;
       initialContext?: [
@@ -173,7 +173,7 @@
   - Request payload
 
     type: object
-    ```
+    ```typescript
     {
       clientIdentifier: string;
       clientSecret: string;
@@ -184,7 +184,7 @@
   - Response payload
 
     type: object
-    ```
+    ```typescript
     {
       authToken: string;
       cloudHost: string;
