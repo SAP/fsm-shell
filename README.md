@@ -25,7 +25,7 @@
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
   - [Library initialization](#library-initialization)
-  - [Sending event to the shell host](#sending-event-to-the-shell-host)
+  - [Sending event to the shell host](#sending-event-to-the-shell-host-application)
   - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
   - [Unsubscribing from event](#unsubscribing-from-event)
   - [Reactive approach to subscribe for shell host events](#reactive-approach-to-subscribe-for-shell-host-events)
