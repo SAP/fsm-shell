@@ -211,8 +211,8 @@
           type: string;
           value: any;
         }
-      ] | null;
-     screenConfiguration: Object | null; 
+      ];
+      screenConfiguration: Object | null; 
     }
     ```
   
