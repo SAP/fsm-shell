@@ -64,6 +64,8 @@
       userId: string;
       userAccountFeatureFlagsEnabled: boolean;
       userAccountFeatureFlagsUserId: string;
+      erpType: string;
+      erpUserId: string;
     }
     ```
 
@@ -203,14 +205,14 @@
       selectedLocale: string;
       user: string;
       userId: string;
-      userAccountFeatureFlagsEnabled: boolean;
-      userAccountFeatureFlagsUserId: string;
-      initialContext?: [
+      initialContext: [
         {
           name: string;
+          type: string;
           value: any;
         }
       ];
+      screenConfiguration: Object | null; 
     }
     ```
   
