@@ -10,7 +10,7 @@ export type EventType = 'V1.REQUIRE_CONTEXT' |
   'V1.START_FLOW' |
   'V1.FLOWS.REQUIRE_CONTEXT' |
   'V1.FLOWS.CAN_CONTINUE' |
-  'V!.FLOWS.ON_CONTINUE' |
+  'V1.FLOWS.ON_CONTINUE' |
   string;
 
 export const SHELL_EVENTS = {
