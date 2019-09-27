@@ -328,6 +328,10 @@
     });
     ```
 
+## Support
+
+In case you need further help, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
+
 ## License
 
 Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
