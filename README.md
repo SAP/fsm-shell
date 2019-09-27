@@ -21,6 +21,8 @@
   - [V1.START_FLOW](#V1START_FLOW)
 - [FLOW-RUNTIME Version1 events](#FLOW-RUNTIME-Version1-events)
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
+  - [V1.FLOWS.CAN_CONTINUE](#V1FLOWSCAN_CONTINUE)
+  - [V1.FLOWS.ON_CONTINUE](#V1FLOWSON_CONTINUE)
 - [Generic events](#generic-events)
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
@@ -215,7 +217,40 @@
       screenConfiguration: Object | null; 
     }
     ```
-  
+
+- #### V1.FLOWS.CAN_CONTINUE  
+  Used to indicate if current flow step ready to continue to the next step. Shell host will
+  block switching to the next step until this event sent with true value in payload. If data
+  at some point becames invalid again, this event with false value in payload can be sent
+  in order to block switching to next step again.
+
+  - Request payload
+
+    type: boolean
+
+  - Response not needed
+
+- #### V1.FLOWS.ON_CONTINUE
+  Will be sent from the shell host to flow app when user continue to the next flow step. Flow app should save(if needed) it's data, prepare output variables and send it in response to this event.
+
+  - Request payload
+
+    type: void
+
+  - Response payload
+
+    type: object
+    ```typescript
+    {
+      output: [
+        {
+          name: string;
+          value: any;
+        }
+      ]
+    }
+    ```
+
   ### Generic events
 
   - #### ERROR  

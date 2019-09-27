@@ -13,7 +13,8 @@ import {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest
+  StartFlowRequest,
+  OnContinueResponse
 }
 from './models/index';
 
@@ -25,5 +26,6 @@ export {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest
+  StartFlowRequest,
+  OnContinueResponse
 };
