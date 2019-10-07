@@ -1,7 +1,11 @@
 
 import { EventType } from './ShellEvents';
+import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 
 export class ShellSdk {
+
+  public static VERSION = SHELL_VERSION_INFO.VERSION;
+  public static BUILD_TS =SHELL_VERSION_INFO.BUILD_TS;
 
   private static _instance: ShellSdk;
 
