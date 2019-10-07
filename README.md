@@ -27,7 +27,7 @@
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
   - [Library initialization](#library-initialization)
-  - [Get library version](#get-library-version-or-build-timestamp)
+  - [Get library version](#get-library-version-or-build-timestamp)    
   - [Sending event to the shell host](#sending-event-to-the-shell-host-application)
   - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
   - [Unsubscribing from event](#unsubscribing-from-event)
@@ -37,7 +37,7 @@
 
 ### SHELL-SDK Version1 events
 
-- #### V1.REQUIRE_CONTEXT
+- #### V1.REQUIRE_CONTEXT  
   Must be sent on application startup to get initial application context from the shell
 
   - Request payload
@@ -72,12 +72,12 @@
     }
     ```
 
-- #### V1.GET_PERMISSIONS
+- #### V1.GET_PERMISSIONS  
   Request permissions for specified object from the shell
 
   - Request payload
 
-    type: PermissionRequest
+    type: PermissionRequest  
     ```typescript
     {
       objectName: string;
@@ -87,7 +87,7 @@
 
   - Response payload
 
-    type: Permission
+    type: Permission  
     ```typescript
     {
       CREATE: boolean;
@@ -98,17 +98,17 @@
     }
     ```
 
-- #### V1.GET_SETTINGS
+- #### V1.GET_SETTINGS  
   Request settings value for specific key from the shell
 
   - Request payload
 
-    type: string
+    type: string  
     Key to read settings from
 
   - Response payload
 
-    type: SettingsResponse\<T\>
+    type: SettingsResponse\<T\>  
     settings value which was read from requested key
     ```typescript
     {
@@ -122,13 +122,13 @@
 
   - Request payload
 
-    type: string
+    type: string  
     Key to read value from
 
   - Response payload
 
-    type: GetItemResponse\<T\>
-    object containing key name and value which was read from requested key
+    type: GetItemResponse\<T\>  
+    object containing key name and value which was read from requested key  
     ```typescript
     {
       key: string;
@@ -141,8 +141,8 @@
 
   - Request payload
 
-    type: SetItemRequest\<T\>
-    object containing key name and value to store under that key
+    type: SetItemRequest\<T\>  
+    object containing key name and value to store under that key  
     ```typescript
     {
       key: string;
@@ -160,8 +160,8 @@
 
   - Request payload
 
-    type: StartFlowRequest
-    object containing flow trigger id and initial context
+    type: StartFlowRequest  
+    object containing flow trigger id and initial context  
     ```typescript
     {
       triggerId: string;
@@ -180,7 +180,7 @@
 
 ### FLOW-RUNTIME Version1 events
 
-- #### V1.FLOWS.REQUIRE_CONTEXT
+- #### V1.FLOWS.REQUIRE_CONTEXT  
   Must be sent on application startup to get initial application context from the shell
 
   - Request payload
@@ -219,7 +219,7 @@
     }
     ```
 
-- #### V1.FLOWS.CAN_CONTINUE
+- #### V1.FLOWS.CAN_CONTINUE  
   Used to indicate if current flow step ready to continue to the next step. Shell host will
   block switching to the next step until this event sent with true value in payload. If data
   at some point becames invalid again, this event with false value in payload can be sent
@@ -254,7 +254,7 @@
 
   ### Generic events
 
-  - #### ERROR
+  - #### ERROR  
     Will be emitted in response to any of request events in case if error occurs during handling the event.
 
     - Payload  Event to the shell host can be sent by using *emit* method from *ShellSdk*
@@ -266,12 +266,12 @@
     ```
 
 
-      type: string
+      type: string  
       string representation of the error object
 
   ### Library usage sample
 
-  - #### Library initialization
+  - #### Library initialization  
 
     import library and available events from *fsm-shell* package
     ```typescript
@@ -286,13 +286,13 @@
       - *parent* - reference to the parent window (window.parent) containing shell host application
       - *origin* - origin for the shell host which loading your microfrontend
 
-  - #### Get Library version or build timestamp
+  - #### Get Library version or build timestamp  
 
-    get the semantic version number of the shell library or the build timestamp
-    ```typescript
-    console.log(shellSdk.VERSION);
-    console.log(shellSdk.BUILD_TS);
-    ```
+    get the semantic version number of the shell library or the build timestamp.        
+    ```typescript  
+    console.log(ShellSdk.VERSION);  
+    console.log(ShellSdk.BUILD_TS);  
+    ```  
 
   - #### Sending event to the shell host application
 
@@ -336,4 +336,3 @@
       // handle received context
     });
     ```
-
