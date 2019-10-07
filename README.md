@@ -3,7 +3,7 @@
 ## Responsibilities:
 
 - communication to host (ask for data from the host, see events section)
-- receive data publish by the host 
+- receive data publish by the host
 
 ## Install dev dependencies and build library:
 
@@ -27,6 +27,7 @@
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
   - [Library initialization](#library-initialization)
+  - [Get library version](#get-library-version-or-build-timestamp)    
   - [Sending event to the shell host](#sending-event-to-the-shell-host-application)
   - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
   - [Unsubscribing from event](#unsubscribing-from-event)
@@ -117,7 +118,7 @@
     ```
 
 - #### V1.GET_STORAGE_ITEM
-  Request value stored under specified key in cloud storage 
+  Request value stored under specified key in cloud storage
 
   - Request payload
 
@@ -214,7 +215,7 @@
           value: any;
         }
       ];
-      screenConfiguration: Object | null; 
+      screenConfiguration: Object | null;
     }
     ```
 
@@ -285,6 +286,14 @@
       - *parent* - reference to the parent window (window.parent) containing shell host application
       - *origin* - origin for the shell host which loading your microfrontend
 
+  - #### Get Library version or build timestamp  
+
+    get the semantic version number of the shell library or the build timestamp.        
+    ```typescript  
+    console.log(ShellSdk.VERSION);  
+    console.log(ShellSdk.BUILD_TS);  
+    ```  
+
   - #### Sending event to the shell host application
 
     event to the shell host should be sent by using *emit* method from *ShellSdk*
@@ -314,7 +323,7 @@
 
   - #### Reactive approach to subscribe for shell host events
 
-    rxjs *fromEventPattern* method can be used to create reactive stream from events coming from the ShellSdk. 
+    rxjs *fromEventPattern* method can be used to create reactive stream from events coming from the ShellSdk.
     ```typescript
     import { fromEventPattern } from 'rxjs';
     ...
@@ -327,4 +336,3 @@
       // handle received context
     });
     ```
-

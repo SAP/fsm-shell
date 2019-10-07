@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "0.1.2-rc10",
+  "version": "0.1.2-rc11",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run clean && node ./scripts/createVersionInfo",
     "clean": "rm -rf release",
     "version": "node ./scripts/version.js > ./version.txt",
     "test": "npm run karma",
