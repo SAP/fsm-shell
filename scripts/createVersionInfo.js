@@ -13,9 +13,7 @@ var writeVersion = function () {
                         "};" + newLine + newLine;
 
     const fileContent = infoNote + versionInfo;
-    // if (process.env.BUILD_USER_ID === "codepipes")
 	fs.writeFileSync("./src/ShellVersionInfo.ts", fileContent);
 };
-
 
 writeVersion();
