@@ -1,6 +1,16 @@
 # Client library for applications rendered in FSM shell host
 
-## Responsibilities:
+## Description
+
+  FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
+  to communicate with the shell host by using set of predefined events described
+  below in [API Documentation](#API-Documentation)
+
+## Requirements
+
+  Minimal supported JavaScript version: ES5
+
+## Responsibilities
 
 - communication to host (ask for data from the host, see events section)
 - receive data publish by the host
