@@ -4,7 +4,8 @@
 
   FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
   to communicate with the shell host by using set of predefined events described
-  below in [API Documentation](#API-Documentation)
+  below in [API Documentation](#API-Documentation).
+  For more information regarding FSM (Field Service Management), check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
 
 ## Requirements
 
