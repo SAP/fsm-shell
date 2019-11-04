@@ -21,14 +21,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coresystemsFSM/fsm-shell.git"
+    "url": "git+https://github.com/SAP/fsm-shell.git"
   },
   "author": "SAP SE",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/coresystemsFSM/fsm-shell/issues"
+    "url": "https://github.com/SAP/fsm-shell/issues"
   },
-  "homepage": "https://github.com/coresystemsFSM/fsm-shell#readme",
+  "homepage": "https://github.com/SAP/fsm-shell#readme",
   "devDependencies": {
     "@types/jasmine": "^3.3.9",
     "@types/jasminewd2": "^2.0.6",
