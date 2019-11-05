@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "0.1.2-rc11",
+  "version": "0.1.2-rc12",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
