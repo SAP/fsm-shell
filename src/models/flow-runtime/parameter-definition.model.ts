@@ -2,6 +2,6 @@
 export interface ParameterDefinition {
     name: string;
     type: string;
-    description: string;
+    description: string | undefined | null;
     required: boolean;
   }
