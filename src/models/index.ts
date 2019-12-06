@@ -11,3 +11,6 @@ export { SettingsResponse } from './settings/settings-response.model';
 
 export { StartFlowRequest } from './flow-runtime/start-flow-request.model';
 export { OnContinueResponse } from './flow-runtime/on-continue-response.model';
+
+export { FlowTrigger } from './flow-runtime/flow-trigger.model';
+export { ParameterDefinition } from './flow-runtime/parameter-definition.model';

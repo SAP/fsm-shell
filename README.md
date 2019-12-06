@@ -2,7 +2,7 @@
 
 ## Description
 
-  SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell *host* is the extendable part of the Web-Application and a FSM shell *client* is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
+  SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell *host* is the extendable part of the Web-Application and a FSM shell *client* is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
 
   FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
   to communicate with the shell host by using set of predefined events described
@@ -30,6 +30,7 @@
   - [V1.GET_SETTINGS](#V1GET_SETTINGS)
   - [V1.GET_STORAGE_ITEM](#V1GET_STORAGE_ITEM)
   - [V1.SET_STORAGE_ITEM](#V1SET_STORAGE_ITEM)
+  - [V1.FLOWS_TRIGGERS](#V1FLOWS_TRIGGERS)  
   - [V1.START_FLOW](#V1START_FLOW)
 - [FLOW-RUNTIME Version1 events](#FLOW-RUNTIME-Version1-events)
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
@@ -166,6 +167,35 @@
 
     type: boolean
     flag indicating if value was saved successfully
+
+- #### V1.FLOWS_TRIGGERS
+  List all available flows triggers
+
+  - Request payload
+
+    type: void
+
+  - Response payload
+
+    type: Array of FlowTrigger   
+    each object containing flow trigger name, description, trigger id and a list of parameters
+    ```typescript
+    {
+       name: string;
+       description: string;
+       help: string;
+       trigger: string;
+       icon: string;
+       parameters?: [
+         {
+            name: string;
+            type: string;
+            description: string;
+            required: boolean;
+         }
+       ];
+    }
+    ```
 
 - #### V1.START_FLOW
   trigger flow
@@ -348,7 +378,7 @@
       // handle received context
     });
     ```
-    
+
 
 ## Support
 

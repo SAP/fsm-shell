@@ -14,7 +14,9 @@ import {
   UiPermissions,
   SettingsResponse,
   StartFlowRequest,
-  OnContinueResponse
+  OnContinueResponse,
+  FlowTrigger,
+  ParameterDefinition
 }
 from './models/index';
 
@@ -27,5 +29,7 @@ export {
   UiPermissions,
   SettingsResponse,
   StartFlowRequest,
-  OnContinueResponse
+  OnContinueResponse,
+  FlowTrigger,
+  ParameterDefinition
 };
