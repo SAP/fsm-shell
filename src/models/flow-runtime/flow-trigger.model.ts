@@ -6,5 +6,6 @@ export interface FlowTrigger {
   description: string;
   help: string;
   trigger: string;
+  icon: string;
   parameters: ParameterDefinition[];
 }

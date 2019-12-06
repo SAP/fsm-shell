@@ -172,7 +172,7 @@
   List all available flows triggers
 
   - Request payload
-    
+
     type: void
 
   - Response payload
@@ -185,6 +185,7 @@
        description: string;
        help: string;
        trigger: string;
+       icon: string;
        parameters?: [
          {
             name: string;
