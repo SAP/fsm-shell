@@ -9,7 +9,10 @@ export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
 export { SettingsResponse } from './settings/settings-response.model';
 
-export { StartFlowRequest } from './flow-runtime/start-flow-request.model';
+export { StartFlowRequest } from './flows/start-flow-request.model';
+export { StartFlowResponse } from './flows/start-flow-response.model';
+export { FlowEndedRequest } from './flows/flow-ended-request.model';
+
 export { OnContinueResponse } from './flow-runtime/on-continue-response.model';
 
 export { FlowTrigger } from './flow-runtime/flow-trigger.model';

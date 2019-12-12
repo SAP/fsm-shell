@@ -14,6 +14,8 @@ import {
   UiPermissions,
   SettingsResponse,
   StartFlowRequest,
+  StartFlowResponse,
+  FlowEndedRequest,
   OnContinueResponse,
   FlowTrigger,
   ParameterDefinition
@@ -29,6 +31,8 @@ export {
   UiPermissions,
   SettingsResponse,
   StartFlowRequest,
+  StartFlowResponse,
+  FlowEndedRequest,
   OnContinueResponse,
   FlowTrigger,
   ParameterDefinition
