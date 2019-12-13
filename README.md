@@ -32,6 +32,7 @@
   - [V1.SET_STORAGE_ITEM](#V1SET_STORAGE_ITEM)
   - [V1.FLOWS_TRIGGERS](#V1FLOWS_TRIGGERS)  
   - [V1.START_FLOW](#V1START_FLOW)
+  - [V1.FLOW_ENDED](#V1FLOW_ENDED)
 - [FLOW-RUNTIME Version1 events](#FLOW-RUNTIME-Version1-events)
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
   - [V1.FLOWS.CAN_CONTINUE](#V1FLOWSCAN_CONTINUE)
@@ -218,7 +219,30 @@
 
   - Response payload
 
-    type: void
+    type: StartFlowResponse  
+    object containing id of the new flow instance
+    ```typescript
+    {
+      flowInstaneId: string;
+    }
+    ```
+
+- #### V1.FLOW_ENDED
+  indicate that flow was finished
+
+  - Request payload
+
+    type: FlowEndedRequest  
+    object id of the finished flow instance  
+    ```typescript
+    {
+      flowInstanceId: string;
+    }
+    ```
+
+  - Response payload
+
+    type: void  
 
 ### FLOW-RUNTIME Version1 events
 
