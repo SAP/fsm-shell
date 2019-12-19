@@ -91,7 +91,7 @@ export class ShellSdk {
     const subscribers = this.subscribersMap.get(payload.type);
     if (!!subscribers) {
       for (const subscriber of subscribers) {
-        subscriber(payload.value);
+        subscriber(payload.value, event.origin);
       }
     }
   }

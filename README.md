@@ -372,10 +372,13 @@
 
   - #### Subscribing to event coming from shell host application
 
-    to subscribe on shell host event *on* method from *ShellSdk* should be used
+    to subscribe on shell host event *on* method from *ShellSdk* should be used.  
+    handler must be a function which receive 2 parameters:
+      - context - payload which was sent with the event
+      - origin - origin of the sender which should be validated inside the handler
     ```typescript
-    const handler = context => {
-      // handle received context
+    const handler = (context, origin) => {
+      // validate sender origin and handle received context
     };
     shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
     ```
