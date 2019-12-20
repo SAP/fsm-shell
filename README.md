@@ -256,7 +256,6 @@
     {
       clientIdentifier: string;
       clientSecret: string;
-      cloudStorageKeys?: CloudStorageKey[];
     }
     ```
 
