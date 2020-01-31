@@ -396,7 +396,7 @@
     import { fromEventPattern } from 'rxjs';
     ...
     const ctxStream$ = fromEventPattern<string>(
-      handler => this.shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler),
+      handler => this.shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, payload => handler(payload)),
       handler => this.shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler)
     );
 
