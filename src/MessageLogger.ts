@@ -44,7 +44,7 @@ export class MessageLogger {
       if (options.type) {
         if (Array.isArray(options.type) && !options.type.some(type => new RegExp(type).test(message.type))) {
           return false;
-        } else if (!RegExp(options.type as string).test(message.type)) {
+        } else if (typeof options.type === 'string' && !RegExp(options.type as string).test(message.type)) {
           return false;
         }
       }
@@ -64,16 +64,17 @@ export class MessageLogger {
       if (
         options.direction &&
         options.direction === 'incoming' &&
+        typeof options.handled !== 'undefined' &&
         options.handled !== (message.handled === 'yes')
       ) {
         return false;
       }
 
-      if (options.from && options.from <= message.timestamp) {
+      if (options.from && options.from > message.timestamp) {
         return false;
       }
 
-      if (options.to && options.to >= message.timestamp) {
+      if (options.to && options.to < message.timestamp) {
         return false;
       }
 
