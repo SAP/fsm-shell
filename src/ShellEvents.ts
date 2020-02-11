@@ -35,3 +35,17 @@ export const SHELL_EVENTS = {
   },
   ERROR: 'ERROR'
 };
+
+const getKeyValues = (source: any, initial: string[] = []): string[] => {
+  let result = [ ...initial ];
+  for (const key in source) {
+    if (typeof source[key] === 'string') {
+      result.push(source[key]);
+    } else if (typeof source[key] === 'object') {
+      result = getKeyValues(source[key], result);
+    }
+  }
+  return result;
+}
+
+export const ALL_SHELL_EVENTS_ARRAY: string[] = getKeyValues(SHELL_EVENTS);
