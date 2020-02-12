@@ -2,6 +2,8 @@
 import { EventType } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 
+import { Debugger } from './Debugger';
+
 export class ShellSdk {
 
   public static VERSION = SHELL_VERSION_INFO.VERSION;
@@ -12,18 +14,21 @@ export class ShellSdk {
   private postMessageHandler: (<T>(type: EventType, value: T) => void) | undefined;
 
   private subscribersMap: Map<EventType, Function[]>
+  private debugger: Debugger;
 
   private constructor(
     private target: Window,
     private origin: string,
-    private winRef: Window
+    private winRef: Window,
+    debugId: string
   ) {
     this.subscribersMap = new Map();
     this.initMessageApi();
+    this.debugger = new Debugger(winRef, debugId);
   }
 
-  public static init(target: Window, origin: string, winRef: Window = window): ShellSdk {
-    ShellSdk._instance = new ShellSdk(target, origin, winRef);
+  public static init(target: Window, origin: string, winRef: Window = window, debugId: string = ''): ShellSdk {
+    ShellSdk._instance = new ShellSdk(target, origin, winRef, debugId);
     return ShellSdk._instance;
   }
 
@@ -81,14 +86,24 @@ export class ShellSdk {
       if (!this.origin) {
         throw new Error('ShellSdk wasn\'t initialized, origin is missing.');
       }
+
+      this.debugger.traceEvent('outgoing', type, value, true);
       this.target.postMessage({ type, value }, this.origin);
     });
     this.winRef.addEventListener('message', this.onMessage);
   }
 
   private onMessage = (event: MessageEvent) => {
+
+    if (!event.data || typeof event.data.type !== 'string') {
+      return;
+    }
+
     const payload = event.data as { type: EventType, value: any };
     const subscribers = this.subscribersMap.get(payload.type);
+
+    this.debugger.traceEvent('incoming', payload.type, payload.value, !!subscribers);
+
     if (!!subscribers) {
       for (const subscriber of subscribers) {
         subscriber(payload.value, event.origin);
