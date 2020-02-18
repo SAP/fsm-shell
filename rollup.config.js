@@ -9,16 +9,21 @@ export default {
     {
       file: pkg.main,
       format: 'umd',
-      name: 'FSMShell'
+      name: 'FSMShell',
+      sourcemap: true
     },
     {
       file: pkg.module,
       format: 'es',
+      sourcemap: true
     },
   ],
   plugins: [
     typescript({
       typescript: require('typescript'),
+      tsconfigDefaults: {
+        sourceMap: true
+      }
     }),
     filesize()
   ],
