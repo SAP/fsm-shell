@@ -18,7 +18,9 @@ import {
   FlowEndedRequest,
   OnContinueResponse,
   FlowTrigger,
-  ParameterDefinition
+  ParameterDefinition,
+  SetViewStateRequest,
+  SetViewStateResponse
 }
 from './models/index';
 
@@ -35,5 +37,7 @@ export {
   FlowEndedRequest,
   OnContinueResponse,
   FlowTrigger,
-  ParameterDefinition
+  ParameterDefinition,
+  SetViewStateRequest,
+  SetViewStateResponse
 };

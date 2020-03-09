@@ -10,5 +10,7 @@ export interface DebugEvent<T> {
   direction: EventDirection,
   handled: EventHandledLabel,
   type: EventType,
+  to: string,
+  from: string,
   payload: T;
 }

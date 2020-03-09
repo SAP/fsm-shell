@@ -26,7 +26,7 @@ export class Debugger {
     }
   }
 
-  public traceEvent(direction: EventDirection, type: EventType, payload: any, hasHandler: boolean) {
+  public traceEvent(direction: EventDirection, type: EventType, payload: any, destination: any, hasHandler: boolean) {
     if (this.debugMode && ALL_SHELL_EVENTS_ARRAY.some(it => it === type)) {
       const debugEvent: DebugEvent<any> = {
         timestamp: new Date(),
@@ -34,6 +34,8 @@ export class Debugger {
         direction,
         type,
         handled: direction === 'incoming' ? (hasHandler ? 'yes' : 'no') : 'n/a',
+        to: destination.to,
+        from: destination.from,
         payload
       }
       this.logEvent(debugEvent);
