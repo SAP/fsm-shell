@@ -7,9 +7,10 @@ import { Debugger } from './Debugger';
 export class ShellSdk {
 
   public static VERSION = SHELL_VERSION_INFO.VERSION;
-  public static BUILD_TS =SHELL_VERSION_INFO.BUILD_TS;
+  public static BUILD_TS = SHELL_VERSION_INFO.BUILD_TS;
 
   private static _instance: ShellSdk;
+  private isRoot: boolean; // true is shell instance, false is in outlet or app
 
   private postMessageHandler: (<T>(type: EventType, value: T, to?: string) => void) | undefined;
 
@@ -19,17 +20,19 @@ export class ShellSdk {
   private debugger: Debugger;
   private outletsMap: Map<Window, string>;
 
+
   private constructor(
     private target: Window,
     private origin: string,
     private winRef: Window,
-    private debugId: string
+    debugId: string
   ) {
     this.subscribersMap = new Map();
     this.subscribersViewStateMap = new Map();
     this.outletsMap = new Map();
     this.initMessageApi();
     this.debugger = new Debugger(winRef, debugId);
+    this.isRoot = target == null;
   }
 
   public static init(target: Window, origin: string, winRef: Window = window, debugId: string = ''): ShellSdk {
@@ -44,8 +47,14 @@ export class ShellSdk {
     return ShellSdk._instance;
   }
 
-  public setOutlet(id: string, frame: Window) {
+  // Called by outlet component to assign an id to a iframe.
+  // Allow to send back a message, and ignore messages from other frame not registered
+  public registerOutlet(frame: Window, id: string) {
     this.outletsMap.set(frame, id);
+  }
+
+  public unregisterOutlet(frame: Window) {
+    this.outletsMap.delete(frame);
   }
 
   public setTarget(target: Window, origin: string) {
@@ -143,77 +152,82 @@ export class ShellSdk {
     }
 
     const payload = event.data as { type: EventType, value: any, from?: string, to?: string };
-    const isShellHost = this.debugId === 'shell-host';
 
-    // Message come from an outlet, we send to parent (this.target) and add `from` value
-    const source: Window = <Window>event.source;
-    if (source.frameElement && this.outletsMap.get(source)) {
-      const outletPosition = this.outletsMap.get(source);
-      this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: outletPosition }, true);
-      this.target.postMessage({ type: payload.type, value: payload.value, from: outletPosition }, this.origin);
-      return;
-    }
+    // If current instance is not root, we act as middleman node to propagate
+    if (!this.isRoot) {
 
-    // Message has a from value and I am not shell-host, so just propagate to parent
-    if (payload.from && this.target && !isShellHost) {     
-      this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: payload.from }, true);
-      this.target.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);
-      return;
-    }
-
-    // Message has a `to` value, we act as Middleman and send to an outlet
-    if (payload.to && !isShellHost) { // If to 
-      this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
-      this.outletsMap.forEach((value, key) => {
-        if (value === payload.to) {
-          key.postMessage({ type: payload.type, value: payload.value }, this.origin);
-        }
-      });
-      return;
-    }
-
-    // We re are not shell-host and receive SET_VIEW_STATE we send to outlets with key
-    if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE && !isShellHost) {
-      this.outletsMap.forEach((value, key) => {
-        key.postMessage({ type: payload.type, value: payload.value }, this.origin);
-      });
-
-      const subscribers = this.subscribersViewStateMap.get(payload.value.key);
-      this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
-      if (!!subscribers) {
-        for (const subscriber of subscribers) {
-          subscriber(payload.value.value);
-        }
+      // Message come from a registered outlet, we send to parent (this.target) with a `from` value
+      const source: Window = <Window>event.source;
+      if (source.frameElement && this.outletsMap.get(source)) {
+        const outletPosition = this.outletsMap.get(source);
+        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: outletPosition }, true);
+        this.target.postMessage({ type: payload.type, value: payload.value, from: outletPosition }, this.origin);
+        return;
       }
-      return;
-    }
 
-    // We propagate init_view_state
-    if (payload.type == SHELL_EVENTS.Version1.INIT_VIEW_STATE && !isShellHost) {
-      for (let key of Object.keys(payload.value)) {
-        const subscribers = this.subscribersViewStateMap.get(`${key}`);
+      // if message has a `from` value, propagate to parent
+      if (payload.from) {
+        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: payload.from }, true);
+        this.target.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);
+        return;
+      }
+
+      // Message has a `to` value, send to an outlet as one to one communication
+      if (payload.to) { // If to 
+        this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
+        this.outletsMap.forEach((value, key) => {
+          if (value === payload.to) {
+            key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+          }
+        });
+        return;
+      }
+
+      // Propagate SET_VIEW_STATE to childrens's outlet andset value to current subscribers
+      if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
+        this.outletsMap.forEach((value, key) => {
+          key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+        });
+
+        const subscribers = this.subscribersViewStateMap.get(payload.value.key);
+        this.debugger.traceEvent('incoming', payload.type, payload.value, {}, !!subscribers);
         if (!!subscribers) {
           for (const subscriber of subscribers) {
-            subscriber(payload.value[key]);
+            subscriber(payload.value.value);
           }
         }
+        return;
       }
-      return;
-    } 
 
-    // Generic case, this message is for me, I receive and handle it.
-    const subscribers = this.subscribersMap.get(payload.type);
-    this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
+      // We propagate init_view_state
+      if (payload.type == SHELL_EVENTS.Version1.INIT_VIEW_STATE) {
+        for (let key of Object.keys(payload.value)) {
+          const subscribers = this.subscribersViewStateMap.get(`${key}`);
+          if (!!subscribers) {
+            for (const subscriber of subscribers) {
+              subscriber(payload.value[key]);
+            }
+          }
+        }
+        return;
+      }
+    } else {
+      // As a root, message is sended to handlers
+      const subscribers = this.subscribersMap.get(payload.type);
+      this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
 
-    if (!!subscribers) {
-      for (const subscriber of subscribers) {
-        subscriber(
-          payload.value, 
-          event.origin, 
-          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
-        );
+      if (!!subscribers) {
+        for (const subscriber of subscribers) {
+          subscriber(
+            payload.value,
+            event.origin,
+            payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
+          );
+        }
       }
     }
+
+
   }
 
 }
