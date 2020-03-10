@@ -145,10 +145,6 @@ export class ShellSdk {
     const payload = event.data as { type: EventType, value: any, from?: string, to?: string };
     const isShellHost = this.debugId === 'shell-host';
 
-    if (isShellHost) {
-      debugger;
-    }
-
     // Message come from an outlet, we send to parent (this.target) and add `from` value
     const source: Window = <Window>event.source;
     if (source.frameElement && this.outletsMap.get(source)) {
