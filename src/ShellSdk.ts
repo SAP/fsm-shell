@@ -4,19 +4,6 @@ import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 
 import { Debugger } from './Debugger';
 
-function findGetParameter(parameterName: string) {
-    var result = null,
-        tmp = [];
-    location.search
-        .substr(1)
-        .split("&")
-        .forEach(function (item) {
-          tmp = item.split("=");
-          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-        });
-    return result;
-}
-
 export class ShellSdk {
 
   public static VERSION = SHELL_VERSION_INFO.VERSION;
@@ -24,15 +11,13 @@ export class ShellSdk {
 
   private static _instance: ShellSdk;
 
-  private clientId: string | null; // Client ID from outlet stuff
-
   private postMessageHandler: (<T>(type: EventType, value: T, to?: string) => void) | undefined;
 
   private subscribersMap: Map<EventType, Function[]>
   private subscribersViewStateMap: Map<string, Function[]>
 
   private debugger: Debugger;
-  private outletsMap: Map<string, Window>;
+  private outletsMap: Map<Window, string>;
 
   private constructor(
     private target: Window,
@@ -43,15 +28,12 @@ export class ShellSdk {
     this.subscribersMap = new Map();
     this.subscribersViewStateMap = new Map();
     this.outletsMap = new Map();
-    this.clientId = findGetParameter('id');
     this.initMessageApi();
-    this.debugger = new Debugger(winRef, debugId == '' ? this.clientId || 'mainApp' : debugId);
+    this.debugger = new Debugger(winRef, debugId);
   }
 
   public static init(target: Window, origin: string, winRef: Window = window, debugId: string = ''): ShellSdk {
     ShellSdk._instance = new ShellSdk(target, origin, winRef, debugId);
-    // TODO :  Need to register as an outlet to set clientId
-    // ShellSdk._instance.emit(SHELL_EVENTS.Version1.INIT_VIEW_STATE, {});
     return ShellSdk._instance;
   }
 
@@ -63,7 +45,7 @@ export class ShellSdk {
   }
 
   public setOutlet(id: string, frame: Window) {
-    this.outletsMap.set(id, frame);
+    this.outletsMap.set(frame, id);
   }
 
   public setTarget(target: Window, origin: string) {
@@ -149,12 +131,7 @@ export class ShellSdk {
       }
 
       this.debugger.traceEvent('outgoing', type, value, { to }, true);
-
-      if (to) {
-        this.target.postMessage({ type, value, to }, this.origin);
-      } else {
-        this.target.postMessage({ type, value, from: this.clientId }, this.origin);
-      }
+      this.target.postMessage({ type, value, to }, this.origin);
     });
     this.winRef.addEventListener('message', this.onMessage);
   }
@@ -164,51 +141,81 @@ export class ShellSdk {
     if (!event.data || typeof event.data.type !== 'string') {
       return;
     }
-    const payload = event.data as { type: EventType, value: any, from?: string, to?: string };
 
-    if (payload.from && this.target && this.debugId != 'shell-host') { // If from someone else and I'm not shellhost, we send to parent
+    const payload = event.data as { type: EventType, value: any, from?: string, to?: string };
+    const isShellHost = this.debugId === 'shell-host';
+
+    if (isShellHost) {
+      debugger;
+    }
+
+    // Message come from an outlet, we send to parent (this.target) and add `from` value
+    const source: Window = <Window>event.source;
+    if (source.frameElement && this.outletsMap.get(source)) {
+      const outletPosition = this.outletsMap.get(source);
+      this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: outletPosition }, true);
+      this.target.postMessage({ type: payload.type, value: payload.value, from: outletPosition }, this.origin);
+      return;
+    }
+
+    // Message has a from value and I am not shell-host, so just propagate to parent
+    if (payload.from && this.target && !isShellHost) {     
       this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: payload.from }, true);
       this.target.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);
-    } else if (payload.to && payload.to !== this.clientId) { // If to 
+      return;
+    }
+
+    // Message has a `to` value, we act as Middleman and send to an outlet
+    if (payload.to && !isShellHost) { // If to 
       this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
-      const outlet = this.outletsMap.get(payload.to);
-      if (outlet) {
-        outlet.postMessage({ type: payload.type, value: payload.value, to: payload.to }, this.origin);
+      this.outletsMap.forEach((value, key) => {
+        if (value === payload.to) {
+          key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+        }
+      });
+      return;
+    }
+
+    // We re are not shell-host and receive SET_VIEW_STATE we send to outlets with key
+    if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE && !isShellHost) {
+      this.outletsMap.forEach((value, key) => {
+        key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+      });
+
+      const subscribers = this.subscribersViewStateMap.get(payload.value.key);
+      this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
+      if (!!subscribers) {
+        for (const subscriber of subscribers) {
+          subscriber(payload.value.value);
+        }
       }
-    } else {
-      // We re are not shell-host and receive SET_VIEW_STATE we send to outlets with key
-      if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE && this.debugId != 'shell-host') {
-        for (let outlet of Array.from(this.outletsMap.values())) {
-          outlet.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);        
-        }
-        const subscribers = this.subscribersViewStateMap.get(payload.value.key);
-        this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
+      return;
+    }
+
+    // We propagate init_view_state
+    if (payload.type == SHELL_EVENTS.Version1.INIT_VIEW_STATE && !isShellHost) {
+      for (let key of Object.keys(payload.value)) {
+        const subscribers = this.subscribersViewStateMap.get(`${key}`);
         if (!!subscribers) {
           for (const subscriber of subscribers) {
-            subscriber(payload.value.value);
+            subscriber(payload.value[key]);
           }
         }
-      } else if (payload.type == SHELL_EVENTS.Version1.INIT_VIEW_STATE && this.debugId != 'shell-host') {
-        for (let key of Object.keys(payload.value)) {
-          const subscribers = this.subscribersViewStateMap.get(`${key}`);
-          if (!!subscribers) {
-            for (const subscriber of subscribers) {
-              subscriber(payload.value[key]);
-            }
-          }
-        }
-      } else {
+      }
+      return;
+    } 
 
-        const subscribers = this.subscribersMap.get(payload.type);
+    // Generic case, this message is for me, I receive and handle it.
+    const subscribers = this.subscribersMap.get(payload.type);
+    this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
 
-        this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
-        // console.log('Sending to local subscribers', payload);
-
-        if (!!subscribers) {
-          for (const subscriber of subscribers) {
-            subscriber(payload.value, event.origin, payload.from);
-          }
-        }
+    if (!!subscribers) {
+      for (const subscriber of subscribers) {
+        subscriber(
+          payload.value, 
+          event.origin, 
+          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
+        );
       }
     }
   }
