@@ -48,7 +48,7 @@ export class ShellSdk {
   }
 
   // Called by outlet component to assign an id to a iframe.
-  // Allow to send back a message, and ignore messages from other frame not registered
+  // Allow to answer back a message, and ignore messages from other frame not registered
   public registerOutlet(frame: Window, id: string) {
     this.outletsMap.set(frame, id);
   }
@@ -83,7 +83,7 @@ export class ShellSdk {
     const subscribers = this.subscribersViewStateMap.get(key) as Function[];
     subscribers.push(subscriber);
     return () => {
-      this.offViewState(key, subscriber);
+      this.removeViewStateSubscriber(key, subscriber);
     }
   }
 
@@ -107,13 +107,6 @@ export class ShellSdk {
       throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
     }
     this.postMessageHandler(SHELL_EVENTS.Version1.SET_VIEW_STATE, { key, value });
-  }
-
-  public initViewState() {
-    if (!this.postMessageHandler) {
-      throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
-    }
-    this.postMessageHandler(SHELL_EVENTS.Version1.INIT_VIEW_STATE, {});
   }
 
   private removeSubscriber(type: EventType, subscriber: Function) {
@@ -165,7 +158,7 @@ export class ShellSdk {
         return;
       }
 
-      // if message has a `from` value, propagate to parent
+      // Message has a `from` value, propagate to parent
       if (payload.from) {
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: payload.from }, true);
         this.target.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);
@@ -198,36 +191,42 @@ export class ShellSdk {
         }
         return;
       }
+    }
 
-      // We propagate init_view_state
-      if (payload.type == SHELL_EVENTS.Version1.INIT_VIEW_STATE) {
-        for (let key of Object.keys(payload.value)) {
-          const subscribers = this.subscribersViewStateMap.get(`${key}`);
-          if (!!subscribers) {
-            for (const subscriber of subscribers) {
-              subscriber(payload.value[key]);
-            }
-          }
-        }
-        return;
-      }
-    } else {
-      // As a root, message is sended to handlers
-      const subscribers = this.subscribersMap.get(payload.type);
-      this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
+    // If isRoot or message is for me, we send to subscribers/handlers
+    const subscribers = this.subscribersMap.get(payload.type);
+    this.debugger.traceEvent('incoming', payload.type, payload.value, { from: payload.from }, !!subscribers);
 
-      if (!!subscribers) {
-        for (const subscriber of subscribers) {
-          subscriber(
-            payload.value,
-            event.origin,
-            payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
-          );
-        }
+    if (!!subscribers) {
+      for (const subscriber of subscribers) {
+        subscriber(
+          payload.value,
+          event.origin,
+          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
+        );
       }
     }
 
-
+    // On REQUIRE_CONTEXT, we split and propagate viewState
+    // Need to be done AFTER REQUIRE_CONTEXT event in case of plugin need auth or context.
+    if (!this.isRoot && payload.type == SHELL_EVENTS.Version1.REQUIRE_CONTEXT) {
+      const viewState = JSON.parse(payload.value).viewState;
+      for (let key of Object.keys(viewState)) {
+        const subscribers = this.subscribersViewStateMap.get(`${key}`);
+        if (!!subscribers) {
+          for (const subscriber of subscribers) {
+            subscriber(viewState[key]);
+          }
+        }
+      }
+      // Propagate REQUIRE_CONTEXT_DONE to have nice UI
+      for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
+        subscriber(
+          payload.value,
+          event.origin,
+          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
+        );
+      }
+    }
   }
-
 }
