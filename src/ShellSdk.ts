@@ -221,11 +221,7 @@ export class ShellSdk {
       }
       // Propagate REQUIRE_CONTEXT_DONE to have nice UI
       for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
-        subscriber(
-          payload.value,
-          event.origin,
-          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
-        );
+        subscriber();
       }
     }
   }
