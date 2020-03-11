@@ -353,7 +353,7 @@ ShellSDK provide a set of features which are specifically designed to communicat
 	You can send any data from any plugin to the main application using the `TO_APP` event.
 	
 	```
-	this.sdk.emit(SHELL_EVENTS.Version1. TO_APP, {
+	this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
 	    message: 'test'
 	});
 	```
