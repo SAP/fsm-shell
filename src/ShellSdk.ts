@@ -50,7 +50,7 @@ export class ShellSdk {
 
   // Called by outlet component to assign an id to a iframe.
   // Allow to answer back a message, and ignore messages from other frame not registered
-  public registerOutlet(frame: Window, id: string) {
+  public registerOutlet(frame: Window) {
     this.outletsMap.set(frame, uuidv4());
   }
 
@@ -160,17 +160,6 @@ export class ShellSdk {
         return;
       }
 
-      // Message has a `to` value, send to an outlet as one to one communication
-      if (payload.to && payload.to.length != 0) {
-        this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
-        this.outletsMap.forEach((value, key) => {
-          if (payload.to && payload.to.indexOf(value) !== -1) {
-            key.postMessage({ type: payload.type, value: payload.value, to: payload.to.filter(id => id != value) }, this.origin);
-          }
-        });
-        return;
-      }
-
       // Propagate SET_VIEW_STATE to childrens's outlet andset value to current subscribers
       if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
         this.outletsMap.forEach((value, key) => {
@@ -184,6 +173,17 @@ export class ShellSdk {
             subscriber(payload.value.value);
           }
         }
+        return;
+      }
+
+      // Message has a `to` value, send to an outlet as one to one communication
+      if (payload.type !== SHELL_EVENTS.Version1.TO_APP && payload.to && payload.to.length != 0) {
+        this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
+        this.outletsMap.forEach((value, key) => {
+          if (payload.to && payload.to.indexOf(value) !== -1) {
+            key.postMessage({ type: payload.type, value: payload.value, to: payload.to.filter(id => id != value) }, this.origin);
+          }
+        });
         return;
       }
     }
