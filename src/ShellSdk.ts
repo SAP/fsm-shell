@@ -152,7 +152,7 @@ export class ShellSdk {
 
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
       const source: Window = <Window>event.source;
-      if (source.frameElement && this.outletsMap.get(source)) { // If it come from an outlet
+      if (source && source.frameElement && this.outletsMap.get(source)) { // If it come from an outlet
         const outletPosition = this.outletsMap.get(source);
         const from = payload.from || [];
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, outletPosition] }, true);
@@ -205,18 +205,21 @@ export class ShellSdk {
     // On REQUIRE_CONTEXT, we split and propagate viewState
     // Need to be done AFTER REQUIRE_CONTEXT event in case of plugin need auth or context.
     if (!this.isRoot && payload.type == SHELL_EVENTS.Version1.REQUIRE_CONTEXT) {
-      const viewState = JSON.parse(payload.value).viewState;
-      for (let key of Object.keys(viewState)) {
-        const subscribers = this.subscribersViewStateMap.get(`${key}`);
-        if (!!subscribers) {
-          for (const subscriber of subscribers) {
-            subscriber(viewState[key]);
+      const context = typeof(payload.value) == 'string' ? JSON.parse(payload.value) : payload.value;
+      const viewState = context.viewState;
+      if (viewState) {        
+        for (let key of Object.keys(viewState)) {
+          const subscribers = this.subscribersViewStateMap.get(`${key}`);
+          if (!!subscribers) {
+            for (const subscriber of subscribers) {
+              subscriber(viewState[key]);
+            }
           }
         }
-      }
-      // Propagate REQUIRE_CONTEXT_DONE to have nice UI
-      for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
-        subscriber();
+        // Propagate REQUIRE_CONTEXT_DONE to have nice UI
+        for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
+          subscriber();
+        }
       }
     }
   }
