@@ -1,6 +1,7 @@
 
 import { EventType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Debugger } from './Debugger';
 
@@ -12,7 +13,7 @@ export class ShellSdk {
   private static _instance: ShellSdk;
   private isRoot: boolean; // true is shell instance, false is in outlet or app
 
-  private postMessageHandler: (<T>(type: EventType, value: T, to?: string) => void) | undefined;
+  private postMessageHandler: (<T>(type: EventType, value: T, to?: string[]) => void) | undefined;
 
   private subscribersMap: Map<EventType, Function[]>
   private subscribersViewStateMap: Map<string, Function[]>
@@ -50,7 +51,7 @@ export class ShellSdk {
   // Called by outlet component to assign an id to a iframe.
   // Allow to answer back a message, and ignore messages from other frame not registered
   public registerOutlet(frame: Window, id: string) {
-    this.outletsMap.set(frame, id);
+    this.outletsMap.set(frame, uuidv4());
   }
 
   public unregisterOutlet(frame: Window) {
@@ -95,7 +96,7 @@ export class ShellSdk {
     this.removeViewStateSubscriber(key, subscriber);
   }
 
-  public emit<T>(type: EventType, value: T, to?: string) {
+  public emit<T>(type: EventType, value: T, to?: string[]) {
     if (!this.postMessageHandler) {
       throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
     }
@@ -124,7 +125,7 @@ export class ShellSdk {
   }
 
   private initMessageApi() {
-    this.postMessageHandler = (<T>(type: EventType, value: T, to?: string) => {
+    this.postMessageHandler = (<T>(type: EventType, value: T, to?: string[]) => {
       if (!this.target) {
         throw new Error('ShellSdk wasn\'t initialized, target is missing.');
       }
@@ -144,33 +145,27 @@ export class ShellSdk {
       return;
     }
 
-    const payload = event.data as { type: EventType, value: any, from?: string, to?: string };
+    const payload = event.data as { type: EventType, value: any, from?: string[], to?: string[] };
 
     // If current instance is not root, we act as middleman node to propagate
     if (!this.isRoot) {
 
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
       const source: Window = <Window>event.source;
-      if (source.frameElement && this.outletsMap.get(source)) {
+      if (source.frameElement && this.outletsMap.get(source)) { // If it come from an outlet
         const outletPosition = this.outletsMap.get(source);
-        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: outletPosition }, true);
-        this.target.postMessage({ type: payload.type, value: payload.value, from: outletPosition }, this.origin);
-        return;
-      }
-
-      // Message has a `from` value, propagate to parent
-      if (payload.from) {
-        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: payload.from }, true);
-        this.target.postMessage({ type: payload.type, value: payload.value, from: payload.from }, this.origin);
+        const from = payload.from || [];
+        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, outletPosition] }, true);
+        this.target.postMessage({ type: payload.type, value: payload.value, from: [...from, outletPosition] }, this.origin);
         return;
       }
 
       // Message has a `to` value, send to an outlet as one to one communication
-      if (payload.to) { // If to 
+      if (payload.to && payload.to.length != 0) {
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
         this.outletsMap.forEach((value, key) => {
-          if (value === payload.to) {
-            key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+          if (payload.to && payload.to.indexOf(value) !== -1) {
+            key.postMessage({ type: payload.type, value: payload.value, to: payload.to.filter(id => id != value) }, this.origin);
           }
         });
         return;
