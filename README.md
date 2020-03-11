@@ -37,6 +37,9 @@
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
   - [V1.FLOWS.CAN_CONTINUE](#V1FLOWSCAN_CONTINUE)
   - [V1.FLOWS.ON_CONTINUE](#V1FLOWSON_CONTINUE)
+- [OUTLETS api](#outlets-api)
+  - [V1.TO_APP](#V1TO_APP)
+  - [VIEW STATE](VIEW_STATE)
 - [Generic events](#generic-events)
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
@@ -84,8 +87,11 @@
       userAccountFeatureFlagsUserId: string;
       erpType: string;
       erpUserId: string;
+      viewState: any;
     }
     ```
+    
+  REQUIRE_CONTEXT will first return the response payload, then trigger inidivual ViewState object as describe in the ViewState section, and then return a REQUIRE_CONTEXT_DONE event to eventually release your UI.
 
 - #### V1.GET_PERMISSIONS  
   Request permissions for specified object from the shell
@@ -318,7 +324,49 @@
     }
     ```
 
-  ### Generic events
+### Plugin's specific api
+
+ShellSDK provide a set of features which are specifically designed to communication with plugins running inside an application as part of the extention feature.
+
+  - #### VIEW STATE : an all instance synced data object
+
+	You might need to share between you applicatin and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method.
+	
+	``` typescript
+	this.sdk.setViewState('TECHNICIAN', id);
+	``` 
+	
+	To listen on modification event, use the listenner `onViewState` with the expected key.
+	
+	```typescript
+	this.sdk.onViewState('TECHNICIAN', id => {
+	    this.selectedId = id;
+	}))
+	```
+	
+	A complete instance of current ViewState is stored in the shell and provided on the `REQUEST_CONTEXT` event for initialisation. It is not persistant and will be deleted when user navigate outside of the application.
+	
+	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. You will first trigger `.on(SHELL_EVENTS.Version1. REQUEST_CONTEXT` to initialize your general context then individually receive events on `onViewState` lsitenners. When all listenners are triggers, you will receive a `REQUEST_CONTEXT _DONE` event which could be used to eventually release the UI. 
+	
+  - #### V1.TO_APP
+
+	You can send any data from any plugin to the main application using the `TO_APP` event.
+	
+	```
+	this.sdk.emit(SHELL_EVENTS.Version1. TO_APP, {
+	    message: 'test'
+	});
+	```
+	
+	To listen in application, use the generic `on` method.
+	
+	```typescript
+	this.sdk.on(SHELL_EVENTS.Version1.TO_APP, content => {
+	    console.log(content.message); // print test in console
+	})
+	```
+
+### Generic events
 
   - #### ERROR  
     Will be emitted in response to any of request events in case if error occurs during handling the event.

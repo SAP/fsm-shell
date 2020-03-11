@@ -11,7 +11,7 @@ export class ShellSdk {
   public static BUILD_TS = SHELL_VERSION_INFO.BUILD_TS;
 
   private static _instance: ShellSdk;
-  private isRoot: boolean; // true is shell instance, false is in outlet or app
+  private isRoot: boolean; // Is root if on `init`, target value is null.
 
   private postMessageHandler: (<T>(type: EventType, value: T, to?: string[]) => void) | undefined;
 
@@ -20,7 +20,6 @@ export class ShellSdk {
 
   private debugger: Debugger;
   private outletsMap: Map<Window, string>;
-
 
   private constructor(
     private target: Window,
@@ -48,8 +47,8 @@ export class ShellSdk {
     return ShellSdk._instance;
   }
 
-  // Called by outlet component to assign an id to a iframe.
-  // Allow to answer back a message, and ignore messages from other frame not registered
+  // Called by outlet component to assign an generated uuid to an iframe. This is key
+  // to allow one to one communication between a pluging and shell-host
   public registerOutlet(frame: Window) {
     this.outletsMap.set(frame, uuidv4());
   }
@@ -100,7 +99,8 @@ export class ShellSdk {
     if (!this.postMessageHandler) {
       throw new Error('ShellSdk wasn\'t initialized, message handler not set.');
     }
-    this.postMessageHandler(type, value, to);
+    // Only root can send a message to a specific node 
+    this.postMessageHandler(type, value, this.isRoot ? to : undefined);
   }
 
   public setViewState(key: string, value: any) {
@@ -139,6 +139,21 @@ export class ShellSdk {
     this.winRef.addEventListener('message', this.onMessage);
   }
 
+  /*
+    Message handler, generic for all ShellSDK instances but have different behaviours if root of not.
+  
+    - If root, we handle all messages to subscribers
+    - If not root, and receive a message from an iframe registered as outlet, we send to parent node 
+    and add node's id to allow return if needed.
+    - If not root and receive SET_VIEW_STATE, we set new value on local node and propagate to outlets
+    - If not root and receive TO_APP, we handle locally and do not propagate to outlets
+    - If not root and receive any message with `to` value, we remove our id and send to desination
+
+    Also define a new event for REQUIRE_CONTEXT which now contains ViewState. To use ViewState binding 
+    and avoid duplicate key we first provide REQUIRE_CONTEXT to init currrent node, then propagate each
+    key of ViewState individualy to match potential subscriptions. To avoid UI glitch after this we
+    send an empty REQUIRE_CONTEXT_DONE to eventually adjust UI if needed.  
+  */
   private onMessage = (event: MessageEvent) => {
 
     if (!event.data || typeof event.data.type !== 'string') {
@@ -177,7 +192,7 @@ export class ShellSdk {
       }
 
       // Message has a `to` value, send to an outlet as one to one communication
-      if (payload.type !== SHELL_EVENTS.Version1.TO_APP && payload.to && payload.to.length != 0) {
+      if (payload.to && payload.to.length != 0 && payload.type !== SHELL_EVENTS.Version1.TO_APP) {
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
         this.outletsMap.forEach((value, key) => {
           if (payload.to && payload.to.indexOf(value) !== -1) {
