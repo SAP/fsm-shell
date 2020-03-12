@@ -5,7 +5,7 @@
   SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell *host* is the extendable part of the Web-Application and a FSM shell *client* is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
 
   FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
-  to communicate with the shell host by using set of predefined events described
+  and plugins to communicate with the shell host by using set of predefined events and api described
   below in [API Documentation](#API-Documentation).
 
 ## Requirements
@@ -16,6 +16,7 @@
 
 - communication to host (ask for data from the host, see events section)
 - receive data publish by the host
+- manage communication with plugins 
 
 ## Install dev dependencies and build library:
 
@@ -37,7 +38,7 @@
   - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
   - [V1.FLOWS.CAN_CONTINUE](#V1FLOWSCAN_CONTINUE)
   - [V1.FLOWS.ON_CONTINUE](#V1FLOWSON_CONTINUE)
-- [OUTLETS api](#outlets-api)
+- [PLUGIN SPECIFIC API](#plugin-specific-api)
   - [V1.TO_APP](#V1TO_APP)
   - [VIEW STATE](VIEW_STATE)
 - [Generic events](#generic-events)
@@ -324,13 +325,13 @@
     }
     ```
 
-### Plugin's specific api
+### PLUGIN SPECIFIC API
 
-ShellSDK provide a set of features which are specifically designed to communication with plugins running inside an application as part of the extention feature.
+ShellSDK provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
 
   - #### VIEW STATE : an all instance synced data object
 
-	You might need to share between you applicatin and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method.
+	You might need to share between you applicatin and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistant and will be deleted when user navigate outside of the application.
 	
 	``` typescript
 	this.sdk.setViewState('TECHNICIAN', id);
@@ -344,11 +345,11 @@ ShellSDK provide a set of features which are specifically designed to communicat
 	}))
 	```
 	
-	A complete instance of current ViewState is stored in the shell and provided on the `REQUEST_CONTEXT` event for initialisation. It is not persistant and will be deleted when user navigate outside of the application.
+	A full instance of the ViewState is stored in the shell and provided on the `REQUEST_CONTEXT` event for initialisation.
 	
-	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. You will first trigger `.on(SHELL_EVENTS.Version1. REQUEST_CONTEXT` to initialize your general context then individually receive events on `onViewState` lsitenners. When all listenners are triggers, you will receive a `REQUEST_CONTEXT _DONE` event which could be used to eventually release the UI. 
+	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSDK will first trigger `.on(SHELL_EVENTS.Version1. REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` lsitenners. When all listenners are triggers, you will receive a `REQUEST_CONTEXT _DONE` event which could be used to eventually release the UI. 
 	
-  - #### V1.TO_APP
+  - #### V1.TO_APP event
 
 	You can send any data from any plugin to the main application using the `TO_APP` event.
 	
@@ -378,7 +379,6 @@ ShellSDK provide a set of features which are specifically designed to communicat
       clientSecret: '<your-app-client-secret>'
     });
     ```
-
 
       type: string  
       string representation of the error object
