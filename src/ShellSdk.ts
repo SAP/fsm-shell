@@ -147,7 +147,7 @@ export class ShellSdk {
     and add node's id to allow return if needed.
     - If not root and receive SET_VIEW_STATE, we set new value on local node and propagate to outlets
     - If not root and receive TO_APP, we handle locally and do not propagate to outlets
-    - If not root and receive any message with `to` value, we remove our id and send to desination
+    - If not root and receive any message with `to` value, we remove our id and send to destination
 
     Also define a new event for REQUIRE_CONTEXT which now contains ViewState. To use ViewState binding 
     and avoid duplicate key we first provide REQUIRE_CONTEXT to init currrent node, then propagate each
