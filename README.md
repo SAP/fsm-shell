@@ -314,14 +314,12 @@ to enable postMessage API debugging perform following steps:
 - click on the origin of the app and add under it key `cs.fsm-shell.debug`
 - set id of the component to be debugged as value for that key, it is possible to list
   multiple ids separated by commas. For example to debug messages going thru both shell-host
-  and flow-runtime set value to `shell-host,flow-runtime`
+  set value to `shell-host`
 - reload application
 
 Following components' ids currently supported to debug postMessage API:
 - `shell-host` - shell core to communicate between shell host and client application loaded
   into the main shell iframe
-- `flow-runtime` - flow-runtime package which used to communicate between shell host and
-  flow step application loaded into iframe rendered by flow-runtime package
 
 #### Fetching and filtering list of tracked postMessage events
 
@@ -347,20 +345,20 @@ Filtering options object may include following keys:
 |----------|------|-----------------|-------------|
 | type | string or string[] | any fsm shell event identifier | include only specific fsm-shell event types |
 | direction | string | `incoming`, `outgoing` | include only received or sent events |
-| component | string | `fsm-shell`, `flow-runtime` | include only events going thru specific component |
+| component | string | `fsm-shell` | include only events going thru specific component |
 | handled | boolean | `true` or `false` | include only events handled by component (component may have no handlers set for specific event type and ignore some events) |
 | from | Date | valid Date object | include only events tracked since spcified moment in time |
 | to | Date | valid Date object | include only events tracked before spcified moment in time |
 
 ##### Example
-To get list of all incoming events of types `V1.FLOWS.CAN_CONTINUE` or `V1.FLOWS.ON_CONTINUE` tracked by `flow-runtime` component type in console following command:
+To get list of all incoming events of types `V1.REQUIRE_CONTEXT` or `V1.GET_PERMISSIONS` tracked by `shell-host` component type in console following command:
 ```javascript
 window.fsmShellMessageLogger.filterTable({
   type: [
-    'V1.FLOWS.CAN_CONTINUE',
-    'V1.FLOWS.ON_CONTINUE'
+    'V1.REQUIRE_CONTEXT',
+    'V1.GET_PERMISSIONS'
   ],
-  component: 'flow-runtime',
+  component: 'shell-host',
   direction: 'incoming'
 })
 ```
