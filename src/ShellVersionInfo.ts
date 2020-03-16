@@ -2,7 +2,7 @@
 // MANUAL CHANGES TO THIS FILE WILL BE OVERWRITTEN !!!
 
 export const SHELL_VERSION_INFO = {
-VERSION : '0.2.4',
-BUILD_TS: '2020-03-09T15:05:50.038Z'
+VERSION : 'Will-Be-Replaced-During-Build',
+BUILD_TS: 'Will-Be-Replaced-During-Build'
 };
 
