@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Outlet feature
-- Add `setViewState` method to propagate 
-- `TO_APP`, `SET_VIEW_STATE`, and `REQUIRE_CONTEXT_DONE` events
+- `setViewState` and `onViewState` to manage ViewState object.
+- `TO_APP` and `REQUIRE_CONTEXT_DONE` events
 - Changelog file
 
 ### Removed
