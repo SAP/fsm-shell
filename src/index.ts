@@ -13,12 +13,6 @@ import {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest,
-  StartFlowResponse,
-  FlowEndedRequest,
-  OnContinueResponse,
-  FlowTrigger,
-  ParameterDefinition,
   SetViewStateRequest,
   SetViewStateResponse
 }
@@ -32,12 +26,6 @@ export {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest,
-  StartFlowResponse,
-  FlowEndedRequest,
-  OnContinueResponse,
-  FlowTrigger,
-  ParameterDefinition,
   SetViewStateRequest,
   SetViewStateResponse
 };
