@@ -37,6 +37,11 @@ describe('Shell Sdk', () => {
     expect(sdk).toBeDefined();
   });
 
+  it('should create instance as Root', () => {
+    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
+    expect(sdk).toBeDefined();
+  });
+
   it('should return same instance', () => {
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
     const sdkCopy = ShellSdk.instance;
@@ -132,6 +137,95 @@ describe('Shell Sdk', () => {
 
     expect(handler1Called).toBe(false);
     expect(handler2Called).toBe(true);
+  });
+
+  it('should confirm context with request_context_done event', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const requestContext = sinon.spy();
+    const requestContextDone = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE, requestContextDone);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+        }
+      }
+    });
+
+    expect(requestContext.called).toBe(true);
+    expect(requestContextDone.called).toBe(true);
+  });
+
+  it('should init viewState on request_context event', () => {
+    let technicianId: number;
+    let servicecallId: number;
+
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    sdk.onViewState('TECHNICIAN', id => technicianId = id);
+    sdk.onViewState('SERVICECALL', id => servicecallId = id);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+          viewState: {
+            'TECHNICIAN': 42,
+            'SERVICECALL': 1337
+          }
+        }
+      }
+    });
+
+    expect(technicianId).toEqual(42);
+    expect(servicecallId).toEqual(1337);
+  });
+
+  it('should trigger onViewState between request_context and request_context_done', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const requestContext = sinon.spy();
+    const requestContextDone = sinon.spy();
+
+    const onViewStateTechnician = sinon.spy();
+    const onViewStateServiceCall = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    sdk.onViewState('TECHNICIAN', onViewStateTechnician);
+    sdk.onViewState('SERVICECALL', onViewStateServiceCall);
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE, requestContextDone);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+          viewState: {
+            'TECHNICIAN': 42,
+            'SERVICECALL': 1337
+          }
+        }
+      }
+    });
+
+    expect(requestContext.called).toBe(true);
+    expect(requestContext.called).toBe(true);
+    expect(requestContext.called).toBe(true);
+    expect(requestContextDone.called).toBe(true);
+
+    expect(requestContext.calledBefore(onViewStateTechnician)).toBe(true);
+    expect(requestContext.calledBefore(onViewStateServiceCall)).toBe(true);
+    expect(requestContext.calledBefore(requestContextDone)).toBe(true);
+    expect(onViewStateTechnician.calledBefore(requestContextDone)).toBe(true);
+    expect(onViewStateServiceCall.calledBefore(requestContextDone)).toBe(true);
   });
 
 });

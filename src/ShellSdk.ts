@@ -160,6 +160,7 @@ export class ShellSdk {
       return;
     }
 
+
     const payload = event.data as { type: EventType, value: any, from?: string[], to?: string[] };
 
     // If current instance is not root, we act as middleman node to propagate
@@ -167,6 +168,7 @@ export class ShellSdk {
 
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
       const source: Window = <Window>event.source;
+
       if (source && source.frameElement && this.outletsMap.get(source)) { // If it come from an outlet
         const outletPosition = this.outletsMap.get(source);
         const from = payload.from || [];
@@ -231,10 +233,10 @@ export class ShellSdk {
             }
           }
         }
-        // Propagate REQUIRE_CONTEXT_DONE to have nice UI
-        for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
-          subscriber();
-        }
+      }
+      // Propagate REQUIRE_CONTEXT_DONE to have nice UI
+      for (const subscriber of (this.subscribersMap.get(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE) || [])) {
+        subscriber();
       }
     }
   }
