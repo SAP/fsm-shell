@@ -169,7 +169,7 @@ export class ShellSdk {
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
       const source: Window = <Window>event.source;
 
-      if (source && source.frameElement && this.outletsMap.get(source)) { // If it come from an outlet
+      if (source && this.outletsMap.get(source)) { // If it come from an outlet
         const outletPosition = this.outletsMap.get(source);
         const from = payload.from || [];
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, outletPosition] }, true);
