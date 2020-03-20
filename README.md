@@ -177,7 +177,7 @@ ShellSDK provide a set of features which are specifically designed to allow comm
 
   - #### VIEW STATE : an all instance synced data object
 
-	You might need to share between you applicatin and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistant and will be deleted when user navigate outside of the application.
+	You might need to share between your application and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistant and will be deleted when user navigate outside of the application.
 	
 	``` typescript
 	this.sdk.setViewState('TECHNICIAN', id);
