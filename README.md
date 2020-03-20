@@ -81,7 +81,6 @@
       userAccountFeatureFlagsUserId: string;
       erpType: string;
       erpUserId: string;
-      viewState: any;
     }
     ```
     
