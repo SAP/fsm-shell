@@ -19,7 +19,7 @@ export class ShellSdk {
   private subscribersViewStateMap: Map<string, Function[]>
 
   private debugger: Debugger;
-  private outletsMap: Map<Window, string>;
+  private outletsMap: Map<HTMLIFrameElement, string>;
 
   private constructor(
     private target: Window,
@@ -49,11 +49,11 @@ export class ShellSdk {
 
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
-  public registerOutlet(frame: Window) {
+  public registerOutlet(frame: HTMLIFrameElement) {
     this.outletsMap.set(frame, uuidv4());
   }
 
-  public unregisterOutlet(frame: Window) {
+  public unregisterOutlet(frame: HTMLIFrameElement) {
     this.outletsMap.delete(frame);
   }
 
@@ -160,7 +160,6 @@ export class ShellSdk {
       return;
     }
 
-
     const payload = event.data as { type: EventType, value: any, from?: string[], to?: string[] };
 
     // If current instance is not root, we act as middleman node to propagate
@@ -169,18 +168,23 @@ export class ShellSdk {
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
       const source: Window = <Window>event.source;
 
-      if (source && this.outletsMap.get(source)) { // If it come from an outlet
-        const outletPosition = this.outletsMap.get(source);
-        const from = payload.from || [];
-        this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, outletPosition] }, true);
-        this.target.postMessage({ type: payload.type, value: payload.value, from: [...from, outletPosition] }, this.origin);
-        return;
+      if (source) { // If has a source, we look if it come from one of our HTMLIFrameElement
+        const iFrameElement = Array.from(this.outletsMap.keys()).find(frame => frame.contentWindow === source);
+        if (iFrameElement) {  // If it come from an outlet
+          const uuid = this.outletsMap.get(iFrameElement);
+          const from = payload.from || [];
+          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, uuid] }, true);
+          this.target.postMessage({ type: payload.type, value: payload.value, from: [...from, uuid] }, this.origin);
+          return;
+        }
       }
 
       // Propagate SET_VIEW_STATE to childrens's outlet andset value to current subscribers
       if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
         this.outletsMap.forEach((value, key) => {
-          key.postMessage({ type: payload.type, value: payload.value }, this.origin);
+          if (key.contentWindow) {
+            key.contentWindow.postMessage({ type: payload.type, value: payload.value }, this.origin);
+          }
         });
 
         const subscribers = this.subscribersViewStateMap.get(payload.value.key);
@@ -197,8 +201,8 @@ export class ShellSdk {
       if (payload.to && payload.to.length != 0 && payload.type !== SHELL_EVENTS.Version1.TO_APP) {
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
         this.outletsMap.forEach((value, key) => {
-          if (payload.to && payload.to.indexOf(value) !== -1) {
-            key.postMessage({ type: payload.type, value: payload.value, to: payload.to.filter(id => id != value) }, this.origin);
+          if (payload.to && payload.to.indexOf(value) !== -1 && key.contentWindow) {
+            key.contentWindow.postMessage({ type: payload.type, value: payload.value, to: payload.to.filter(id => id != value) }, this.origin);
           }
         });
         return;
