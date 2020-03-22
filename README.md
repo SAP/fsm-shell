@@ -84,8 +84,8 @@
     }
     ```
     
-  REQUIRE_CONTEXT will first return the response payload, then trigger inidivual ViewState object as describe in the ViewState section, and then return a REQUIRE_CONTEXT_DONE event to eventually release your UI.
-
+  REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
+  
 - #### V1.GET_PERMISSIONS  
   Request permissions for specified object from the shell
 

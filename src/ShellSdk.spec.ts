@@ -140,13 +140,14 @@ describe('Shell Sdk', () => {
   });
 
   it('should confirm context with request_context_done event', () => {
-    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
 
     const requestContext = sinon.spy();
-    const requestContextDone = sinon.spy();
 
     sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
-    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE, requestContextDone);
 
     windowMockCallback({
       data: {
@@ -158,7 +159,7 @@ describe('Shell Sdk', () => {
     });
 
     expect(requestContext.called).toBe(true);
-    expect(requestContextDone.called).toBe(true);
+    expect(postMessageParent.called).toBe(true);
   });
 
   it('should init viewState on request_context event', () => {
@@ -187,11 +188,13 @@ describe('Shell Sdk', () => {
     expect(servicecallId).toEqual(1337);
   });
 
-  it('should trigger onViewState between request_context and request_context_done', () => {
-    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+  it('should trigger onViewState after request_context then send to parent loading_success', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
 
     const requestContext = sinon.spy();
-    const requestContextDone = sinon.spy();
 
     const onViewStateTechnician = sinon.spy();
     const onViewStateServiceCall = sinon.spy();
@@ -200,8 +203,6 @@ describe('Shell Sdk', () => {
 
     sdk.onViewState('TECHNICIAN', onViewStateTechnician);
     sdk.onViewState('SERVICECALL', onViewStateServiceCall);
-
-    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT_DONE, requestContextDone);
 
     windowMockCallback({
       data: {
@@ -219,13 +220,12 @@ describe('Shell Sdk', () => {
     expect(requestContext.called).toBe(true);
     expect(requestContext.called).toBe(true);
     expect(requestContext.called).toBe(true);
-    expect(requestContextDone.called).toBe(true);
 
     expect(requestContext.calledBefore(onViewStateTechnician)).toBe(true);
     expect(requestContext.calledBefore(onViewStateServiceCall)).toBe(true);
-    expect(requestContext.calledBefore(requestContextDone)).toBe(true);
-    expect(onViewStateTechnician.calledBefore(requestContextDone)).toBe(true);
-    expect(onViewStateServiceCall.calledBefore(requestContextDone)).toBe(true);
+    expect(requestContext.calledBefore(postMessageParent)).toBe(true);
+    expect(onViewStateTechnician.calledBefore(postMessageParent)).toBe(true);
+    expect(onViewStateServiceCall.calledBefore(postMessageParent)).toBe(true);
   });
 
 });
