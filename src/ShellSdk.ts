@@ -238,7 +238,7 @@ export class ShellSdk {
           }
         }
       }
-      this.target.postMessage({ type: SHELL_EVENTS.Version1.LOADING_SUCCESS }, this.origin);
+      this.target.postMessage({ type: SHELL_EVENTS.Version1.OUTLET.LOADING_SUCCESS }, this.origin);
     }
   }
 }

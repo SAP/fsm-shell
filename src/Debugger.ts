@@ -8,8 +8,8 @@ interface DebuggableWindow extends Window {
 }
 
 interface Routing {
-  to: string[];
-  from: string[];
+  to?: string[];
+  from?: string[];
 }
 
 const FSM_SHELL_DEBUG_KEY = 'cs.fsm-shell.debug';
