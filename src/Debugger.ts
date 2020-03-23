@@ -7,6 +7,11 @@ interface DebuggableWindow extends Window {
   fsmShellMessageLogger: MessageLogger | undefined;
 }
 
+interface Routing {
+  to: string[];
+  from: string[];
+}
+
 const FSM_SHELL_DEBUG_KEY = 'cs.fsm-shell.debug';
 
 export class Debugger {
@@ -26,7 +31,7 @@ export class Debugger {
     }
   }
 
-  public traceEvent(direction: EventDirection, type: EventType, payload: any, destination: any, hasHandler: boolean) {
+  public traceEvent(direction: EventDirection, type: EventType, payload: any, routing: Routing, hasHandler: boolean) {
     if (this.debugMode && ALL_SHELL_EVENTS_ARRAY.some(it => it === type)) {
       const debugEvent: DebugEvent<any> = {
         timestamp: new Date(),
@@ -34,8 +39,8 @@ export class Debugger {
         direction,
         type,
         handled: direction === 'incoming' ? (hasHandler ? 'yes' : 'no') : 'n/a',
-        to: destination.to,
-        from: destination.from,
+        to: routing.to,
+        from: routing.from,
         payload
       }
       this.logEvent(debugEvent);
