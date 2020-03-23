@@ -172,11 +172,11 @@
 
 ### PLUGIN SPECIFIC API
 
-ShellSDK provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
+ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
 
   - #### VIEW STATE : an all instance synced data object
 
-	You might need to share between your application and plugins a general context to provide coherent UI. ShellSDK let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistent and will be deleted when user navigate outside of the application.
+	You might need to share between your application and plugins a general context to provide coherent UI. ShellSdk let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistent and will be deleted when user navigate outside of the application.
 	
 	``` typescript
 	this.sdk.setViewState('TECHNICIAN', id);
@@ -189,10 +189,8 @@ ShellSDK provide a set of features which are specifically designed to allow comm
 	    this.selectedId = id;
 	}))
 	```
-	
-	A full instance of the ViewState is stored in the shell and provided on the `REQUEST_CONTEXT` event for initialisation.
-	
-	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSDK will first trigger `.on(SHELL_EVENTS.Version1. REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` lsitenners. When all listenners are triggers, you will receive a `REQUEST_CONTEXT _DONE` event which could be used to eventually release the UI. 
+		
+	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
 	
   - #### V1.TO_APP event
 
