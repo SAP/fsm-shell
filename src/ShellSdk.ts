@@ -167,6 +167,11 @@ export class ShellSdk {
 
     const payload = event.data as { type: EventType, value: any, from?: string[], to?: string[] };
 
+    // we ignore LOADING SUCCESS as it is handled by the outlet component itself
+    if (payload.type === SHELL_EVENTS.Version1.OUTLET.LOADING_SUCCESS) {
+      return;
+    }
+
     // If current instance is not root, we act as middleman node to propagate
     if (!this.isRoot) {
 
