@@ -13,12 +13,8 @@ import {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest,
-  StartFlowResponse,
-  FlowEndedRequest,
-  OnContinueResponse,
-  FlowTrigger,
-  ParameterDefinition
+  SetViewStateRequest,
+  SetViewStateResponse
 }
 from './models/index';
 
@@ -30,10 +26,6 @@ export {
   PermissionResponse,
   UiPermissions,
   SettingsResponse,
-  StartFlowRequest,
-  StartFlowResponse,
-  FlowEndedRequest,
-  OnContinueResponse,
-  FlowTrigger,
-  ParameterDefinition
+  SetViewStateRequest,
+  SetViewStateResponse
 };

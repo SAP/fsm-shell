@@ -5,7 +5,7 @@
   SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell *host* is the extendable part of the Web-Application and a FSM shell *client* is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
 
   FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
-  to communicate with the shell host by using set of predefined events described
+  and plugins to communicate with the shell host by using set of predefined events and api described
   below in [API Documentation](#API-Documentation).
 
 ## Requirements
@@ -16,6 +16,7 @@
 
 - communication to host (ask for data from the host, see events section)
 - receive data publish by the host
+- manage communication with plugins 
 
 ## Install dev dependencies and build library:
 
@@ -30,13 +31,9 @@
   - [V1.GET_SETTINGS](#V1GET_SETTINGS)
   - [V1.GET_STORAGE_ITEM](#V1GET_STORAGE_ITEM)
   - [V1.SET_STORAGE_ITEM](#V1SET_STORAGE_ITEM)
-  - [V1.FLOWS_TRIGGERS](#V1FLOWS_TRIGGERS)  
-  - [V1.START_FLOW](#V1START_FLOW)
-  - [V1.FLOW_ENDED](#V1FLOW_ENDED)
-- [FLOW-RUNTIME Version1 events](#FLOW-RUNTIME-Version1-events)
-  - [V1.FLOWS.REQUIRE_CONTEXT](#V1FLOWSREQUIRE_CONTEXT)
-  - [V1.FLOWS.CAN_CONTINUE](#V1FLOWSCAN_CONTINUE)
-  - [V1.FLOWS.ON_CONTINUE](#V1FLOWSON_CONTINUE)
+- [PLUGIN SPECIFIC API](#plugin-specific-api)
+  - [V1.TO_APP](#V1TO_APP)
+  - [VIEW STATE](VIEW_STATE)
 - [Generic events](#generic-events)
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
@@ -86,7 +83,9 @@
       erpUserId: string;
     }
     ```
-
+    
+  REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
+  
 - #### V1.GET_PERMISSIONS  
   Request permissions for specified object from the shell
 
@@ -170,155 +169,48 @@
     type: boolean
     flag indicating if value was saved successfully
 
-- #### V1.FLOWS_TRIGGERS
-  List all available flows triggers
 
-  - Request payload
+### PLUGIN SPECIFIC API
 
-    type: void
+ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
 
-  - Response payload
+  - #### VIEW STATE : an all instance synced data object
 
-    type: Array of FlowTrigger   
-    each object containing flow trigger name, description, trigger id and a list of parameters
-    ```typescript
-    {
-       name: string;
-       description: string;
-       help: string;
-       trigger: string;
-       icon: string;
-       parameters?: [
-         {
-            name: string;
-            type: string;
-            description: string;
-            required: boolean;
-         }
-       ];
-    }
-    ```
+	You might need to share between your application and plugins a general context to provide coherent UI. ShellSdk let you share any `{ key: value }` object through the ViewState entity. You can define a key from any application or any plugin using the `setViewState` method. ViewState is not persistent and will be deleted when user navigate outside of the application.
+	
+	``` typescript
+	this.sdk.setViewState('TECHNICIAN', id);
+	``` 
+	
+	To listen on modification event, use the listenner `onViewState` with the expected key.
+	
+	```typescript
+	this.sdk.onViewState('TECHNICIAN', id => {
+	    this.selectedId = id;
+	}))
+	```
+		
+	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
+	
+  - #### V1.TO_APP event
 
-- #### V1.START_FLOW
-  trigger flow
+	You can send any data from any plugin to the main application using the `TO_APP` event.
+	
+	```
+	this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
+	    message: 'test'
+	});
+	```
+	
+	To listen in application, use the generic `on` method.
+	
+	```typescript
+	this.sdk.on(SHELL_EVENTS.Version1.TO_APP, content => {
+	    console.log(content.message); // print test in console
+	})
+	```
 
-  - Request payload
-
-    type: StartFlowRequest  
-    object containing flow trigger id and initial context  
-    ```typescript
-    {
-      triggerId: string;
-      initialContext?: [
-        {
-          name: string;
-          value: any;
-        }
-      ];
-    }
-    ```
-
-  - Response payload
-
-    type: StartFlowResponse  
-    object containing id of the new flow instance
-    ```typescript
-    {
-      flowInstaneId: string;
-    }
-    ```
-
-- #### V1.FLOW_ENDED
-  indicate that flow was finished
-
-  - Request payload
-
-    type: FlowEndedRequest  
-    object id of the finished flow instance  
-    ```typescript
-    {
-      flowInstanceId: string;
-    }
-    ```
-
-  - Response payload
-
-    type: void  
-
-### FLOW-RUNTIME Version1 events
-
-- #### V1.FLOWS.REQUIRE_CONTEXT  
-  Must be sent on application startup to get initial application context from the shell
-
-  - Request payload
-
-    type: object
-    ```typescript
-    {
-      clientIdentifier: string;
-      clientSecret: string;
-    }
-    ```
-
-  - Response payload
-
-    type: object
-    ```typescript
-    {
-      authToken: string;
-      cloudHost: string;
-      account: string;
-      accountId: string;
-      company: string;
-      companyId: string;
-      selectedLocale: string;
-      user: string;
-      userId: string;
-      initialContext: [
-        {
-          name: string;
-          type: string;
-          value: any;
-        }
-      ];
-      screenConfiguration: Object | null;
-    }
-    ```
-
-- #### V1.FLOWS.CAN_CONTINUE  
-  Used to indicate if current flow step ready to continue to the next step. Shell host will
-  block switching to the next step until this event sent with true value in payload. If data
-  at some point becames invalid again, this event with false value in payload can be sent
-  in order to block switching to next step again.
-
-  - Request payload
-
-    type: boolean
-
-  - Response not needed
-
-- #### V1.FLOWS.ON_CONTINUE
-  Will be sent from the shell host to flow app when user continue to the next flow step. Flow app should save(if needed) it's data, prepare output variables and send it in response to this event.
-
-  - Request payload
-
-    type: void
-
-  - Response payload
-
-    type: object
-    ```typescript
-    {
-      output: [
-        {
-          name: string;
-          value: any;
-        }
-      ]
-    }
-    ```
-
-  ### Generic events
+### Generic events
 
   - #### ERROR  
     Will be emitted in response to any of request events in case if error occurs during handling the event.
@@ -330,7 +222,6 @@
       clientSecret: '<your-app-client-secret>'
     });
     ```
-
 
       type: string  
       string representation of the error object
@@ -420,14 +311,12 @@ to enable postMessage API debugging perform following steps:
 - click on the origin of the app and add under it key `cs.fsm-shell.debug`
 - set id of the component to be debugged as value for that key, it is possible to list
   multiple ids separated by commas. For example to debug messages going thru both shell-host
-  and flow-runtime set value to `shell-host,flow-runtime`
+  set value to `shell-host`
 - reload application
 
 Following components' ids currently supported to debug postMessage API:
 - `shell-host` - shell core to communicate between shell host and client application loaded
   into the main shell iframe
-- `flow-runtime` - flow-runtime package which used to communicate between shell host and
-  flow step application loaded into iframe rendered by flow-runtime package
 
 #### Fetching and filtering list of tracked postMessage events
 
@@ -453,20 +342,20 @@ Filtering options object may include following keys:
 |----------|------|-----------------|-------------|
 | type | string or string[] | any fsm shell event identifier | include only specific fsm-shell event types |
 | direction | string | `incoming`, `outgoing` | include only received or sent events |
-| component | string | `fsm-shell`, `flow-runtime` | include only events going thru specific component |
+| component | string | `fsm-shell` | include only events going thru specific component |
 | handled | boolean | `true` or `false` | include only events handled by component (component may have no handlers set for specific event type and ignore some events) |
 | from | Date | valid Date object | include only events tracked since spcified moment in time |
 | to | Date | valid Date object | include only events tracked before spcified moment in time |
 
 ##### Example
-To get list of all incoming events of types `V1.FLOWS.CAN_CONTINUE` or `V1.FLOWS.ON_CONTINUE` tracked by `flow-runtime` component type in console following command:
+To get list of all incoming events of types `V1.REQUIRE_CONTEXT` or `V1.GET_PERMISSIONS` tracked by `shell-host` component type in console following command:
 ```javascript
 window.fsmShellMessageLogger.filterTable({
   type: [
-    'V1.FLOWS.CAN_CONTINUE',
-    'V1.FLOWS.ON_CONTINUE'
+    'V1.REQUIRE_CONTEXT',
+    'V1.GET_PERMISSIONS'
   ],
-  component: 'flow-runtime',
+  component: 'shell-host',
   direction: 'incoming'
 })
 ```
