@@ -1,9 +1,14 @@
 
 import { EventType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
-import { v4 as uuidv4 } from 'uuid';
-
 import { Debugger } from './Debugger';
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 export class ShellSdk {
 
@@ -172,9 +177,12 @@ export class ShellSdk {
         const iFrameElement = Array.from(this.outletsMap.keys()).find(frame => frame.contentWindow === source);
         if (iFrameElement) {  // If it come from an outlet
           const uuid = this.outletsMap.get(iFrameElement);
-          const from = payload.from || [];
-          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, uuid] }, true);
-          this.target.postMessage({ type: payload.type, value: payload.value, from: [...from, uuid] }, this.origin);
+          let from = payload.from || [];
+          if (uuid) {
+            from = [...from, uuid];
+          }
+          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
+          this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
           return;
         }
       }
