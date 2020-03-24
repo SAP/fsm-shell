@@ -172,9 +172,12 @@ export class ShellSdk {
         const iFrameElement = Array.from(this.outletsMap.keys()).find(frame => frame.contentWindow === source);
         if (iFrameElement) {  // If it come from an outlet
           const uuid = this.outletsMap.get(iFrameElement);
-          const from = payload.from || [];
-          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from: [...from, uuid] }, true);
-          this.target.postMessage({ type: payload.type, value: payload.value, from: [...from, uuid] }, this.origin);
+          let from = payload.from || [];
+          if (uuid) {
+            from = [...from, uuid];
+          }
+          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
+          this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
           return;
         }
       }
