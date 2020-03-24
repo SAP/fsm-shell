@@ -54,7 +54,5 @@
     "sinon": "^7.4.1",
     "typescript": "^3.2.4"
   },
-  "dependencies": {
-    "@types/uuid": "^7.0.2"
-  }
+  "dependencies": {}
 }
