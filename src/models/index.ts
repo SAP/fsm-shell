@@ -12,3 +12,5 @@ export { SettingsResponse } from './settings/settings-response.model';
 export { SetViewStateRequest } from './view-state/set-view-state-request.model';
 export { SetViewStateResponse } from './view-state/set-view-state-response.model';
 
+export { OutletsRequestContextRequest } from './outlets/outlets-request-context-request.model';
+export { OutletsRequestContextResponse } from './outlets/outlets-request-context-response.model';

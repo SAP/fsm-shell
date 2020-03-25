@@ -14,7 +14,9 @@ import {
   UiPermissions,
   SettingsResponse,
   SetViewStateRequest,
-  SetViewStateResponse
+  SetViewStateResponse,
+  OutletsRequestContextRequest,
+  OutletsRequestContextResponse
 }
 from './models/index';
 
@@ -27,5 +29,7 @@ export {
   UiPermissions,
   SettingsResponse,
   SetViewStateRequest,
-  SetViewStateResponse
+  SetViewStateResponse,
+  OutletsRequestContextRequest,
+  OutletsRequestContextResponse
 };
