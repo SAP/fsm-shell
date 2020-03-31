@@ -169,8 +169,40 @@ describe('Outlets', () => {
     expect(postMessage.called).toBe(false);
   });
 
-  it('should not handle message from an outlet but send parent', () => {
+  it('should not handle TO_APP message from an outlet but send parent', () => {
     
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
+
+    let handleMessage = sinon.spy();
+    sdk.on(SHELL_EVENTS.Version1.TO_APP, handleMessage);
+
+    // postMessage catch messages send to outlets
+    const postMessageOutlet = sinon.spy();
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe);
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      data: {
+        type: SHELL_EVENTS.Version1.TO_APP,
+        value: 'RANDOM_VALUE'
+      }
+    });
+
+    expect(postMessageParent.called).toBe(true);
+    expect(handleMessage.called).toBe(false);
+    expect(postMessageOutlet.called).toBe(false);
+  });
+
+  it('should ignore SET_VIEW_STATE message from an outlet for security reason', () => {
+
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init({
       postMessage: postMessageParent
@@ -188,20 +220,21 @@ describe('Outlets', () => {
     } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
-    windowMockCallback({
-      source: iframe,
-      data: {
-        type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
-        value: {
-          key: 'TECHNICIAN',
-          value: 42
+    expect(() => {
+      windowMockCallback({
+        source: iframe.contentWindow,
+        data: {
+          type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
+          value: {
+            key: 'TECHNICIAN',
+            value: 42
+          }
         }
-      }
-    });
-
+      })
+    }).toThrow(new Error('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.'));
     expect(postMessageParent.called).toBe(false);
     expect(handleMessage.called).toBe(false);
-    expect(postMessageOutlet.called).toBe(true);
+    expect(postMessageOutlet.called).toBe(false);
   });
 
   it('should outlet send to parent loading_success on require_context', () => {
@@ -224,7 +257,6 @@ describe('Outlets', () => {
     sdk.registerOutlet(iframe);
 
     windowMockCallback({
-      source: iframe,
       data: {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
