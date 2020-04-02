@@ -192,6 +192,9 @@ export class ShellSdk {
           this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
           this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
           return;
+        } else if (source != this.target) {
+          // ShellSdk now ignore messages from outlets if it has no outlet registered
+          return;
         }
       }
 
