@@ -190,8 +190,7 @@ export class ShellSdk {
           this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
           return;
         } else if (source != this.target) {
-          // This make sure ShellSDk in app do not handle messages from outlets. Those should be handled by ShellSdk
-          // initialized in fsm/outlet.
+          // ShellSdk now ignore messages from outlets if it has no outlet registered
           return;
         }
       }
