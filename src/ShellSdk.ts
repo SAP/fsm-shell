@@ -181,6 +181,9 @@ export class ShellSdk {
       if (source) { // If has a source, we look if it come from one of our HTMLIFrameElement
         const iFrameElement = Array.from(this.outletsMap.keys()).find(frame => frame.contentWindow === source);
         if (iFrameElement) {  // If it come from an outlet
+          if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
+            throw new Error('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.');
+          }
           const uuid = this.outletsMap.get(iFrameElement);
           let from = payload.from || [];
           if (uuid) {
@@ -188,6 +191,9 @@ export class ShellSdk {
           }
           this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
           this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
+          return;
+        } else if (source != this.target) {
+          // ShellSdk now ignore messages from outlets if it has no outlet registered
           return;
         }
       }
