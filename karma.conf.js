@@ -36,7 +36,7 @@ module.exports = function (config) {
     random: false,
     port: 9876,
     colors: true,
-    reporters: ['mocha', 'bamboo', 'karma-typescript'],
+    reporters: ['progress', 'mocha', 'bamboo', 'karma-typescript'],
     bambooReporter: {
       filename: 'mocha.json'
     },
