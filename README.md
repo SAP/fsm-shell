@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/fsm-shell.svg)](https://badge.fury.io/js/fsm-shell)
+
 # Client library for applications rendered in FSM shell host
 
 ## Description
