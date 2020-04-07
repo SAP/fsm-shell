@@ -29,6 +29,10 @@ module.exports = function (config) {
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     }, 
+    random: false,
+    port: 9876,
+    colors: true,
+    reporters: ['progress', 'mocha', 'bamboo', 'karma-typescript'],
     coverageReporter: {
       reporters: [
         {
@@ -38,10 +42,6 @@ module.exports = function (config) {
         }
       ]
     },
-    random: false,
-    port: 9876,
-    colors: true,
-    reporters: ['progress', 'mocha', 'bamboo', 'karma-typescript'],
     bambooReporter: {
       filename: 'mocha.json'
     },
