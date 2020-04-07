@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -46,6 +46,7 @@
     "karma-jasmine-html-reporter": "^1.5.3",
     "karma-mocha-reporter": "^2.2.5",
     "karma-typescript": "^5.0.2",
+    "minimist": "^0.2.1",
     "mocha": "^7.1.1",
     "nyc": "^15.0.1",
     "rollup": "^2.3.3",
