@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/SAP/fsm-shell.svg?branch=master)](https://travis-ci.org/SAP/fsm-shell)[![npm version](https://badge.fury.io/js/fsm-shell.svg)](https://badge.fury.io/js/fsm-shell)
+[![Build Status](https://travis-ci.org/sebastienbarbier/fsm-shell.svg?branch=master)](https://travis-ci.org/sebastienbarbier/fsm-shell)[![Coverage Status](https://coveralls.io/repos/github/sebastienbarbier/fsm-shell/badge.svg?branch=master)](https://coveralls.io/github/sebastienbarbier/fsm-shell?branch=master)[![npm version](https://badge.fury.io/js/fsm-shell.svg)](https://badge.fury.io/js/fsm-shell)
 
 # Client library for applications rendered in FSM shell host
 
