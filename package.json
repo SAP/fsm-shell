@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -53,7 +53,7 @@
     "rollup-plugin-filesize": "^7.0.0",
     "rollup-plugin-typescript2": "^0.27.0",
     "sinon": "^9.0.1",
-    "typescript": "^3.4.5"
+    "typescript": "~3.4.5"
   },
   "dependencies": {}
 }
