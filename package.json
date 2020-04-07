@@ -51,5 +51,6 @@
     "rollup-plugin-typescript2": "^0.27.0",
     "sinon": "^9.0.1",
     "typescript": "^3.4.5"
-  }
+  },
+  "dependencies": {}
 }
