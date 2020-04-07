@@ -44,7 +44,6 @@
     "karma-jasmine-html-reporter": "^1.5.3",
     "karma-mocha-reporter": "^2.2.5",
     "karma-typescript": "^5.0.2",
-    "mkdirp": "^1.0.4",
     "mocha": "^7.1.1",
     "nyc": "^15.0.1",
     "rollup": "^2.3.3",
