@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/SAP/fsm-shell.svg?branch=master)](https://travis-ci.org/SAP/fsm-shell)
+[![Build Status](https://travis-ci.com/SAP/fsm-shell.svg?branch=master)](https://travis-ci.com/SAP/fsm-shell)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/fsm-shell/badge.svg?branch=master)](https://coveralls.io/github/SAP/fsm-shell?branch=master)
 [![npm version](https://badge.fury.io/js/fsm-shell.svg)](https://badge.fury.io/js/fsm-shell)
 
