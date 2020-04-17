@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - New `OutletsDeleteAssignmentRequest` and `OutletsDeleteAssignmentResponse` models for messages
+- Propagate `SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT` to all outlets if only update configurationmode state
 
 ## [1.2.0] - 2020-03-31
 
