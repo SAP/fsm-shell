@@ -5,6 +5,10 @@ const tsconfig = {
       "es2015",
       "dom"
     ]
+  },
+  "reports": {
+    "html": "coverage",
+    "lcovonly": "coverage"
   }
 };
 
@@ -23,38 +27,16 @@ module.exports = function (config) {
       require('karma-typescript'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
-      require('karma-coverage-istanbul-reporter'),
       require('karma-bamboo-reporter'),
-      require('karma-mocha-reporter'),
-      require('karma-coverage')
+      require('karma-mocha-reporter')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, 'coverage'),
-      reports: ['text-summary'],
-      fixWebpackSourcePaths: true,
-      thresholds: {
-        statements: 70,
-        lines: 70,
-        branches: 65,
-        functions: 70
-      }
-    },
     random: false,
     port: 9876,
     colors: true,
-    reporters: ['coverage', 'mocha', 'bamboo', 'karma-typescript'],
-    coverageReporter: {
-      reporters: [
-        {
-          type: 'json',
-          dir: 'coverage',
-          subdir: 'json'
-        }
-      ]
-    },
+    reporters: ['progress', 'mocha', 'bamboo', 'karma-typescript'],
     bambooReporter: {
       filename: 'mocha.json'
     },
@@ -64,6 +46,10 @@ module.exports = function (config) {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox']
       }
+    },
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
     },
     singleRun: false,
     autoWatch: true,

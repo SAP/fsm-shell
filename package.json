@@ -15,8 +15,9 @@
     "clean": "rm -rf release",
     "version": "node ./scripts/version.js > ./version.txt",
     "test": "npm run karma",
-    "test:ci": "npm run karma -- --watch=false --code-coverage --karma-config ./karma.conf.js",
+    "test:ci": "npm run karma -- --watch=false --code-coverage --karma-config ./karma.conf.js && npm run test:coveralls",
     "test:ci:headless": "SET_HEADLESS_CHROME=1 npm run test:ci",
+    "test:coveralls": "npx copyfiles --flat ./coverage/**/*.info ./coverage/ && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js || echo -e \"Coveralls failed.\"",
     "karma": "node ./node_modules/karma/bin/karma start --single-run"
   },
   "repository": {
@@ -33,6 +34,8 @@
     "@types/jasmine": "^3.5.10",
     "@types/jasminewd2": "^2.0.8",
     "@types/sinon": "^9.0.0",
+    "copyfiles": "^2.2.0",
+    "coveralls": "^3.0.11",
     "git-rev": "^0.2.1",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "^5.0.1",
@@ -40,8 +43,6 @@
     "karma-bamboo-reporter": "^0.1.2",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
-    "karma-coverage": "^2.0.1",
-    "karma-coverage-istanbul-reporter": "^2.1.0",
     "karma-jasmine": "^3.1.1",
     "karma-jasmine-html-reporter": "^1.5.3",
     "karma-mocha-reporter": "^2.2.5",
