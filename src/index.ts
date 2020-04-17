@@ -16,7 +16,9 @@ import {
   SetViewStateRequest,
   SetViewStateResponse,
   OutletsRequestContextRequest,
-  OutletsRequestContextResponse
+  OutletsRequestContextResponse,
+  OutletsDeleteAssignmentRequest,
+  OutletsDeleteAssignmentResponse
 }
 from './models/index';
 
@@ -31,5 +33,7 @@ export {
   SetViewStateRequest,
   SetViewStateResponse,
   OutletsRequestContextRequest,
-  OutletsRequestContextResponse
+  OutletsRequestContextResponse,
+  OutletsDeleteAssignmentRequest,
+  OutletsDeleteAssignmentResponse
 };

@@ -14,3 +14,8 @@ export { SetViewStateResponse } from './view-state/set-view-state-response.model
 
 export { OutletsRequestContextRequest } from './outlets/outlets-request-context-request.model';
 export { OutletsRequestContextResponse } from './outlets/outlets-request-context-response.model';
+
+export { OutletsDeleteAssignmentRequest } from './outlets-delete-assignment/outlets-delete-assignment-request.model';
+export { OutletsDeleteAssignmentResponse } from './outlets-delete-assignment/outlets-delete-assignment-response.model';
+
+
