@@ -52,6 +52,10 @@ export class ShellSdk {
     return ShellSdk._instance;
   }
 
+  public static isInsideShell(): boolean {
+    return window.self !== window.top;
+  }
+
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
   public registerOutlet(frame: HTMLIFrameElement) {
