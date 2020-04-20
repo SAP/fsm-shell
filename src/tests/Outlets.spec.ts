@@ -270,4 +270,59 @@ describe('Outlets', () => {
     expect(postMessageOutlet.called).toBe(false);
   });
 
+
+
+  it('should not propagate SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT isConfigurationMode changes', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    let value: any;
+
+    // postMessage catch messages send to outlets
+    const postMessage = sinon.spy();
+    sdk.registerOutlet({
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+        value: {
+          isConfigurationMode: true,
+          target: ''
+        }
+      }
+    });
+
+    expect(postMessage.called).toBe(false);
+    postMessage.resetHistory();
+    
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+        value: {
+          isConfigurationMode: true
+        }
+      }
+    });
+
+    expect(postMessage.called).toBe(true);
+    postMessage.resetHistory();
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+        value: {
+          isConfigurationMode: true,
+          plugin: {}
+        }
+      }
+    });
+
+    expect(postMessage.called).toBe(false);
+
+
+  });
+
 });

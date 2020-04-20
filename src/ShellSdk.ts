@@ -216,6 +216,18 @@ export class ShellSdk {
         return;
       }
 
+      // If ShellSdk receive OUTLET.REQUEST_CONTEXT with only `isConfigurationMode` we propagate to all outlets
+      if (payload.type == SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+          payload.value.hasOwnProperty('isConfigurationMode') &&
+          !payload.value.hasOwnProperty('target') &&
+          !payload.value.hasOwnProperty('plugin')) {
+        this.outletsMap.forEach((value, key) => {
+          if (key.contentWindow) {
+            key.contentWindow.postMessage({ type: payload.type, value: payload.value }, this.origin);
+          }
+        });
+      }
+
       // Message has a `to` value, send to an outlet as one to one communication
       if (payload.to && payload.to.length != 0 && payload.type !== SHELL_EVENTS.Version1.TO_APP) {
         this.debugger.traceEvent('outgoing', payload.type, payload.value, { to: payload.to }, true);
