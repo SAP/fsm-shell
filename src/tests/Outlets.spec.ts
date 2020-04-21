@@ -270,8 +270,6 @@ describe('Outlets', () => {
     expect(postMessageOutlet.called).toBe(false);
   });
 
-
-
   it('should not propagate SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT isConfigurationMode changes', () => {
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
 
@@ -322,7 +320,56 @@ describe('Outlets', () => {
 
     expect(postMessage.called).toBe(false);
 
+  });
 
+
+  it('should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if reached maximum depth', () => {
+
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock, null, 3);
+
+    let handleMessage = sinon.spy();
+    sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
+
+    const postMessageOutlet = sinon.spy();
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe);
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      data: {
+        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+        value: {
+          target: 'test'
+        },
+        from: ['a', 'b']
+      }
+    });
+
+    expect(postMessageParent.called).toBe(true);
+    expect(postMessageOutlet.called).toBe(false);
+    postMessageParent.resetHistory();
+    postMessageOutlet.resetHistory();
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      data: {
+        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+        value: {
+          target: 'test'
+        },
+        from: ['a', 'b', 'c']
+      }
+    });
+
+    expect(postMessageParent.called).toBe(false);
+    expect(postMessageOutlet.called).toBe(true);
   });
 
 });

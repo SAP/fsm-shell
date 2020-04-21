@@ -2,8 +2,8 @@
 import { ShellSdk } from './ShellSdk';
 export { ShellSdk };
 
-import { SHELL_EVENTS, EventType } from './ShellEvents';
-export { SHELL_EVENTS, EventType };
+import { SHELL_EVENTS, EventType, ErrorType } from './ShellEvents';
+export { SHELL_EVENTS, EventType, ErrorType };
 
 import {
   GetItemResponse,

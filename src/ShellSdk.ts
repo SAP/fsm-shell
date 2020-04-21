@@ -1,5 +1,5 @@
 
-import { EventType, SHELL_EVENTS } from './ShellEvents';
+import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
 
@@ -9,6 +9,8 @@ function uuidv4() {
     return v.toString(16);
   });
 }
+
+const DEFAULT_MAXIMUM_DEPTH = 1;
 
 export class ShellSdk {
 
@@ -30,7 +32,8 @@ export class ShellSdk {
     private target: Window,
     private origin: string,
     private winRef: Window,
-    debugId: string
+    debugId: string,
+    private outletMaximumDepth: number
   ) {
     this.subscribersMap = new Map();
     this.subscribersViewStateMap = new Map();
@@ -40,8 +43,8 @@ export class ShellSdk {
     this.isRoot = target == null;
   }
 
-  public static init(target: Window, origin: string, winRef: Window = window, debugId: string = ''): ShellSdk {
-    ShellSdk._instance = new ShellSdk(target, origin, winRef, debugId);
+  public static init(target: Window, origin: string, winRef: Window = window, debugId: string = '', outletMaximumDepth: number = DEFAULT_MAXIMUM_DEPTH): ShellSdk {
+    ShellSdk._instance = new ShellSdk(target, origin, winRef, debugId, outletMaximumDepth);
     return ShellSdk._instance;
   }
 
@@ -188,13 +191,27 @@ export class ShellSdk {
           if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
             throw new Error('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.');
           }
-          const uuid = this.outletsMap.get(iFrameElement);
           let from = payload.from || [];
-          if (uuid) {
-            from = [...from, uuid];
+          // If we receive from outlet request_context to fetch plugin from target, we return LOADING_FAIL
+          // if too many depth exchanges
+          if (payload.type == SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+              from.length >= this.outletMaximumDepth) {
+            source.postMessage({
+              type: SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL,
+              value: {
+                target: payload.value.target,
+                error: ErrorType.OUTLET_MAXIMUM_DEPTH
+              },
+              to: from
+            }, this.origin);
+          } else {
+            const uuid = this.outletsMap.get(iFrameElement);
+            if (uuid) { // this is the uuid outlet used for routing of source object
+              from = [...from, uuid];
+              this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
+              this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
+            }
           }
-          this.debugger.traceEvent('outgoing', payload.type, payload.value, { from }, true);
-          this.target.postMessage({ type: payload.type, value: payload.value, from }, this.origin);
           return;
         } else if (source != this.target) {
           // ShellSdk now ignore messages from outlets if it has no outlet registered
