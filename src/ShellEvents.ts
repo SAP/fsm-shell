@@ -41,7 +41,8 @@ export const SHELL_EVENTS = {
 
 export enum ErrorType {
   OUTLET_TIMEOUT = 'OUTLET_TIMEOUT',
-  OUTLET_MAXIMUM_DEPTH = 'OUTLET_MAXIMUM_DEPTH'
+  OUTLET_MAXIMUM_DEPTH = 'OUTLET_MAXIMUM_DEPTH',
+  OUTLET_HTTPS_ERROR = 'OUTLET_HTTPS_ERROR'
 }
 
 const getKeyValues = (source: any, initial: string[] = []): string[] => {
