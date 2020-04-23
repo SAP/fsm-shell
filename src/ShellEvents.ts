@@ -14,6 +14,7 @@ export type EventType = 'V1.REQUIRE_CONTEXT' |
   'V1.OUTLET.REMOVE_PLUGIN' |
   'V1.OUTLET.REQUEST_CONTEXT' |
   'V1.OUTLET.LOADING_SUCCESS' |
+  'V1.OUTLET.LOADING_FAIL' |
   string;
 
 export const SHELL_EVENTS = {
@@ -31,11 +32,17 @@ export const SHELL_EVENTS = {
       ADD_PLUGIN: 'V1.OUTLET.ADD_PLUGIN',
       REMOVE_PLUGIN: 'V1.OUTLET.REMOVE_PLUGIN',
       REQUEST_CONTEXT: 'V1.OUTLET.REQUEST_CONTEXT',
-      LOADING_SUCCESS: 'V1.OUTLET.LOADING_SUCCESS'
+      LOADING_SUCCESS: 'V1.OUTLET.LOADING_SUCCESS',
+      LOADING_FAIL: 'V1.OUTLET.LOADING_FAIL'
     }
   },
   ERROR: 'ERROR'
 };
+
+export enum ErrorType {
+  OUTLET_TIMEOUT = 'OUTLET_TIMEOUT',
+  OUTLET_MAXIMUM_DEPTH = 'OUTLET_MAXIMUM_DEPTH'
+}
 
 const getKeyValues = (source: any, initial: string[] = []): string[] => {
   let result = [ ...initial ];
