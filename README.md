@@ -218,17 +218,11 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
   - #### ERROR  
     Will be emitted in response to any of request events in case if error occurs during handling the event.
-
-    - Payload  Event to the shell host can be sent by using *emit* method from *ShellSdk*
+    
     ```typescript
-    this.shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
-      clientIdentifier: '<your-app-client-identifier>',
-      clientSecret: '<your-app-client-secret>'
-    });
+    shellSdk.on(SHELL_EVENTS.ERROR, error => { });
     ```
-
-      type: string  
-      string representation of the error object
+    
 
   ### Library usage sample
 
@@ -251,9 +245,18 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
     get the semantic version number of the shell library or the build timestamp.        
     ```typescript  
-    console.log(ShellSdk.VERSION);  
-    console.log(ShellSdk.BUILD_TS);  
-    ```  
+    console.log(ShellSdk.VERSION);  // 1.2.8
+    console.log(ShellSdk.BUILD_TS); // 2020-04-23T12:10:43.070Z 
+    ```
+    
+  - #### Determine if an app runs inside Shell or not  
+
+    using the static function isInsideShell you can check at runtime
+    ```typescript
+    console.log(ShellSdk.isInsideShell());  // true/false
+    ```
+    
+    since: `1.2.6`
 
   - #### Sending event to the shell host application
 
