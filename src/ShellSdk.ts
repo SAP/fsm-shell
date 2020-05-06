@@ -28,6 +28,8 @@ export class ShellSdk {
   private debugger: Debugger;
   private outletsMap: Map<HTMLIFrameElement, string>;
 
+  private allowedOrigins: string[] = [];
+
   private constructor(
     private target: Window,
     private origin: string,
@@ -57,6 +59,10 @@ export class ShellSdk {
 
   public static isInsideShell(): boolean {
     return window.self !== window.top;
+  }
+
+  public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
+      this.allowedOrigins = allowedOrigins === '*' ? [] : allowedOrigins;
   }
 
   // Called by outlet component to assign an generated uuid to an iframe. This is key
@@ -169,6 +175,11 @@ export class ShellSdk {
   private onMessage = (event: MessageEvent) => {
 
     if (!event.data || typeof event.data.type !== 'string') {
+      return;
+    }
+
+    if (this.allowedOrigins && Array.isArray(this.allowedOrigins) && this.allowedOrigins.length != 0 && this.allowedOrigins.indexOf(event.origin) === -1) {
+      console.error(`${event.origin} is not in the list of known origins`);
       return;
     }
 

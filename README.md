@@ -48,8 +48,9 @@
   - [Unsubscribing from event](#unsubscribing-from-event)
   - [Reactive approach to subscribe for shell host events](#reactive-approach-to-subscribe-for-shell-host-events)
 - [Debugging postMessage API events](#debugging-postmessage-api-events)
-
-
+- [Security](#security)
+- [Support](#support)
+- [License](#license)
 
 ### SHELL-SDK Version1 events
 
@@ -366,6 +367,24 @@ window.fsmShellMessageLogger.filterTable({
   direction: 'incoming'
 })
 ```
+
+## Security
+
+### Allowed origins only
+
+You can use the method `.setAllowedOrigins` to restrict message handling to a list of allowed origins. 
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setAllowedOrigins([
+  'example.com',
+  'example2.com'
+]);
+```
+
+To help debugging, an error will be displayed if an event come from an other origin.
+
+You disable this settings, call `.setAllowedOrigins` with an empy parameter. 
 
 ## Support
 

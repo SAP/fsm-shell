@@ -228,4 +228,65 @@ describe('Shell Sdk', () => {
     expect(onViewStateServiceCall.calledBefore(postMessageParent)).toBe(true);
   });
 
+  it('should only accept events from allowedOrigins', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
+
+    sdk.setAllowedOrigins([
+      'https://s1.exemple.com',
+      'https://s2.exemple.com'
+    ]);
+
+    const data = {
+      type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+      value: {
+        message: 'test data'
+      }
+    };
+
+    const requestContext = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    windowMockCallback({ origin: 'localhost:8000', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: 'https://s1.exemple.com', data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: 's1.exemple.com', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: 'https://s3.exemple.com', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    // Test reseting a list
+    sdk.setAllowedOrigins('*');
+    windowMockCallback({ origin: 'localhost:8000', data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.setAllowedOrigins(['https://s1.exemple.com']);
+    windowMockCallback({ origin: 'https://s3.exemple.com', data });
+    expect(requestContext.called).toBe(false);
+    sdk.setAllowedOrigins();
+    windowMockCallback({ origin: 'https://s3.exemple.com', data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.setAllowedOrigins(['https://s1.exemple.com']);
+    windowMockCallback({ origin: 'https://s3.exemple.com', data });
+    expect(requestContext.called).toBe(false);
+    sdk.setAllowedOrigins([]);
+    windowMockCallback({ origin: 'https://s3.exemple.com', data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+  });
+
 });
