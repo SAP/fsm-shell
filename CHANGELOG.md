@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Special rules ro expose `key` value on `GET_STORAGE_ITEM` event, with legacy support.
+- Special rule to expose `key` value on `GET_STORAGE_ITEM` event, with legacy support.
 
 ## [1.3.0] - 2020-05-06
 
