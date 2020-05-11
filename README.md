@@ -155,6 +155,16 @@
     }
     ```
 
+  - Listenner
+
+  To listen `GET_STORAGE_ITEM`, ShellSdk provide a different synthax for legacy reason. You can access `value` and `key`
+  as following:
+  ```typescript
+  sdk.on(SHELL_EVENTS.Version1.GET_STORAGE_ITEM, (value, key) => {
+    console.log(`${key} is now equal to ${value}`);
+  });
+  ```
+
 - #### V1.SET_STORAGE_ITEM
   Save value in cloud staorage under specified key
 

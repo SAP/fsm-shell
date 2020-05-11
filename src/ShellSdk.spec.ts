@@ -289,4 +289,29 @@ describe('Shell Sdk', () => {
     requestContext.resetHistory();
   });
 
+  it('should have special synthax for GET_STORAGE_ITEM', (done) => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
+
+    const requestContext = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.GET_STORAGE_ITEM, (value, key) => {
+      expect(value).toBe('fr');
+      expect(key).toBe('Cockpit_SelectedLocale');
+      done();
+    });
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_STORAGE_ITEM,
+        value: {
+          key: 'Cockpit_SelectedLocale',
+          value: 'fr'
+        }
+      }
+    });
+  });
+
 });
