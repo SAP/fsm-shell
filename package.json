@@ -37,6 +37,7 @@
     "copyfiles": "^2.2.0",
     "coveralls": "^3.0.11",
     "git-rev": "^0.2.1",
+    "husky": "^4.2.5",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "^5.0.1",
     "karma": "^4.2.0",
@@ -47,14 +48,29 @@
     "karma-jasmine-html-reporter": "^1.5.3",
     "karma-mocha-reporter": "^2.2.5",
     "karma-typescript": "^5.0.2",
+    "lint-staged": "^10.2.2",
     "minimist": "^0.2.1",
     "mocha": "^7.1.1",
     "nyc": "^15.0.1",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "rollup": "^2.3.3",
     "rollup-plugin-filesize": "^7.0.0",
     "rollup-plugin-typescript2": "^0.27.0",
     "sinon": "^9.0.1",
-    "typescript": "~3.4.5"
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.4.5"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "tslint --config tslint.json"
+    ]
+  }
 }
