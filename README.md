@@ -6,21 +6,21 @@
 
 ## Description
 
-  SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell *host* is the extendable part of the Web-Application and a FSM shell *client* is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
+SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell _host_ is the extendable part of the Web-Application and a FSM shell _client_ is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
 
-  FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
-  and plugins to communicate with the shell host by using set of predefined events and api described
-  below in [API Documentation](#API-Documentation).
+FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
+and plugins to communicate with the shell host by using set of predefined events and api described
+below in [API Documentation](#API-Documentation).
 
 ## Requirements
 
-  Minimal supported JavaScript version: ES5
+Minimal supported JavaScript version: ES5
 
 ## Responsibilities
 
 - communication to host (ask for data from the host, see events section)
 - receive data publish by the host
-- manage communication with plugins 
+- manage communication with plugins
 
 ## Install dev dependencies and build library:
 
@@ -42,7 +42,7 @@
   - [ERROR](#error)
 - [Library usage sample](#library-usage-sample)
   - [Library initialization](#library-initialization)
-  - [Get library version](#get-library-version-or-build-timestamp)    
+  - [Get library version](#get-library-version-or-build-timestamp)
   - [Sending event to the shell host](#sending-event-to-the-shell-host-application)
   - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
   - [Unsubscribing from event](#unsubscribing-from-event)
@@ -54,12 +54,14 @@
 
 ### SHELL-SDK Version1 events
 
-- #### V1.REQUIRE_CONTEXT  
+- #### V1.REQUIRE_CONTEXT
+
   Must be sent on application startup to get initial application context from the shell
 
   - Request payload
 
     type: object
+
     ```typescript
     {
       clientIdentifier: string;
@@ -71,9 +73,9 @@
   - Response payload
 
     type: object
+
     ```typescript
     {
-      authToken: string;
       cloudHost: string;
       account: string;
       accountId: string;
@@ -88,15 +90,17 @@
       erpUserId: string;
     }
     ```
-    
+
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
-  
-- #### V1.GET_PERMISSIONS  
+
+- #### V1.GET_PERMISSIONS
+
   Request permissions for specified object from the shell
 
   - Request payload
 
-    type: PermissionRequest  
+    type: PermissionRequest
+
     ```typescript
     {
       objectName: string;
@@ -106,7 +110,8 @@
 
   - Response payload
 
-    type: Permission  
+    type: Permission
+
     ```typescript
     {
       CREATE: boolean;
@@ -117,7 +122,8 @@
     }
     ```
 
-- #### V1.GET_SETTINGS  
+- #### V1.GET_SETTINGS
+
   Request settings value for specific key from the shell
 
   - Request payload
@@ -129,6 +135,7 @@
 
     type: SettingsResponse\<T\>  
     settings value which was read from requested key
+
     ```typescript
     {
       key: string;
@@ -137,6 +144,7 @@
     ```
 
 - #### V1.GET_STORAGE_ITEM
+
   Request value stored under specified key in cloud storage
 
   - Request payload
@@ -147,7 +155,8 @@
   - Response payload
 
     type: GetItemResponse\<T\>  
-    object containing key name and value which was read from requested key  
+    object containing key name and value which was read from requested key
+
     ```typescript
     {
       key: string;
@@ -156,12 +165,14 @@
     ```
 
 - #### V1.SET_STORAGE_ITEM
+
   Save value in cloud staorage under specified key
 
   - Request payload
 
     type: SetItemRequest\<T\>  
-    object containing key name and value to store under that key  
+    object containing key name and value to store under that key
+
     ```typescript
     {
       key: string;
@@ -174,136 +185,146 @@
     type: boolean
     flag indicating if value was saved successfully
 
-
 ### PLUGIN SPECIFIC API
 
 ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
 
-  - #### VIEW STATE : an all instance synced data object
+- #### VIEW STATE : an all instance synced data object
 
-	You might need to share between your application and plugins a general context to provide consistent UI. ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in a plugin for security reason, and will throw generic error object.
-	
-	``` typescript
-	this.sdk.setViewState('TECHNICIAN', id);
-	``` 
-	
-	To listen on modification event, use the listenner `onViewState` with the expected key.
-	
-	```typescript
-	this.sdk.onViewState('TECHNICIAN', id => {
-	    this.selectedId = id;
-	}))
-	```
-		
-	To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
-	
-  - #### V1.TO_APP event
+  You might need to share between your application and plugins a general context to provide consistent UI. ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in a plugin for security reason, and will throw generic error object.
 
-	You can send any data from any plugin to the main application using the `TO_APP` event.
-	
-	```
-	this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
-	    message: 'test'
-	});
-	```
-	
-	To listen in application, use the generic `on` method.
-	
-	```typescript
-	this.sdk.on(SHELL_EVENTS.Version1.TO_APP, content => {
-	    console.log(content.message); // print test in console
-	})
-	```
+  ```typescript
+  this.sdk.setViewState('TECHNICIAN', id);
+  ```
+
+  To listen on modification event, use the listenner `onViewState` with the expected key.
+
+  ```typescript
+  this.sdk.onViewState('TECHNICIAN', id => {
+      this.selectedId = id;
+  }))
+  ```
+
+  To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
+
+- #### V1.TO_APP event
+
+  You can send any data from any plugin to the main application using the `TO_APP` event.
+
+  ```
+  this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
+      message: 'test'
+  });
+  ```
+
+  To listen in application, use the generic `on` method.
+
+  ```typescript
+  this.sdk.on(SHELL_EVENTS.Version1.TO_APP, (content) => {
+    console.log(content.message); // print test in console
+  });
+  ```
 
 ### Generic events
 
-  - #### ERROR  
-    Will be emitted in response to any of request events in case if error occurs during handling the event.
-    
-    ```typescript
-    shellSdk.on(SHELL_EVENTS.ERROR, error => { });
-    ```
-    
+- #### ERROR
 
-  ### Library usage sample
+  Will be emitted in response to any of request events in case if error occurs during handling the event.
 
-  - #### Library initialization  
+  ```typescript
+  shellSdk.on(SHELL_EVENTS.ERROR, (error) => {});
+  ```
 
-    import library and available events from *fsm-shell* package
-    ```typescript
-    import { ShellSdk, SHELL_EVENTS } from 'fsm-shell';
-    ```
+### Library usage sample
 
-    initialize the library
-    ```typescript
-    const shellSdk = ShellSdk.init(parent, origin);
-    ```
-    where
-      - *parent* - reference to the parent window (window.parent) containing shell host application
-      - *origin* - origin for the shell host which loading your microfrontend
+- #### Library initialization
 
-  - #### Get Library version or build timestamp  
+  import library and available events from _fsm-shell_ package
 
-    get the semantic version number of the shell library or the build timestamp.        
-    ```typescript  
-    console.log(ShellSdk.VERSION);  // 1.2.8
-    console.log(ShellSdk.BUILD_TS); // 2020-04-23T12:10:43.070Z 
-    ```
-    
-  - #### Determine if an app runs inside Shell or not  
+  ```typescript
+  import { ShellSdk, SHELL_EVENTS } from 'fsm-shell';
+  ```
 
-    using the static function isInsideShell you can check at runtime
-    ```typescript
-    console.log(ShellSdk.isInsideShell());  // true/false
-    ```
-    
-    since: `1.2.6`
+  initialize the library
 
-  - #### Sending event to the shell host application
+  ```typescript
+  const shellSdk = ShellSdk.init(parent, origin);
+  ```
 
-    event to the shell host should be sent by using *emit* method from *ShellSdk*
-    ```typescript
-    shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
-      clientIdentifier: '<your-app-client-identifier>',
-      cleintSecret: '<your-app-client-secret>'
-    });
-    ```
+  where
 
-  - #### Subscribing to event coming from shell host application
+  - _parent_ - reference to the parent window (window.parent) containing shell host application
+  - _origin_ - origin for the shell host which loading your microfrontend
 
-    to subscribe on shell host event *on* method from *ShellSdk* should be used.  
-    handler must be a function which receive 2 parameters:
-      - context - payload which was sent with the event
-      - origin - origin of the sender which should be validated inside the handler
-    ```typescript
-    const handler = (context, origin) => {
-      // validate sender origin and handle received context
-    };
-    shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
-    ```
+- #### Get Library version or build timestamp
 
-  - #### Unsubscribing from event
+  get the semantic version number of the shell library or the build timestamp.
 
-    to unsibscribe use *off* method from *ShellSdk*
-    ```typescript
-    shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
-    ```
+  ```typescript
+  console.log(ShellSdk.VERSION); // 1.2.8
+  console.log(ShellSdk.BUILD_TS); // 2020-04-23T12:10:43.070Z
+  ```
 
-  - #### Reactive approach to subscribe for shell host events
+- #### Determine if an app runs inside Shell or not
 
-    rxjs *fromEventPattern* method can be used to create reactive stream from events coming from the ShellSdk.
-    ```typescript
-    import { fromEventPattern } from 'rxjs';
-    ...
-    const ctxStream$ = fromEventPattern<string>(
-      handler => this.shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, payload => handler(payload)),
-      handler => this.shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler)
-    );
+  using the static function isInsideShell you can check at runtime
 
-    ctxStream$.subscribe(context => {
-      // handle received context
-    });
-    ```
+  ```typescript
+  console.log(ShellSdk.isInsideShell()); // true/false
+  ```
+
+  since: `1.2.6`
+
+- #### Sending event to the shell host application
+
+  event to the shell host should be sent by using _emit_ method from _ShellSdk_
+
+  ```typescript
+  shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+    clientIdentifier: '<your-app-client-identifier>',
+    cleintSecret: '<your-app-client-secret>',
+  });
+  ```
+
+- #### Subscribing to event coming from shell host application
+
+  to subscribe on shell host event _on_ method from _ShellSdk_ should be used.  
+  handler must be a function which receive 2 parameters:
+
+  - context - payload which was sent with the event
+  - origin - origin of the sender which should be validated inside the handler
+
+  ```typescript
+  const handler = (context, origin) => {
+    // validate sender origin and handle received context
+  };
+  shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+  ```
+
+- #### Unsubscribing from event
+
+  to unsibscribe use _off_ method from _ShellSdk_
+
+  ```typescript
+  shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+  ```
+
+- #### Reactive approach to subscribe for shell host events
+
+  rxjs _fromEventPattern_ method can be used to create reactive stream from events coming from the ShellSdk.
+
+  ```typescript
+  import { fromEventPattern } from 'rxjs';
+  ...
+  const ctxStream$ = fromEventPattern<string>(
+    handler => this.shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, payload => handler(payload)),
+    handler => this.shellSdk.off(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler)
+  );
+
+  ctxStream$.subscribe(context => {
+    // handle received context
+  });
+  ```
 
 ### Debugging postMessage API events
 
@@ -313,6 +334,7 @@ shell host side or on a client application side.
 #### Enable debugging
 
 to enable postMessage API debugging perform following steps:
+
 - open in the browser shell application which should be debugged
 - open browser developer tools
 - in developer tools go to `Application` tab and open `LocalStorage` item
@@ -323,13 +345,14 @@ to enable postMessage API debugging perform following steps:
 - reload application
 
 Following components' ids currently supported to debug postMessage API:
+
 - `shell-host` - shell core to communicate between shell host and client application loaded
   into the main shell iframe
 
 #### Fetching and filtering list of tracked postMessage events
 
 When debugging enabled for some component(s) all postMessage events going thru it will
-be logged into the browser console. 
+be logged into the browser console.
 
 List of previously tracked events can be accessed using MessageLogger object which is
 available under `fsmShellMessageLogger` property of the window object. For example,
@@ -340,6 +363,7 @@ also all events can be printed in table format by typing command:
 
 Message logger also provides ability to filter list of tracked events and includes 2 methods
 for that:
+
 - `filter` - to get filtered list of tracked events
 - `filterTable` - to print table containing filtered list of tracked events
 
@@ -356,35 +380,31 @@ Filtering options object may include following keys:
 | to | Date | valid Date object | include only events tracked before spcified moment in time |
 
 ##### Example
+
 To get list of all incoming events of types `V1.REQUIRE_CONTEXT` or `V1.GET_PERMISSIONS` tracked by `shell-host` component type in console following command:
+
 ```javascript
 window.fsmShellMessageLogger.filterTable({
-  type: [
-    'V1.REQUIRE_CONTEXT',
-    'V1.GET_PERMISSIONS'
-  ],
+  type: ['V1.REQUIRE_CONTEXT', 'V1.GET_PERMISSIONS'],
   component: 'shell-host',
-  direction: 'incoming'
-})
+  direction: 'incoming',
+});
 ```
 
 ## Security
 
 ### Allowed origins only
 
-You can use the method `.setAllowedOrigins` to restrict message handling to a list of allowed origins. 
+You can use the method `.setAllowedOrigins` to restrict message handling to a list of allowed origins.
 
 ```javascript
 sdk = ShellSdk.init();
-sdk.setAllowedOrigins([
-  'example.com',
-  'example2.com'
-]);
+sdk.setAllowedOrigins(['example.com', 'example2.com']);
 ```
 
 To help debugging, an error will be displayed if an event come from an other origin.
 
-You disable this settings, call `.setAllowedOrigins` with an empy parameter. 
+You disable this settings, call `.setAllowedOrigins` with an empy parameter.
 
 ## Support
 
