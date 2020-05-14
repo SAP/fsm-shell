@@ -157,7 +157,7 @@
 
   - Listenner
 
-    To listen `GET_STORAGE_ITEM`, ShellSdk provide a different synthax for legacy reason. You can access `value` and `key`
+    To listen `GET_STORAGE_ITEM`, ShellSdk provide a different syntax for legacy reason. You can access `value` and `key`
     as following:
     ```typescript
     sdk.on(SHELL_EVENTS.Version1.GET_STORAGE_ITEM, (value, key) => {
