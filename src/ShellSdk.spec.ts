@@ -289,7 +289,7 @@ describe('Shell Sdk', () => {
     requestContext.resetHistory();
   });
 
-  it('should have special synthax for GET_STORAGE_ITEM', (done) => {
+  it('should have special syntax for GET_STORAGE_ITEM', (done) => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init({
       postMessage: postMessageParent
