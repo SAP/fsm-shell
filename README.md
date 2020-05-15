@@ -68,12 +68,12 @@
     }
     ```
 
-  - Response payload
+- Response payload
 
     type: object
     ```typescript
     {
-      authToken: string;
+      authToken?: string;
       cloudHost: string;
       account: string;
       accountId: string;
@@ -88,7 +88,9 @@
       erpUserId: string;
     }
     ```
-    
+
+  The property `authToken` can only be accessed by applications and will not be exposed to plugins.
+
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
   
 - #### V1.GET_PERMISSIONS  
