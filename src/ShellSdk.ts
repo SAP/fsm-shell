@@ -278,7 +278,7 @@ export class ShellSdk {
 
     if (!!subscribers) {
       for (const subscriber of subscribers) {
-        if (payload.type == SHELL_EVENTS.Version1.GET_STORAGE_ITEM) {
+        if (payload.type == SHELL_EVENTS.Version1.GET_STORAGE_ITEM && !this.isRoot) {
           // different call for GET_STORAGE_ITEM to support legacy code (CPB-47059)
           subscriber(
             payload.value.value,
