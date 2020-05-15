@@ -33,6 +33,7 @@
   - [V1.REQUIRE_CONTEXT](#V1REQUIRE_CONTEXT)
   - [V1.GET_PERMISSIONS](#V1GET_PERMISSIONS)
   - [V1.GET_SETTINGS](#V1GET_SETTINGS)
+  - [V2.GET_STORAGE_ITEM](#V2GET_STORAGE_ITEM)
   - [V1.GET_STORAGE_ITEM](#V1GET_STORAGE_ITEM)
   - [V1.SET_STORAGE_ITEM](#V1SET_STORAGE_ITEM)
 - [PLUGIN SPECIFIC API](#plugin-specific-api)
@@ -138,7 +139,15 @@
     }
     ```
 
-- #### V1.GET_STORAGE_ITEM
+  - Listenner
+
+    ```typescript
+    sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (value) => {
+     console.log(`item is now ${value}`);
+    });
+    ```
+
+- #### V2.GET_STORAGE_ITEM
   Request value stored under specified key in cloud storage
 
   - Request payload
@@ -159,12 +168,25 @@
 
   - Listenner
 
-    To listen `GET_STORAGE_ITEM`, ShellSdk provide a different syntax for legacy reason. You can access `value` and `key`
-    as following:
     ```typescript
-    sdk.on(SHELL_EVENTS.Version1.GET_STORAGE_ITEM, (value, key) => {
-     console.log(`${key} is now equal to ${value}`);
+    sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (response) => {
+     console.log(`${response.key} is now ${response.value}`);
     });
+    ```
+
+- #### V1.GET_STORAGE_ITEM (deprecated for v2)
+  Request value stored under specified key in cloud storage
+
+  - Request payload
+
+    type: string  
+    Key to read value from
+
+  - Response payload
+    ```typescript
+    {
+      value: T;
+    }
     ```
 
 - #### V1.SET_STORAGE_ITEM
@@ -406,3 +428,4 @@ In case you need further help, check out the [SAP Field Service Management Help 
 
 Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
 This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE](./LICENSE) file.
+
