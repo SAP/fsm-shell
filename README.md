@@ -69,12 +69,12 @@
     }
     ```
 
-  - Response payload
+- Response payload
 
     type: object
     ```typescript
     {
-      authToken: string;
+      authToken?: string;
       cloudHost: string;
       account: string;
       accountId: string;
@@ -89,7 +89,9 @@
       erpUserId: string;
     }
     ```
-    
+
+  The property `authToken` can only be accessed by applications and will not be exposed to plugins.
+
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
   
 - #### V1.GET_PERMISSIONS  
@@ -426,3 +428,4 @@ In case you need further help, check out the [SAP Field Service Management Help 
 
 Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
 This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE](./LICENSE) file.
+
