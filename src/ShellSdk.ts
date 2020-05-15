@@ -278,21 +278,11 @@ export class ShellSdk {
 
     if (!!subscribers) {
       for (const subscriber of subscribers) {
-        if (payload.type == SHELL_EVENTS.Version1.GET_STORAGE_ITEM) {
-          // different call for GET_STORAGE_ITEM to support legacy code (CPB-47059)
-          subscriber(
-            payload.value.value,
-            payload.value.key,
-            event.origin,
-            payload.from
-          );
-        } else {
-          subscriber(
-            payload.value,
-            event.origin,
-            payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
-          );
-        }
+        subscriber(
+          payload.value,
+          event.origin,
+          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE ? null : payload.from
+        );
       }
     }
 
