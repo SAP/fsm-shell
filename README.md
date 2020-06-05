@@ -31,6 +31,7 @@
 
 - [SHELL-SDK Version1 events](#SHELL-SDK-Version1-events)
   - [V1.REQUIRE_CONTEXT](#V1REQUIRE_CONTEXT)
+  - [V2.GET_PERMISSIONS](#V2GET_PERMISSIONS)
   - [V1.GET_PERMISSIONS](#V1GET_PERMISSIONS)
   - [V1.GET_SETTINGS](#V1GET_SETTINGS)
   - [V2.GET_STORAGE_ITEM](#V2GET_STORAGE_ITEM)
@@ -50,6 +51,7 @@
   - [Reactive approach to subscribe for shell host events](#reactive-approach-to-subscribe-for-shell-host-events)
 - [Debugging postMessage API events](#debugging-postmessage-api-events)
 - [Security](#security)
+  - [Allowed origins only](#allowed-origins-only)
 - [Support](#support)
 - [License](#license)
 
@@ -94,6 +96,38 @@
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
   
+  
+- #### V2.GET_PERMISSIONS  
+  Request permissions for specified object from the shell
+
+  - Request payload
+
+    type: PermissionRequest  
+    ```typescript
+    {
+      objectName: string;
+      owners?: string[];
+    }
+    ```
+
+  - Response payload
+
+    type: PermissionResponse  
+    ```typescript
+    {
+      objectName: string;
+      owners?: string[];
+      permission: {
+        CREATE: boolean;
+        READ: boolean;
+        UPDATE: boolean;
+        DELETE: boolean;
+        UI_PERMISSIONS: number[];
+      };
+    }
+
+    ```
+
 - #### V1.GET_PERMISSIONS  
   Request permissions for specified object from the shell
 
