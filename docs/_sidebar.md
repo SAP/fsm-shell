@@ -15,3 +15,5 @@
 - [Panels](panels.md)
 
 - [Mermaid](mermaid.md)
+
+- [Examples](examples.md)
