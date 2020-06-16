@@ -71,3 +71,6 @@ version.txt
 
 # bamboo reporter output
 mocha.json
+
+#cypress video folder
+cypress/videos
