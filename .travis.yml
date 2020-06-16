@@ -1,8 +1,17 @@
 language: node_js
 node_js:
-  - "10.17"
+  - '10.17'
 install:
   - npm install
 script:
   - npm run test:ci
   - npm run build
+  - npm e2e:ci
+deploy:
+  # deploy shell-dsk docs on github page
+  - provider: pages
+    skip_cleanup: true
+    local_dir: docs
+    github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+    on:
+      branch: master
