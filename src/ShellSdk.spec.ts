@@ -1,10 +1,8 @@
-
 import { ShellSdk } from './ShellSdk';
 import { SHELL_EVENTS } from './ShellEvents';
 import * as sinon from 'sinon';
 
 describe('Shell Sdk', () => {
-
   let sdk: ShellSdk;
   let sdkTarget: any;
   let sdkOrigin: string;
@@ -20,14 +18,14 @@ describe('Shell Sdk', () => {
       addEventListener: (eventType, callback) => {
         windowMockEventListenerAdded = true;
         windowMockEventType = eventType;
-        windowMockCallback = callback
-      }
-    }
+        windowMockCallback = callback;
+      },
+    };
 
     sdkOrigin = 'fsm-sdk.net';
 
     sdkTarget = {
-      postMessage: sinon.stub()
+      postMessage: sinon.stub(),
     };
     data = { message: 'test' };
   });
@@ -36,9 +34,8 @@ describe('Shell Sdk', () => {
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
     expect(sdk).toBeDefined();
   });
-
   it('should create instance as Root', () => {
-    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
+    sdk = ShellSdk.init((null as any) as Window, sdkOrigin, windowMock);
     expect(sdk).toBeDefined();
   });
 
@@ -46,6 +43,11 @@ describe('Shell Sdk', () => {
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
     const sdkCopy = ShellSdk.instance;
     expect(sdk).toEqual(sdkCopy);
+  });
+
+  it('should return target using getTarget', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+    expect(sdk.getTarget()).toBe(sdkTarget);
   });
 
   it('should post message on emit', () => {
@@ -65,7 +67,7 @@ describe('Shell Sdk', () => {
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
     expect(windowMockEventListenerAdded).toBe(true);
     expect(windowMockEventType).toBe('message'),
-    expect(windowMockCallback).toBeDefined();
+      expect(windowMockCallback).toBeDefined();
   });
 
   it('should call subscriber on message event', (done) => {
@@ -78,9 +80,9 @@ describe('Shell Sdk', () => {
       data: {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
-          message: 'test data'
-        }
-      }
+          message: 'test data',
+        },
+      },
     });
   });
 
@@ -102,9 +104,9 @@ describe('Shell Sdk', () => {
       data: {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
-          message: 'test data'
-        }
-      }
+          message: 'test data',
+        },
+      },
     });
 
     expect(handler1Called).toBe(true);
@@ -130,9 +132,9 @@ describe('Shell Sdk', () => {
       data: {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
-          message: 'test data'
-        }
-      }
+          message: 'test data',
+        },
+      },
     });
 
     expect(handler1Called).toBe(false);
@@ -141,9 +143,13 @@ describe('Shell Sdk', () => {
 
   it('should confirm context with request_context_done event', () => {
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init({
-      postMessage: postMessageParent
-    } as any as Window, sdkOrigin, windowMock);
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
 
     const requestContext = sinon.spy();
 
@@ -154,8 +160,8 @@ describe('Shell Sdk', () => {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
           message: 'test data',
-        }
-      }
+        },
+      },
     });
 
     expect(requestContext.called).toBe(true);
@@ -168,8 +174,8 @@ describe('Shell Sdk', () => {
 
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
 
-    sdk.onViewState('TECHNICIAN', id => technicianId = id);
-    sdk.onViewState('SERVICECALL', id => servicecallId = id);
+    sdk.onViewState('TECHNICIAN', (id) => (technicianId = id));
+    sdk.onViewState('SERVICECALL', (id) => (servicecallId = id));
 
     windowMockCallback({
       data: {
@@ -177,11 +183,11 @@ describe('Shell Sdk', () => {
         value: {
           message: 'test data',
           viewState: {
-            'TECHNICIAN': 42,
-            'SERVICECALL': 1337
-          }
-        }
-      }
+            TECHNICIAN: 42,
+            SERVICECALL: 1337,
+          },
+        },
+      },
     });
 
     expect(technicianId).toEqual(42);
@@ -190,9 +196,13 @@ describe('Shell Sdk', () => {
 
   it('should trigger onViewState after request_context then send to parent loading_success', () => {
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init({
-      postMessage: postMessageParent
-    } as any as Window, sdkOrigin, windowMock);
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
 
     const requestContext = sinon.spy();
 
@@ -210,11 +220,11 @@ describe('Shell Sdk', () => {
         value: {
           message: 'test data',
           viewState: {
-            'TECHNICIAN': 42,
-            'SERVICECALL': 1337
-          }
-        }
-      }
+            TECHNICIAN: 42,
+            SERVICECALL: 1337,
+          },
+        },
+      },
     });
 
     expect(requestContext.called).toBe(true);
@@ -230,20 +240,21 @@ describe('Shell Sdk', () => {
 
   it('should only accept events from allowedOrigins', () => {
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init({
-      postMessage: postMessageParent
-    } as any as Window, sdkOrigin, windowMock);
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
 
-    sdk.setAllowedOrigins([
-      'https://s1.exemple.com',
-      'https://s2.exemple.com'
-    ]);
+    sdk.setAllowedOrigins(['https://s1.exemple.com', 'https://s2.exemple.com']);
 
     const data = {
       type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
       value: {
-        message: 'test data'
-      }
+        message: 'test data',
+      },
     };
 
     const requestContext = sinon.spy();
@@ -288,5 +299,4 @@ describe('Shell Sdk', () => {
     expect(requestContext.called).toBe(true);
     requestContext.resetHistory();
   });
-
 });
