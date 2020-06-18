@@ -1,19 +1,25 @@
 <!-- docs/_sidebar.md -->
 
-- [Get Started](get-started.md)
+- Getting started
 
-- [API documentation](api-documentation.md)
+  - [Installation](installation.md)
 
-- [Library Usage Sample](usage-sample.md)
+  - [Library Usage Sample](usage-sample.md)
 
-- [Debugging](debugging.md)
+- API documentation
 
-- [Security](security.md)
+  - [ShellSdk Events](events.md)
 
-- [Changelog](changelog)
+  - [Debugging](debugging.md)
 
-- [Panels](panels.md)
+  - [Security](security.md)
 
-- [Mermaid](mermaid.md)
+- Examples
 
-- [Examples](examples.md)
+  - [Require context](examples.md)
+
+- About this library
+
+  - [Changelog](changelog)
+
+  - [License](license.md)

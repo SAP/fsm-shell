@@ -49,6 +49,13 @@
   });
   ```
 
+  ```mermaid
+  sequenceDiagram
+      participant Shell
+      participant Application
+      Application->>Shell: SHELL_EVENTS.Version1.REQUIRE_CONTEXT
+  ```
+
 - ## Subscribing to event coming from shell host application
 
   to subscribe on shell host event _on_ method from _ShellSdk_ should be used.  
@@ -62,6 +69,13 @@
     // validate sender origin and handle received context
   };
   shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+  ```
+
+  ```mermaid
+  sequenceDiagram
+    participant Shell
+    participant Application
+    Shell->>Application: SHELL_EVENTS.Version1.REQUIRE_CONTEXT
   ```
 
 - ## Unsubscribing from event

@@ -1,44 +1,24 @@
 # API Documentation
 
-- [SHELL-SDK Version1 events](#SHELL-SDK-Version1-events)
-  - [V1.REQUIRE_CONTEXT](#V1REQUIRE_CONTEXT)
-  - [V1.GET_PERMISSIONS](#V1GET_PERMISSIONS)
-  - [V1.GET_SETTINGS](#V1GET_SETTINGS)
-  - [V2.GET_STORAGE_ITEM](#V2GET_STORAGE_ITEM)
-  - [V1.GET_STORAGE_ITEM](#V1GET_STORAGE_ITEM)
-  - [V1.SET_STORAGE_ITEM](#V1SET_STORAGE_ITEM)
-- [PLUGIN SPECIFIC API](#plugin-specific-api)
-  - [V1.TO_APP](#V1TO_APP)
-  - [VIEW STATE](VIEW_STATE)
-- [Generic events](#generic-events)
-  - [ERROR](#error)
-- [Library usage sample](#library-usage-sample)
-  - [Library initialization](#library-initialization)
-  - [Get library version](#get-library-version-or-build-timestamp)
-  - [Sending event to the shell host](#sending-event-to-the-shell-host-application)
-  - [Subscribing to event coming from shell host application](#subscribing-to-event-coming-from-shell-host-application)
-  - [Unsubscribing from event](#unsubscribing-from-event)
-  - [Reactive approach to subscribe for shell host events](#reactive-approach-to-subscribe-for-shell-host-events)
-- [Debugging postMessage API events](#debugging-postmessage-api-events)
-- [Security](#security)
-- [Support](#support)
-- [License](#license)
+- ### REQUIRE_CONTEXT
 
-* ### V1.REQUIRE_CONTEXT
+```
+SHELL_EVENTS.Version1.REQUIRE_CONTEXT
+```
 
-  Must be sent on application startup to get initial application context from the shell
+Must be sent on application startup to get initial application context from the shell
 
-  - Request payload
+- Request payload
 
-    type: object
+  type: object
 
-    ```typescript
-    {
-      clientIdentifier: string;
-      clientSecret: string;
-      cloudStorageKeys?: CloudStorageKey[];
-    }
-    ```
+  ```typescript
+  {
+    clientIdentifier: string;
+    clientSecret: string;
+    cloudStorageKeys?: CloudStorageKey[];
+  }
+  ```
 
 * Response payload
 
@@ -66,36 +46,88 @@
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
 
-* ### V1.GET_PERMISSIONS
+- ### GET_PERMISSIONS
 
-  Request permissions for specified object from the shell
+<!-- tabs:start -->
 
-  - Request payload
+#### **Version 2**
 
-    type: PermissionRequest
+```
+SHELL_EVENTS.Version2.GET_PERMISSIONS
+```
 
-    ```typescript
-    {
-      objectName: string;
-      owners?: string[];
-    }
-    ```
+Request permissions for specified object from the shell
 
-  - Response payload
+- Request payload
 
-    type: Permission
+  type: PermissionRequest
 
-    ```typescript
-    {
+  ```typescript
+  {
+    objectName: string;
+    owners?: string[];
+  }
+  ```
+
+- Response payload
+
+  type: PermissionResponse
+
+  ```typescript
+  {
+    objectName: string;
+    owners?: string[];
+    permission: {
       CREATE: boolean;
       READ: boolean;
       UPDATE: boolean;
       DELETE: boolean;
       UI_PERMISSIONS: number[];
-    }
-    ```
+    };
+  }
 
-* ### V1.GET_SETTINGS
+  ```
+
+#### **Version 1 (deprecated)**
+
+```
+SHELL_EVENTS.Version1.GET_PERMISSIONS
+```
+
+Request permissions for specified object from the shell
+
+- Request payload
+
+  type: PermissionRequest
+
+  ```typescript
+  {
+    objectName: string;
+    owners?: string[];
+  }
+  ```
+
+- Response payload
+
+  type: Permission
+
+  ```typescript
+  {
+    CREATE: boolean;
+    READ: boolean;
+    UPDATE: boolean;
+    DELETE: boolean;
+    UI_PERMISSIONS: number[];
+  }
+  ```
+
+<!-- tabs:end -->
+
+- ### GET_SETTINGS
+
+  ```
+  SHELL_EVENTS.Version1.GET_SETTINGS
+  ```
 
   Request settings value for specific key from the shell
 
@@ -124,52 +156,70 @@
     });
     ```
 
-* ### V2.GET_STORAGE_ITEM
+- ### GET_STORAGE_ITEM
 
-  Request value stored under specified key in cloud storage
+<!-- tabs:start -->
 
-  - Request payload
+#### **Version 2**
 
-    type: string  
-    Key to read value from
+```
+SHELL_EVENTS.Version2.GET_STORAGE_ITEM
+```
 
-  - Response payload
+Request value stored under specified key in cloud storage
 
-    type: GetItemResponse\<T\>  
-    object containing key name and value which was read from requested key
+- Request payload
 
-    ```typescript
-    {
-      key: string;
-      value: T;
-    }
-    ```
+  type: string  
+  Key to read value from
 
-  - Listenner
+- Response payload
 
-    ```typescript
-    sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (response) => {
-      console.log(`${response.key} is now ${response.value}`);
-    });
-    ```
+  type: GetItemResponse\<T\>  
+  object containing key name and value which was read from requested key
 
-* ### V1.GET_STORAGE_ITEM (deprecated for v2)
+  ```typescript
+  {
+    key: string;
+    value: T;
+  }
+  ```
 
-  Request value stored under specified key in cloud storage
+- Listenner
 
-  - Request payload
+  ```typescript
+  sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (response) => {
+    console.log(`${response.key} is now ${response.value}`);
+  });
+  ```
 
-    type: string  
-    Key to read value from
+#### **Version 1 (deprecated)**
 
-  - Response payload
-    ```typescript
-    {
-      value: T;
-    }
-    ```
+```
+SHELL_EVENTS.Version1.GET_STORAGE_ITEM
+```
 
-* ### V1.SET_STORAGE_ITEM
+Request value stored under specified key in cloud storage
+
+- Request payload
+
+  type: string  
+  Key to read value from
+
+- Response payload
+  ```typescript
+  {
+    value: T;
+  }
+  ```
+
+<!-- tabs:end -->
+
+- ### SET_STORAGE_ITEM
+
+  ```
+  SHELL_EVENTS.Version1.SET_STORAGE_ITEM
+  ```
 
   Save value in cloud staorage under specified key
 
@@ -212,7 +262,11 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
   To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
 
-- ### V1.TO_APP event
+- ### TO_APP event
+
+  ```
+  SHELL_EVENTS.Version1.TO_APP
+  ```
 
   You can send any data from any plugin to the main application using the `TO_APP` event.
 

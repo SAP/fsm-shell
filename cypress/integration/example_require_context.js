@@ -38,7 +38,7 @@ context('Docsify start and load', () => {
   it('Require_context get data from hell-host', () => {
     // https://on.cypress.io/window
     cy.window().should('have.property', 'top');
-    cy.get(':nth-child(9) > p > a').click();
+    cy.get('li > a').click();
     getIframeBody()
       .find('h2')
       .should('be.visible')
