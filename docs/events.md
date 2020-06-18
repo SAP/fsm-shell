@@ -1,5 +1,7 @@
 # API Documentation
 
+## Events
+
 - ### REQUIRE_CONTEXT
 
 ```
@@ -240,13 +242,15 @@ Request value stored under specified key in cloud storage
     type: boolean
     flag indicating if value was saved successfully
 
-## PLUGIN SPECIFIC API
+## Plugin specific events
 
 ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
 
-- ### VIEW STATE : an all instance synced data object
+- ### VIEW STATE
 
-  You might need to share between your application and plugins a general context to provide consistent UI. ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in a plugin for security reason, and will throw generic error object.
+  View State event provide a shared context between all local instance.
+
+  As you might need to share between your application and plugins a general context to provide consistent UI, ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in a plugin for security reason, and will throw generic error object.
 
   ```typescript
   this.sdk.setViewState('TECHNICIAN', id);
@@ -262,7 +266,7 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
   To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
 
-- ### TO_APP event
+- ### TO_APP
 
   ```
   SHELL_EVENTS.Version1.TO_APP
