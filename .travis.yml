@@ -6,7 +6,7 @@ install:
 script:
   - npm run test:ci
   - npm run build
-  - npm e2e:ci
+  - npm run e2e:ci
 deploy:
   # deploy shell-dsk docs on github page
   - provider: pages
