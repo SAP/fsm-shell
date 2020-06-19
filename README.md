@@ -6,7 +6,7 @@
 
 ## How to use ShellSdk
 
-Full documentation can be found on this repository's github pages.
+Full documentation can be found online: https://sap.github.io/fsm-shell/.
 
 ## About this repository
 
