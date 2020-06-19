@@ -1,23 +1,22 @@
-
-
-export type EventType = 'V1.REQUIRE_CONTEXT' |
-  'V1.CLOSE' |
-  'V1.REQUIRE_PERMISSIONS' |
-  'V1.GET_PERMISSIONS' |
-  'V2.GET_PERMISSIONS' |
-  'V1.GET_SETTINGS' |
-  'V1.GET_STORAGE_ITEM' |
-  'V2.GET_STORAGE_ITEM' |
-  'V1.SET_STORAGE_ITEM' |
-  'V1.SET_VIEW_STATE' |
-  'V1.TO_APP' |
-  'V1.LOADING_SUCCESS' |
-  'V1.OUTLET.ADD_PLUGIN' |
-  'V1.OUTLET.REMOVE_PLUGIN' |
-  'V1.OUTLET.REQUEST_CONTEXT' |
-  'V1.OUTLET.LOADING_SUCCESS' |
-  'V1.OUTLET.LOADING_FAIL' |
-  string;
+export type EventType =
+  | 'V1.REQUIRE_CONTEXT'
+  | 'V1.CLOSE'
+  | 'V1.REQUIRE_PERMISSIONS'
+  | 'V1.GET_PERMISSIONS'
+  | 'V2.GET_PERMISSIONS'
+  | 'V1.GET_SETTINGS'
+  | 'V1.GET_STORAGE_ITEM'
+  | 'V2.GET_STORAGE_ITEM'
+  | 'V1.SET_STORAGE_ITEM'
+  | 'V1.SET_VIEW_STATE'
+  | 'V1.TO_APP'
+  | 'V1.LOADING_SUCCESS'
+  | 'V1.OUTLET.ADD_PLUGIN'
+  | 'V1.OUTLET.REMOVE_PLUGIN'
+  | 'V1.OUTLET.REQUEST_CONTEXT'
+  | 'V1.OUTLET.LOADING_SUCCESS'
+  | 'V1.OUTLET.LOADING_FAIL'
+  | string;
 
 export const SHELL_EVENTS = {
   Version1: {
@@ -35,24 +34,24 @@ export const SHELL_EVENTS = {
       REMOVE_PLUGIN: 'V1.OUTLET.REMOVE_PLUGIN',
       REQUEST_CONTEXT: 'V1.OUTLET.REQUEST_CONTEXT',
       LOADING_SUCCESS: 'V1.OUTLET.LOADING_SUCCESS',
-      LOADING_FAIL: 'V1.OUTLET.LOADING_FAIL'
-    }
+      LOADING_FAIL: 'V1.OUTLET.LOADING_FAIL',
+    },
   },
   Version2: {
     GET_STORAGE_ITEM: 'V2.GET_STORAGE_ITEM',
     GET_PERMISSIONS: 'V2.GET_PERMISSIONS',
   },
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
 };
 
 export enum ErrorType {
   OUTLET_TIMEOUT = 'OUTLET_TIMEOUT',
   OUTLET_MAXIMUM_DEPTH = 'OUTLET_MAXIMUM_DEPTH',
-  OUTLET_HTTPS_ERROR = 'OUTLET_HTTPS_ERROR'
+  OUTLET_HTTPS_ERROR = 'OUTLET_HTTPS_ERROR',
 }
 
 const getKeyValues = (source: any, initial: string[] = []): string[] => {
-  let result = [ ...initial ];
+  let result = [...initial];
   for (const key in source) {
     if (typeof source[key] === 'string') {
       result.push(source[key]);
@@ -61,6 +60,6 @@ const getKeyValues = (source: any, initial: string[] = []): string[] => {
     }
   }
   return result;
-}
+};
 
 export const ALL_SHELL_EVENTS_ARRAY: string[] = getKeyValues(SHELL_EVENTS);

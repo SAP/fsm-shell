@@ -18,14 +18,17 @@
     "test:ci": "npm run karma -- --watch=false --code-coverage --karma-config ./karma.conf.js && npm run test:coveralls",
     "test:ci:headless": "SET_HEADLESS_CHROME=1 npm run test:ci",
     "test:coveralls": "npx copyfiles --flat ./coverage/**/*.info ./coverage/ && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js || echo -e \"Coveralls failed.\"",
-    "karma": "node ./node_modules/karma/bin/karma start --single-run"
+    "karma": "node ./node_modules/karma/bin/karma start --single-run",
+    "docs": "docsify serve docs",
+    "e2e": "npx cypress run",
+    "e2e:ci": "start-server-and-test docs http://localhost:3000 e2e"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SAP/fsm-shell.git"
   },
   "author": "SAP SE",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/SAP/fsm-shell/issues"
   },
@@ -36,6 +39,8 @@
     "@types/sinon": "^9.0.0",
     "copyfiles": "^2.2.0",
     "coveralls": "^3.0.11",
+    "cypress": "^4.8.0",
+    "docsify-cli": "^4.4.1",
     "git-rev": "^0.2.1",
     "husky": "^4.2.5",
     "jasmine-core": "^3.5.0",
@@ -58,6 +63,7 @@
     "rollup-plugin-filesize": "^7.0.0",
     "rollup-plugin-typescript2": "^0.27.0",
     "sinon": "^9.0.1",
+    "start-server-and-test": "^1.11.0",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.4.5"
