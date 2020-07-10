@@ -46,7 +46,7 @@ shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
 
 <!-- div:left-panel -->
 
-Selected activity is shared by the dispatching board using the `ViewState` object. In case of no selected activity or if a user unselect noe, the `null` value will be propagated and should also be handle accordingly.
+Selected activity is shared by the dispatching board using the `ViewState` object. In case of no selected activity or unselect event, the `null` value will be propagated and should be handle accordingly.
 
 <!-- div:right-panel -->
 
