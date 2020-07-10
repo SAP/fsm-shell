@@ -10,8 +10,8 @@ ShellSdk is used internally, but also by third party developers as part of the e
 ## Applications allowing third party extensions
 
 <div class="appList">
-  <a href="/#/fsm/dispatching-board" >
-    <img src="/fsm/dispatchBoard.icon.png" alt="Dispatching board icon" />
+  <a href="#/fsm/dispatching-board" >
+    <img src="fsm/dispatchBoard.icon.png" alt="Dispatching board icon" />
     Dispatching Board
   </a>
 </div>
