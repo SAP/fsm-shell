@@ -51,7 +51,8 @@ Selected activity is shared by the dispatching board using the `ViewState` objec
 <!-- div:right-panel -->
 
 ```javascript
-this.sdk.onViewState('ActivityId', (id) => {
+this.sdk.onViewState('ActivityId', (activityId) => {
+ console.log(activityId) // -> "2081B33B672E4B69B44A902CB65CB6A0" or null   
   // use fsm public API to retrieve the activity object from id value
 });
 ```
