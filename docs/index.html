@@ -109,8 +109,10 @@
         left: 0;
         right: 0;
         text-align: center;
-
+        padding: 20px 40px 0;
+        z-index: 999;
         visibility: hidden;
+        pointer-events: none;
         transform: translateY(200px);
         transition: visibility 0s 400ms, transform 400ms;
         transition-timing-function: ease-in-out;
@@ -130,8 +132,9 @@
           rgba(255, 255, 255, 1)
         );
       }
-      #privacy. p {
+      #privacy p {
         z-index: 999;
+        pointer-events: all;
         color: #34495e;
         font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif;
       }
