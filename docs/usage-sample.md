@@ -45,7 +45,7 @@
   ```typescript
   shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
     clientIdentifier: '<your-app-client-identifier>',
-    cleintSecret: '<your-app-client-secret>',
+    clientSecret: '<your-app-client-secret>',
   });
   ```
 

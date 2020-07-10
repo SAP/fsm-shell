@@ -20,6 +20,8 @@
 
 - About this library
 
+  - [SAP FSM](fsm.md)
+
   - [Changelog](changelog)
 
   - [License](license.md)
