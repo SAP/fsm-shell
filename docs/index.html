@@ -113,6 +113,7 @@
         visibility: hidden;
         transform: translateY(200px);
         transition: visibility 0s 400ms, transform 400ms;
+        transition-timing-function: ease-in-out;
       }
       #privacy:after {
         content: '';
@@ -138,6 +139,8 @@
         border: none;
         border-radius: 8px;
         padding: 4px 8px;
+        cursor: pointer;
+        margin-left: 20px;
       }
       #privacy.show {
         visibility: visible;
