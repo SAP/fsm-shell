@@ -27,10 +27,11 @@ When loaded, this component appears within a collapsable card with a maximum hei
 
 Plug-in need to request fsm context to release the embedded loading screen. More about `GET_CONTEXT` within the [ShellSdk Events](/events?id=require_context) page.
 Related: [Generating Client ID and Secret](https://docs.coresystems.net/admin/account.html#wow7)
+
 <!-- div:right-panel -->
 
 ```javascript
-shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+this.shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
   clientIdentifier: '<your-app-client-identifier>',
   clientSecret: '<your-app-client-secret>',
 });
@@ -51,8 +52,8 @@ Selected activity is shared by the dispatching board using the `ViewState` objec
 <!-- div:right-panel -->
 
 ```javascript
-this.sdk.onViewState('ActivityId', (activityId) => {
- console.log(activityId) // -> "2081B33B672E4B69B44A902CB65CB6A0" or null   
+this.shellSdk.onViewState('ActivityId', (activityId) => {
+  console.log(activityId); // -> "2081B33B672E4B69B44A902CB65CB6A0" or null
   // use fsm public API to retrieve the activity object from id value
 });
 ```
@@ -74,7 +75,7 @@ When editing data, dispatching board might need to refresh its content to show t
 <!-- div:right-panel -->
 
 ```javascript
-this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
+this.shellSdk.emit(SHELL_EVENTS.Version1.TO_APP, {
   type: 'REFRESH',
 });
 ```
