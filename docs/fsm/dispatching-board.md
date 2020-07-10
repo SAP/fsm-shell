@@ -26,7 +26,7 @@ When loaded, this component appears within a collapsable card with a maximum hei
 <!-- div:left-panel -->
 
 Plug-in need to request fsm context to release the embedded loading screen. More about `GET_CONTEXT` within the [ShellSdk Events](/events?id=require_context) page.
-
+Related: [Generating Client ID and Secret](https://docs.coresystems.net/admin/account.html#wow7)
 <!-- div:right-panel -->
 
 ```javascript
