@@ -25,3 +25,5 @@
   - [Changelog](changelog)
 
   - [License](license.md)
+
+  - <span class="sidebarFooter">[Privacy](https://www.sap.com/corporate/en/legal/privacy.html) [Legal](https://www.sap.com/about/legal/impressum.html)</span>
