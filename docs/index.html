@@ -99,76 +99,11 @@
       .sidebarFooter a:not(:first-child) {
         margin-left: 14px;
       }
-      #privacy {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        padding: 20px 40px 0;
-        z-index: 999;
-        visibility: hidden;
-        pointer-events: none;
-        transform: translateY(200px);
-        transition: visibility 0s 400ms, transform 400ms;
-        transition-timing-function: ease-in-out;
-      }
-      #privacy:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        padding-top: 100px;
-        z-index: -1;
-        background-image: linear-gradient(
-          rgba(255, 255, 255, 0),
-          rgba(255, 255, 255, 0.8),
-          rgba(255, 255, 255, 1)
-        );
-      }
-      #privacy p {
-        z-index: 999;
-        pointer-events: all;
-        color: #34495e;
-        font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif;
-      }
-      #privacy button {
-        border: none;
-        border-radius: 8px;
-        padding: 4px 8px;
-        cursor: pointer;
-        margin-left: 20px;
-      }
-      #privacy.show {
-        visibility: visible;
-        transform: translateY(0px);
-        transition: visibility 0s, transform 400ms;
-      }
     </style>
   </head>
   <body>
     <div id="app"></div>
-    <div id="privacy">
-      <p>
-        We use cookies 🍪 for the best online experience. Read our
-        <a href="https://www.sap.com/corporate/en/legal/privacy.html"
-          >Privacy Statement</a
-        >.
-        <button
-          onClick="localStorage.setItem('askedAboutcookies', 'true'); document.querySelector('#privacy').classList.remove('show');"
-        >
-          Close
-        </button>
-      </p>
-    </div>
     <script>
-      setTimeout(function () {
-        if (!localStorage.getItem('askedAboutcookies')) {
-          document.querySelector('#privacy').classList.add('show');
-        }
-      }, 400);
       window.$docsify = {
         name: 'ShellSdk',
         repo: 'https://github.com/SAP/fsm-shell',
