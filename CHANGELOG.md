@@ -55,6 +55,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Return `SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL` if reached maximum depth
 
+## [1.2.6] - 2020-04-21
+
+### Added
+
+- Add `ShellSdk.isInsideShell()` to verified if an application is running with or without Shell
+
 ## [1.2.5] - 2020-04-17
 
 ### Added
@@ -62,7 +68,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `OutletsDeleteAssignmentRequest` and `OutletsDeleteAssignmentResponse` models for messages
 - Propagate `SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT` to all outlets if only update configurationmode state
 
-## [1.2.0] - 2020-03-31
+## [1.2.4] - 2020-04-09
+
+### Added
+
+- Implement CI with travis, badges, and coveralls
+
+## [1.2.3] - 2020-04-07
+
+### Fixed
+
+- Specify typescript version as dependency to avoid fix conflict
+
+## [1.2.2] - 2020-04-07
+
+### Fixed
+
+- Remove alert security by updating all dependencies
+
+## [1.2.1] - 2020-04-03
 
 ### Added
 
