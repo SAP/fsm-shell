@@ -34,6 +34,36 @@ async function main() {
           '*'
         );
         break;
+      case SHELL_EVENTS.Version1.SET_VIEW_STATE:
+        const { key, value } = event.data.value;
+        console.log(SHELL_EVENTS.Version1.SET_VIEW_STATE, key, value);
+        console.log({
+          type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
+          value: {
+            key,
+            value,
+          },
+        });
+        event.source.postMessage(
+          {
+            type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
+            value: {
+              key,
+              value,
+            },
+          },
+          '*'
+        );
+        break;
+      case SHELL_EVENTS.Version1.TO_APP:
+        event.source.postMessage(
+          {
+            type: SHELL_EVENTS.Version1.TO_APP,
+            value: event.data.value,
+          },
+          '*'
+        );
+        break;
     }
   });
 }

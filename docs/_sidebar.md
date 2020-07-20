@@ -14,6 +14,8 @@
 
   - [Security](security.md)
 
+  - [Nested views](nested-views.md)
+
 - Examples
 
   - [Require context](examples.md)

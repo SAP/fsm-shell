@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example nested views iFrame</title>
+  </head>
+  <body>
+    <div>
+      <h1>Selected items with nested view</h1>
+      <div style="margin: 8px 0px;">
+        <button onClick="setUser(this)">User 1</button>
+        <button onClick="setUser(this)">User 2</button>
+        <button onClick="setUser(this)">User 3</button>
+      </div>
+      <iframe src="/examples/selected_items/plugin.html"></iframe>
+      <iframe src="/examples/selected_items/plugin.html"></iframe>
+      <iframe src="/examples/selected_items/plugin.html"></iframe>
+    </div>
+    <script src="https://unpkg.com/fsm-shell"></script>
+    <script>
+      const { ShellSdk, SHELL_EVENTS } = FSMShell;
+      if (!ShellSdk.isInsideShell()) {
+        throw new Error('unable to reach shell eventAPI');
+      }
+      const shellSdk = FSMShell.ShellSdk.init(parent, '*');
+      // We register all iframe to enable routing
+      document
+        .querySelectorAll('iframe')
+        .forEach((iframe) => shellSdk.registerOutlet(iframe));
+      // Define action
+      const setUser = (button) => {
+        shellSdk.setViewState('name', button.innerHTML);
+        // Disable selected buttons
+        document
+          .querySelectorAll('button')
+          .forEach((button) => button.removeAttribute('disabled'));
+        button.setAttribute('disabled', 'disabled');
+      };
+      // Allo plugins to trigger unselect buton
+      shellSdk.on(SHELL_EVENTS.Version1.TO_APP, (value) => {
+        if (value === 'unselect') {
+          shellSdk.setViewState('name', null);
+          // Disable selected buttons
+          document
+            .querySelectorAll('button')
+            .forEach((button) => button.removeAttribute('disabled'));
+        }
+      });
+    </script>
+  </body>
+</html>
