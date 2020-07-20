@@ -7,23 +7,30 @@
   <body>
     <div>
       <p id="name"></p>
-      <button hidden id="unselect" onClick="unselect()">Unselect</button>
+      <button id="unselect" onClick="unselect()" hidden>Unselect</button>
     </div>
     <script src="https://unpkg.com/fsm-shell"></script>
     <script>
-      // get latest sdk
       const { ShellSdk, SHELL_EVENTS } = FSMShell;
-      const element = document.querySelectorAll('#name')[0];
+
+      // Init shellSdk
       const shellSdk = ShellSdk.init(parent, '*');
+
+      // Listen to name value an
       shellSdk.onViewState('name', (name) => {
+        const element = document.getElementById('name');
+        const button = document.getElementById('unselect');
+
         if (name) {
           element.innerText = `👋 Hi ${name}`;
-          document.getElementById('unselect').removeAttribute('hidden');
+          button.removeAttribute('hidden');
         } else {
           element.innerText = ``;
-          document.getElementById('unselect').setAttribute('hidden', 'hidden');
+          button.setAttribute('hidden', 'hidden');
         }
       });
+
+      // onClick we request the application to unselect current user
       var unselect = () => {
         shellSdk.emit(SHELL_EVENTS.Version1.TO_APP, 'unselect');
       };
