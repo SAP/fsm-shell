@@ -79,15 +79,7 @@
       };
 
       shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, (event) => {
-        const {
-          account,
-          accountId,
-          company,
-          companyId,
-          user,
-          userId,
-          selectedLocale,
-        } = JSON.parse(event);
+        const { account, company, user } = JSON.parse(event);
         document.getElementById(
           'contexts'
         ).innerText = ` | ${user} / ${account} / ${company}!`;

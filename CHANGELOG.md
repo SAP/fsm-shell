@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `getTarget()` method to access ShellSdk target object
+- Nested page within fsm-shell documentation
 
 ## [1.5.0] - 2020-06-05
 
