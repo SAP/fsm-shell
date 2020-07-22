@@ -10,9 +10,12 @@
       <button onClick="setUser(this)">User 1</button>
       <button onClick="setUser(this)">User 2</button>
       <button onClick="setUser(this)">User 3</button>
-      <button id="unselect" onClick="unselect()" hidden>Unselect</button>
+      <button id="unselect" onClick="unselect()" hidden>Unselect</button> |
+      <button id="context" onClick="getContext()">Get context</button>
     </div>
-    <p id="name"></p>
+    <div>
+      <p><span id="name"></span><span id="contexts"></span></p>
+    </div>
     <div id="iframes">
       <!-- script generate two <iframe src="application.html?depth=depth-1" />-->
     </div>
@@ -24,11 +27,10 @@
 
       // Generate 2 iframes until depth is 0
       const depth = new URL(location.href).searchParams.get('depth');
-      const url = new URL(location.href);
       if (depth > 0) {
+        const url = (new URL(location.href).search = `?depth=${depth - 1}`);
         for (var i = 0; i < 2; i++) {
           let iframe = document.createElement('iframe');
-          url.search = `?depth=${depth - 1}`;
           iframe.src = url;
           document.getElementById('iframes').appendChild(iframe);
         }
@@ -61,6 +63,34 @@
       // Allow plugins to trigger unselect event
       shellSdk.on(SHELL_EVENTS.Version1.TO_APP, (value) => {
         shellSdk.setViewState('name', value);
+      });
+
+      // Define onClick event to set name value
+      const getContext = () => {
+        if (document.getElementById('contexts').innerText) {
+          document.getElementById('context').innerText = 'Get context';
+          document.getElementById('contexts').innerText = '';
+        } else {
+          document.getElementById('context').innerText = 'Remove context';
+          shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+            clientIdentifier: 'example-plugin',
+          });
+        }
+      };
+
+      shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, (event) => {
+        const {
+          account,
+          accountId,
+          company,
+          companyId,
+          user,
+          userId,
+          selectedLocale,
+        } = JSON.parse(event);
+        document.getElementById(
+          'contexts'
+        ).innerText = ` | ${user} / ${account} / ${company}!`;
       });
     </script>
   </body>

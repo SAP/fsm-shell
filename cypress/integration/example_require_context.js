@@ -42,6 +42,6 @@ context('Docsify start and load', () => {
     getIframeBody()
       .find('h2')
       .should('be.visible')
-      .should('have.text', 'Hi user / account / company!');
+      .should('have.text', 'Hi shell-docsify / my_account / sap!');
   });
 });

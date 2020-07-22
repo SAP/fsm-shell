@@ -21,14 +21,15 @@ async function main() {
         event.source.postMessage(
           {
             type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+            to: event.data.from,
             value: JSON.stringify({
-              account: 'account',
-              accountId: 'accountId',
-              company: 'company',
-              companyId: 'companyId',
-              user: 'user',
-              userId: 'userId',
-              selectedLocale: 'selectedLocale',
+              account: 'my_account',
+              accountId: '1',
+              company: 'sap',
+              companyId: '1',
+              user: 'shell-docsify',
+              userId: '007',
+              selectedLocale: 'en',
             }),
           },
           '*'
