@@ -5,23 +5,21 @@
     <title>Example nested views iFrame</title>
   </head>
   <body>
-    <div>
-      <h1>Selected items with nested view</h1>
-      <div style="margin: 8px 0px;">
-        <button onClick="setUser('User 1')">User 1</button>
-        <button onClick="setUser('User 2')">User 2</button>
-        <button onClick="setUser('User 3')">User 3</button>
-      </div>
-      <iframe src="/examples/selected_items/plugin.html"></iframe>
-      <iframe src="/examples/selected_items/plugin.html"></iframe>
-      <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <h1>Selected items with nested view</h1>
+    <div style="margin: 8px 0px;">
+      <button onClick="setUser(this)">User 1</button>
+      <button onClick="setUser(this)">User 2</button>
+      <button onClick="setUser(this)">User 3</button>
     </div>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
     <script src="https://unpkg.com/fsm-shell"></script>
     <script>
       const { ShellSdk, SHELL_EVENTS } = FSMShell;
 
       // Init ShellSDk
-      const shellSdk = FSMShell.ShellSdk.init(parent, '*');
+      const shellSdk = ShellSdk.init(window.parent, '*');
 
       // We register all iframes to enable routing
       document
@@ -29,26 +27,21 @@
         .forEach((iframe) => shellSdk.registerOutlet(iframe));
 
       // Define onClick event to set name value
-      const setUser = (name) => {
-        shellSdk.setViewState('name', name);
+      const setUser = (button) => {
+        shellSdk.setViewState('name', button.innerHTML);
       };
-
-      // Allow plugins to trigger unselect buton
-      shellSdk.on(SHELL_EVENTS.Version1.TO_APP, (value) => {
-        if (value === 'unselect') {
-          shellSdk.setViewState('name', null);
-        }
-      });
 
       // update UI based on new `name` value
       shellSdk.onViewState('name', (name) => {
-        document
-          .querySelectorAll('button')
-          .forEach((button) => button.removeAttribute('disabled'));
-        if (name) {
-          Array.from(document.querySelectorAll('button'))
-            .find((button) => button.innerHTML == name)
-            .setAttribute('disabled', 'disabled');
+        document.querySelectorAll('button').forEach((button) => {
+          button.disabled = button.innerHTML == name ? true : false;
+        });
+      });
+
+      // Allow plugins to trigger unselect event
+      shellSdk.on(SHELL_EVENTS.Version1.TO_APP, (value) => {
+        if (value === 'unselect') {
+          shellSdk.setViewState('name', null);
         }
       });
     </script>
