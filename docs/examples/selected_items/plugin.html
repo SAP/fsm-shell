@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example nested views iFrame</title>
+  </head>
+  <body>
+    <p id="name"></p>
+    <button id="unselect" onClick="unselect()" hidden>Unselect</button>
+    <script src="https://unpkg.com/fsm-shell"></script>
+    <script>
+      const { ShellSdk, SHELL_EVENTS } = FSMShell;
+
+      // Init shellSdk
+      const shellSdk = ShellSdk.init(parent, '*');
+
+      // Listen to name value
+      shellSdk.onViewState('name', (name) => {
+        document.getElementById('name').innerText = name ? `👋 Hi ${name}` : ``;
+        document.getElementById('unselect').hidden = name ? false : true;
+      });
+
+      // onClick we request the application to unselect current user
+      var unselect = () => {
+        shellSdk.emit(SHELL_EVENTS.Version1.TO_APP, 'unselect');
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+body {
+  padding: 4px;
+}
+#iframes {
+  display: flex;
+  flex-grow: 1;
+}
+#iframes iframe {
+  flex-grow: 1;
+  flex-wrap: wrap;
+  margin: 4px;
+  min-width: 40%;
+}
+button {
+  margin-bottom: 4px;
+}

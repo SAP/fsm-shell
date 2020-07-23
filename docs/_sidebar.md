@@ -6,13 +6,15 @@
 
   - [Library Usage Sample](usage-sample.md)
 
+  - [Nested views](nested-views.md)
+
 - API documentation
 
   - [ShellSdk Events](events.md)
 
-  - [Debugging](debugging.md)
-
   - [Security](security.md)
+
+  - [Debugging](debugging.md)
 
 - Examples
 

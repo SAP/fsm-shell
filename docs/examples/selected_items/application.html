@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example nested views iFrame</title>
+  </head>
+  <body>
+    <h1>Selected items with nested view</h1>
+    <div style="margin: 8px 0px;">
+      <button onClick="setUser(this)">User 1</button>
+      <button onClick="setUser(this)">User 2</button>
+      <button onClick="setUser(this)">User 3</button>
+    </div>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <iframe src="/examples/selected_items/plugin.html"></iframe>
+    <script src="https://unpkg.com/fsm-shell"></script>
+    <script>
+      const { ShellSdk, SHELL_EVENTS } = FSMShell;
+
+      // Init ShellSDk
+      const shellSdk = ShellSdk.init(window.parent, '*');
+
+      // We register all iframes to enable routing
+      document
+        .querySelectorAll('iframe')
+        .forEach((iframe) => shellSdk.registerOutlet(iframe));
+
+      // Define onClick event to set name value
+      const setUser = (button) => {
+        shellSdk.setViewState('name', button.innerHTML);
+      };
+
+      // update UI based on new `name` value
+      shellSdk.onViewState('name', (name) => {
+        document.querySelectorAll('button').forEach((button) => {
+          button.disabled = button.innerHTML == name ? true : false;
+        });
+      });
+
+      // Allow plugins to trigger unselect event
+      shellSdk.on(SHELL_EVENTS.Version1.TO_APP, (value) => {
+        if (value === 'unselect') {
+          shellSdk.setViewState('name', null);
+        }
+      });
+    </script>
+  </body>
+</html>
