@@ -33,7 +33,7 @@ It use the concept of a [meshed distributed network](https://en.wikipedia.org/wi
 
 ## Routing
 
-When initialising a sub-application node, the hosting application need to register it to shellSdk so he knows it is a valid origin.
+When initialising a sub-application node, the hosting application need to register it to shellSdk so it build routing and recognise it as a valid route.
 
 ```javascript
 // on init event
