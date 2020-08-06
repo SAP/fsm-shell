@@ -55,6 +55,7 @@
     "karma-mocha-reporter": "^2.2.5",
     "karma-typescript": "^5.0.3",
     "lint-staged": "^10.2.11",
+    "lodash": "^4.17.19",
     "minimist": "^1.2.5",
     "mocha": "^8.1.1",
     "nyc": "^15.1.0",
