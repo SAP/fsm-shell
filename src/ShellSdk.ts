@@ -71,7 +71,13 @@ export class ShellSdk {
   }
 
   public static isInsideShell(): boolean {
-    return window.self !== window.top;
+    // using local variable for window reference below needed to fix issue when running tests
+    // for applications which use fsm-shell in cypress
+    // cypress may replace `window.self !== window.top` with `window.self !== window.self`
+    // what makes isInsideShell method returning wrong value
+
+    const winRef = window;
+    return winRef.self !== winRef.top;
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
