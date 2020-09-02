@@ -71,7 +71,8 @@ export class ShellSdk {
   }
 
   public static isInsideShell(): boolean {
-    return window.self !== window.top;
+    const winRef = window;
+    return winRef.self !== winRef.top;
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
