@@ -299,4 +299,9 @@ describe('Shell Sdk', () => {
     expect(requestContext.called).toBe(true);
     requestContext.resetHistory();
   });
+
+  it('isInsideShell should report result depending on top end self references in window are same', () => {
+    const isInsideShell = ShellSdk.isInsideShell();
+    expect(isInsideShell).toEqual(window.top !== window.self);
+  });
 });
