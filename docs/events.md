@@ -242,6 +242,46 @@ Request value stored under specified key in cloud storage
     type: boolean
     flag indicating if value was saved successfully
 
+- ### GET_FEATURE_FLAG
+
+  ```
+  SHELL_EVENTS.Version1.GET_FEATURE_FLAG
+  ```
+
+  Request feature flag value from shell host
+
+- Request payload
+
+  type: GetFeatureFlagRequest  
+  object containing key name and default value for feature flag to get
+
+  ```typescript
+  {
+    key: string;
+    defaultValue: boolean;
+  }
+  ```
+
+- Response payload
+
+  type: GetFeatureFlagResponse  
+  object containing key name and value for feature flag
+
+  ```typescript
+  {
+    key: string;
+    value: boolean;
+  }
+  ```
+
+- Listenner
+
+  ```typescript
+  sdk.on(SHELL_EVENTS.Version1.GET_FEATURE_FLAG, (response) => {
+    console.log(`${response.key} is now ${response.value}`);
+  });
+  ```
+
 ## Plugin specific events
 
 ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
