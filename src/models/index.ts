@@ -1,4 +1,3 @@
-
 export { PermissionRequest } from './permissions/permission-request.model';
 export { PermissionResponse } from './permissions/permission-response.model';
 export { Permission } from './permissions/permission.model';
@@ -9,6 +8,9 @@ export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
 export { SettingsResponse } from './settings/settings-response.model';
 
+export { GetFeatureFlagRequest } from './feature-flag/get-feature-flag-request.model';
+export { GetFeatureFlagResponse } from './feature-flag/get-feature-flag-response.model';
+
 export { SetViewStateRequest } from './view-state/set-view-state-request.model';
 export { SetViewStateResponse } from './view-state/set-view-state-response.model';
 
@@ -17,5 +19,3 @@ export { OutletsRequestContextResponse } from './outlets/outlets-request-context
 
 export { OutletsDeleteAssignmentRequest } from './outlets-delete-assignment/outlets-delete-assignment-request.model';
 export { OutletsDeleteAssignmentResponse } from './outlets-delete-assignment/outlets-delete-assignment-response.model';
-
-
