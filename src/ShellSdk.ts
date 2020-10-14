@@ -244,9 +244,10 @@ export class ShellSdk {
         if (iFrameElement) {
           // If it come from an outlet
           if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
-            throw new Error(
+            console.warn(
               '[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.'
             );
+            return;
           }
           let from = payload.from || [];
           // If we receive from outlet request_context to fetch plugin from target, we return LOADING_FAIL
