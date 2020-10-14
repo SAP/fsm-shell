@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2020-10-14
+
+### Fixed
+
+- Replace error message for the usage of V1.SET_VIEW_STATE event to a warning
+
 ## [1.7.0] - 2020-09-02
 
 ### Added
