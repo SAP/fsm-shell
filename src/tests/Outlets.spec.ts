@@ -1,8 +1,10 @@
+
 import { ShellSdk } from '../ShellSdk';
 import { SHELL_EVENTS } from '../ShellEvents';
 import * as sinon from 'sinon';
 
 describe('Outlets', () => {
+
   let sdk: ShellSdk;
   let sdkTarget: any;
   let sdkOrigin: string;
@@ -18,13 +20,13 @@ describe('Outlets', () => {
       addEventListener: (eventType, callback) => {
         windowMockEventListenerAdded = true;
         windowMockEventType = eventType;
-        windowMockCallback = callback;
-      },
+        windowMockCallback = callback
+      }
     };
 
     sdkOrigin = 'fsm-sdk.net';
     sdkTarget = {
-      postMessage: sinon.stub(),
+      postMessage: sinon.stub()
     };
   });
 
@@ -35,12 +37,12 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
-
+    const iframe = {
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement;
+    
     sdk.registerOutlet(iframe);
     sdk.unregisterOutlet(iframe);
 
@@ -49,10 +51,10 @@ describe('Outlets', () => {
         type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
         value: {
           key: 'TECHNICIAN',
-          value: 42,
+          value: 42
         },
-        to: ['abc'], // `to` parameter should be ignored
-      },
+        to: ['abc'] // `to` parameter should be ignored
+      }
     });
 
     expect(postMessage.called).toBe(false);
@@ -72,29 +74,29 @@ describe('Outlets', () => {
       origin = _origin;
     });
 
-    sdk.onViewState('TECHNICIAN', (id) => (technicianId = id));
+    sdk.onViewState('TECHNICIAN', id => technicianId = id);
 
     // Define two outlets with different frame
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet({
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement);
+    sdk.registerOutlet({
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement);
 
     windowMockCallback({
       data: {
         type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
         value: {
           key: 'TECHNICIAN',
-          value: 42,
+          value: 42
         },
-        to: ['abc'], // `to` parameter should be ignored
-      },
+        to: ['abc'] // `to` parameter should be ignored
+      }
     });
 
     expect(type).toEqual(SHELL_EVENTS.Version1.SET_VIEW_STATE);
@@ -118,9 +120,9 @@ describe('Outlets', () => {
         type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
         value: {
           key: 'TECHNICIAN',
-          value: 42,
-        },
-      },
+          value: 42
+        }
+      }
     });
 
     expect(event.called).toBe(false);
@@ -133,9 +135,9 @@ describe('Outlets', () => {
         type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
         value: {
           key: 'TECHNICIAN',
-          value: 42,
-        },
-      },
+          value: 42
+        }
+      }
     });
     expect(event.called).toBe(false);
   });
@@ -150,17 +152,17 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet({
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement);
 
     windowMockCallback({
       data: {
         type: SHELL_EVENTS.Version1.TO_APP,
-        value: 'HI APP',
-      },
+        value: 'HI APP'
+      }
     });
 
     expect(value).toEqual('HI APP');
@@ -168,33 +170,30 @@ describe('Outlets', () => {
   });
 
   it('should not handle TO_APP message from an outlet but send parent', () => {
+    
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init(
-      ({
-        postMessage: postMessageParent,
-      } as any) as Window,
-      sdkOrigin,
-      windowMock
-    );
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
 
     let handleMessage = sinon.spy();
     sdk.on(SHELL_EVENTS.Version1.TO_APP, handleMessage);
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
-        postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
     windowMockCallback({
       source: iframe.contentWindow,
       data: {
         type: SHELL_EVENTS.Version1.TO_APP,
-        value: 'RANDOM_VALUE',
-      },
+        value: 'RANDOM_VALUE'
+      }
     });
 
     expect(postMessageParent.called).toBe(true);
@@ -203,61 +202,69 @@ describe('Outlets', () => {
   });
 
   it('should ignore SET_VIEW_STATE message from an outlet for security reason', () => {
+
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init(
-      ({
-        postMessage: postMessageParent,
-      } as any) as Window,
-      sdkOrigin,
-      windowMock
-    );
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
 
     let handleMessage = sinon.spy();
     sdk.on(SHELL_EVENTS.Version1.SET_VIEW_STATE, handleMessage);
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
-        postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
+    const consoleSpy = sinon.spy(console, 'warn');
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      data: {
+        type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
+        value: {
+          key: 'TECHNICIAN',
+          value: 42
+        }
+      }
+    });
+
+    expect(consoleSpy.calledWith('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.')).toBe(true);
     expect(postMessageParent.called).toBe(false);
     expect(handleMessage.called).toBe(false);
     expect(postMessageOutlet.called).toBe(false);
   });
 
   it('should outlet send to parent loading_success on require_context', () => {
+    
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init(
-      ({
-        postMessage: postMessageParent,
-      } as any) as Window,
-      sdkOrigin,
-      windowMock
-    );
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock);
 
     let handleMessage = sinon.spy();
     sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handleMessage);
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
-        postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
     windowMockCallback({
       data: {
         type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
         value: {
-          message: 'test',
-        },
-      },
+          message: 'test'
+        }
+      }
     });
 
     expect(postMessageParent.called).toBe(true);
@@ -272,32 +279,32 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet({
+      contentWindow: {
+        postMessage
+      } as any as Window
+    } as any as HTMLIFrameElement);
 
     windowMockCallback({
       data: {
         type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
         value: {
           isConfigurationMode: true,
-          target: '',
-        },
-      },
+          target: ''
+        }
+      }
     });
 
     expect(postMessage.called).toBe(false);
     postMessage.resetHistory();
-
+    
     windowMockCallback({
       data: {
         type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
         value: {
-          isConfigurationMode: true,
-        },
-      },
+          isConfigurationMode: true
+        }
+      }
     });
 
     expect(postMessage.called).toBe(true);
@@ -308,35 +315,32 @@ describe('Outlets', () => {
         type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
         value: {
           isConfigurationMode: true,
-          plugin: {},
-        },
-      },
+          plugin: {}
+        }
+      }
     });
 
     expect(postMessage.called).toBe(false);
+
   });
 
+
   it('should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if reached maximum depth', () => {
+
     const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init(
-      ({
-        postMessage: postMessageParent,
-      } as any) as Window,
-      sdkOrigin,
-      windowMock,
-      null,
-      3
-    );
+    sdk = ShellSdk.init({
+      postMessage: postMessageParent
+    } as any as Window, sdkOrigin, windowMock, null, 3);
 
     let handleMessage = sinon.spy();
     sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
 
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
-        postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
+    const iframe = {
+      contentWindow: {
+        postMessage: postMessageOutlet
+      } as any as Window
+    } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
     windowMockCallback({
@@ -344,10 +348,10 @@ describe('Outlets', () => {
       data: {
         type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
         value: {
-          target: 'test',
+          target: 'test'
         },
-        from: ['a', 'b'],
-      },
+        from: ['a', 'b']
+      }
     });
 
     expect(postMessageParent.called).toBe(true);
@@ -360,13 +364,14 @@ describe('Outlets', () => {
       data: {
         type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
         value: {
-          target: 'test',
+          target: 'test'
         },
-        from: ['a', 'b', 'c'],
-      },
+        from: ['a', 'b', 'c']
+      }
     });
 
     expect(postMessageParent.called).toBe(false);
     expect(postMessageOutlet.called).toBe(true);
   });
+
 });
