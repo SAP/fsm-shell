@@ -220,18 +220,20 @@ describe('Outlets', () => {
     } as any as HTMLIFrameElement;
     sdk.registerOutlet(iframe);
 
-    expect(() => {
-      windowMockCallback({
-        source: iframe.contentWindow,
-        data: {
-          type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
-          value: {
-            key: 'TECHNICIAN',
-            value: 42
-          }
+    const consoleSpy = sinon.spy(console, 'warn');
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      data: {
+        type: SHELL_EVENTS.Version1.SET_VIEW_STATE,
+        value: {
+          key: 'TECHNICIAN',
+          value: 42
         }
-      })
-    }).toThrow(new Error('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.'));
+      }
+    });
+
+    expect(consoleSpy.calledWith('[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.')).toBe(true);
     expect(postMessageParent.called).toBe(false);
     expect(handleMessage.called).toBe(false);
     expect(postMessageOutlet.called).toBe(false);
