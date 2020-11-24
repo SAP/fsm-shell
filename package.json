@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -68,7 +68,7 @@
     "start-server-and-test": "^1.11.2",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.9.7"
+    "typescript": "~3.1.6"
   },
   "dependencies": {},
   "husky": {
