@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.2] - 2020-11-24
+
+### Update
+
+- Downgrade fsm-shell dependency typescript to make it compatible with the current outlet package
+
 ## [1.7.1] - 2020-10-14
 
 ### Fixed
