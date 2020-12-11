@@ -35,7 +35,7 @@ context('Docsify start and load', () => {
     cy.visit('http://localhost:3000');
   });
 
-  it('Require_context get data from hell-host', () => {
+  it('Require_context get data from shell-host', () => {
     // https://on.cypress.io/window
     cy.window().should('have.property', 'top');
     cy.get('li > a').click();
