@@ -2,13 +2,15 @@ import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
 
+// tslint:disable
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
+// tslint:enable
 
 const DEFAULT_MAXIMUM_DEPTH = 1;
 
@@ -23,7 +25,9 @@ export class ShellSdk {
     | (<T>(type: EventType, value: T, to?: string[]) => void)
     | undefined;
 
+  // tslint:disable-next-line
   private subscribersMap: Map<EventType, Function[]>;
+  // tslint:disable-next-line
   private subscribersViewStateMap: Map<string, Function[]>;
 
   private debugger: Debugger;
@@ -106,10 +110,12 @@ export class ShellSdk {
     }
   }
 
+  // tslint:disable-next-line
   public on = (type: EventType, subscriber: Function): Function => {
     if (!this.subscribersMap.has(type)) {
       this.subscribersMap.set(type, []);
     }
+    // tslint:disable-next-line
     const subscribers = this.subscribersMap.get(type) as Function[];
     subscribers.push(subscriber);
     return () => {
@@ -117,10 +123,12 @@ export class ShellSdk {
     };
   };
 
+  // tslint:disable-next-line
   public onViewState = (key: string, subscriber: Function): Function => {
     if (!this.subscribersViewStateMap.has(key)) {
       this.subscribersViewStateMap.set(key, []);
     }
+    // tslint:disable-next-line
     const subscribers = this.subscribersViewStateMap.get(key) as Function[];
     subscribers.push(subscriber);
     return () => {
@@ -128,10 +136,12 @@ export class ShellSdk {
     };
   };
 
+  // tslint:disable-next-line
   public off = (type: EventType, subscriber: Function): void => {
     this.removeSubscriber(type, subscriber);
   };
 
+  // tslint:disable-next-line
   public offViewState = (key: string, subscriber: Function): void => {
     this.removeViewStateSubscriber(key, subscriber);
   };
@@ -154,6 +164,7 @@ export class ShellSdk {
     });
   }
 
+  // tslint:disable-next-line
   private removeSubscriber(type: EventType, subscriber: Function) {
     const subscribers = this.subscribersMap.get(type);
     if (!!subscribers) {
@@ -164,6 +175,7 @@ export class ShellSdk {
     }
   }
 
+  // tslint:disable-next-line
   private removeViewStateSubscriber(type: string, subscriber: Function) {
     const subscribers = this.subscribersViewStateMap.get(type);
     if (!!subscribers) {
@@ -212,7 +224,7 @@ export class ShellSdk {
     if (
       this.allowedOrigins &&
       Array.isArray(this.allowedOrigins) &&
-      this.allowedOrigins.length != 0 &&
+      this.allowedOrigins.length !== 0 &&
       this.allowedOrigins.indexOf(event.origin) === -1
     ) {
       console.error(`${event.origin} is not in the list of known origins`);
@@ -234,16 +246,30 @@ export class ShellSdk {
     // If current instance is not root, we act as middleman node to propagate
     if (!this.isRoot) {
       // Message come from a registered outlet, we send to parent (this.target) with a `from` value
-      const source: Window = <Window>event.source;
+      const source: Window = event.source as Window;
 
       if (source) {
         // If has a source, we look if it come from one of our HTMLIFrameElement
         const iFrameElement = Array.from(this.outletsMap.keys()).find(
           (frame) => frame.contentWindow === source
         );
-        if (iFrameElement) {
+        if (iFrameElement && iFrameElement.src) {
+          const iFrameOrigin = new URL(iFrameElement.src).origin;
+          if (iFrameOrigin !== event.origin) {
+            // If it comes from unregistered iFrame we ignore it
+            // in order to prevent unauthorized access to the data
+            this.debugger.traceEvent(
+              'blocked',
+              payload.type,
+              payload.value,
+              { from: payload.from },
+              false
+            );
+            return;
+          }
+
           // If it come from an outlet
-          if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
+          if (payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE) {
             console.warn(
               '[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.'
             );
@@ -253,7 +279,7 @@ export class ShellSdk {
           // If we receive from outlet request_context to fetch plugin from target, we return LOADING_FAIL
           // if too many depth exchanges
           if (
-            payload.type == SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+            payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
             from.length >= this.outletMaximumDepth
           ) {
             source.postMessage(
@@ -286,14 +312,14 @@ export class ShellSdk {
             }
           }
           return;
-        } else if (source != this.target) {
+        } else if (source !== this.target) {
           // ShellSdk now ignore messages from outlets if it has no outlet registered
           return;
         }
       }
 
       // Propagate SET_VIEW_STATE to childrens's outlet andset value to current subscribers
-      if (payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE) {
+      if (payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE) {
         this.outletsMap.forEach((value, key) => {
           if (key.contentWindow) {
             key.contentWindow.postMessage(
@@ -303,16 +329,18 @@ export class ShellSdk {
           }
         });
 
-        const subscribers = this.subscribersViewStateMap.get(payload.value.key);
+        const thisSubscribers = this.subscribersViewStateMap.get(
+          payload.value.key
+        );
         this.debugger.traceEvent(
           'incoming',
           payload.type,
           payload.value,
           {},
-          !!subscribers
+          !!thisSubscribers
         );
-        if (!!subscribers) {
-          for (const subscriber of subscribers) {
+        if (!!thisSubscribers) {
+          for (const subscriber of thisSubscribers) {
             subscriber(payload.value.value);
           }
         }
@@ -321,7 +349,7 @@ export class ShellSdk {
 
       // If ShellSdk receive OUTLET.REQUEST_CONTEXT with only `isConfigurationMode` we propagate to all outlets
       if (
-        payload.type == SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+        payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
         payload.value.hasOwnProperty('isConfigurationMode') &&
         !payload.value.hasOwnProperty('target') &&
         !payload.value.hasOwnProperty('plugin')
@@ -339,7 +367,7 @@ export class ShellSdk {
       // Message has a `to` value, send to an outlet as one to one communication
       if (
         payload.to &&
-        payload.to.length != 0 &&
+        payload.to.length !== 0 &&
         payload.type !== SHELL_EVENTS.Version1.TO_APP
       ) {
         this.debugger.traceEvent(
@@ -359,7 +387,7 @@ export class ShellSdk {
               {
                 type: payload.type,
                 value: payload.value,
-                to: payload.to.filter((id) => id != value),
+                to: payload.to.filter((id) => id !== value),
               },
               this.origin
             );
@@ -384,7 +412,7 @@ export class ShellSdk {
         subscriber(
           payload.value,
           event.origin,
-          payload.type == SHELL_EVENTS.Version1.SET_VIEW_STATE
+          payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE
             ? null
             : payload.from
         );
@@ -393,17 +421,20 @@ export class ShellSdk {
 
     // On REQUIRE_CONTEXT, we split and propagate viewState
     // Need to be done AFTER REQUIRE_CONTEXT event in case of plugin need auth or context.
-    if (!this.isRoot && payload.type == SHELL_EVENTS.Version1.REQUIRE_CONTEXT) {
+    if (
+      !this.isRoot &&
+      payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT
+    ) {
       const context =
-        typeof payload.value == 'string'
+        typeof payload.value === 'string'
           ? JSON.parse(payload.value)
           : payload.value;
       const viewState = context.viewState;
       if (viewState) {
-        for (let key of Object.keys(viewState)) {
-          const subscribers = this.subscribersViewStateMap.get(`${key}`);
-          if (!!subscribers) {
-            for (const subscriber of subscribers) {
+        for (const key of Object.keys(viewState)) {
+          const thisSubscribers = this.subscribersViewStateMap.get(`${key}`);
+          if (!!thisSubscribers) {
+            for (const subscriber of thisSubscribers) {
               subscriber(viewState[key]);
             }
           }
