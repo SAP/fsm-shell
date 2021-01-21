@@ -88,6 +88,40 @@ export class ShellSdk {
     this.allowedOrigins = allowedOrigins === '*' ? [] : allowedOrigins;
   }
 
+  public addAllowedOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    this.allowedOrigins.push(urlObj.origin);
+  }
+
+  public removeAllowedOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    this.allowedOrigins = this.allowedOrigins.filter(
+      (allowedOrigin) => allowedOrigin !== urlObj.origin
+    );
+  }
+
+  public isOriginAllowed(url: string): boolean {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return false;
+    }
+    return this.allowedOrigins.some(
+      (allowedOrigin) => allowedOrigin === urlObj.origin
+    );
+  }
+
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
   public registerOutlet(frame: HTMLIFrameElement) {

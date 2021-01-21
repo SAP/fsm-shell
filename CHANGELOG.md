@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Update
 
 - Validate iFrame origing against postMessage event origin when proxing events from outlets
+- Added ability to dynamically add/remove allowed origins
 
 ## [1.7.3] - 2020-12-11
 
