@@ -6,9 +6,47 @@ You can use the method `.setAllowedOrigins` to restrict message handling to a li
 
 ```javascript
 sdk = ShellSdk.init();
-sdk.setAllowedOrigins(['example.com', 'example2.com']);
+sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
 ```
 
 To help debugging, an error will be displayed if an event come from an other origin.
 
 You disable this settings, call `.setAllowedOrigins` with an empy parameter.
+
+### Allowed origins may be managed dynamically at runtime using following methods:
+
+#### - addAllowedOrigin(url: string): void
+
+method can be used to append new allowed orign to existing list of allowed origins at any time. `url` Parameter may
+contain full url, in this case origin will be extracted from it.
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
+sdk.add('https://example3.com/extension');
+// now allowed origins are: ['https://example.com', 'https://example2.com', 'https://example3.com']
+```
+
+#### - removeAllowedOrigin(url: string): void
+
+method can be used to remove origin from list of allowed orign at any time. `url` Parameter may
+contain full url, in this case origin will be extracted from it.
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
+sdk.add('https://example.com/extension');
+// now allowed origins are: ['https://example2.com']
+```
+
+#### - isOriginAllowed(url: string): boolean
+
+method can be used to test if specified origin is in the list of allowed origins. `url` Parameter may
+contain full url, in this case origin will be extracted from it.
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
+const isAllowed = sdk.isOriginAllowed('https://example.com/extension');
+// isAllowed will be set to true
+```

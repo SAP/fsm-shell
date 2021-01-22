@@ -75,5 +75,8 @@
       "check-type"
     ]
   },
-  "extends": ["tslint:latest", "tslint-config-prettier"]
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": "*/**/*.spec.ts"
+  }
 }

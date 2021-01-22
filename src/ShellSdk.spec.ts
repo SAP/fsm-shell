@@ -2,6 +2,9 @@ import { ShellSdk } from './ShellSdk';
 import { SHELL_EVENTS } from './ShellEvents';
 import * as sinon from 'sinon';
 
+const ORIGIN1 = 'https://s1.exemple.com';
+const ORIGIN2 = 'https://s2.exemple.com';
+
 describe('Shell Sdk', () => {
   let sdk: ShellSdk;
   let sdkTarget: any;
@@ -248,7 +251,7 @@ describe('Shell Sdk', () => {
       windowMock
     );
 
-    sdk.setAllowedOrigins(['https://s1.exemple.com', 'https://s2.exemple.com']);
+    sdk.setAllowedOrigins([ORIGIN1, ORIGIN2]);
 
     const data = {
       type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
@@ -298,6 +301,143 @@ describe('Shell Sdk', () => {
     windowMockCallback({ origin: 'https://s3.exemple.com', data });
     expect(requestContext.called).toBe(true);
     requestContext.resetHistory();
+  });
+
+  it('should add allowed origin', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+
+    sdk.setAllowedOrigins([ORIGIN1]);
+    sdk.addAllowedOrigin(`${ORIGIN2}/extension`);
+
+    const data = {
+      type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+      value: {
+        message: 'test data',
+      },
+    };
+
+    const requestContext = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    windowMockCallback({ origin: 'localhost:8000', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+  });
+
+  it('should remove allowed origin', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+
+    sdk.setAllowedOrigins([ORIGIN1, ORIGIN2]);
+    sdk.removeAllowedOrigin(`${ORIGIN2}/extension`);
+
+    const data = {
+      type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+      value: {
+        message: 'test data',
+      },
+    };
+
+    const requestContext = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    windowMockCallback({ origin: 'localhost:8000', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+  });
+
+  it('should remove only one allowed origin', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+
+    sdk.setAllowedOrigins([ORIGIN1]);
+    sdk.addAllowedOrigin(ORIGIN2);
+    sdk.addAllowedOrigin(ORIGIN2);
+
+    const data = {
+      type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+      value: {
+        message: 'test data',
+      },
+    };
+
+    const requestContext = sinon.spy();
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    windowMockCallback({ origin: 'localhost:8000', data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.removeAllowedOrigin(`${ORIGIN2}/extension`);
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.removeAllowedOrigin(`${ORIGIN2}/extension`);
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+  });
+
+  it('should indicate if origin allowed', () => {
+    sdk = ShellSdk.init(
+      ({
+        postMessage: () => {},
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+
+    sdk.setAllowedOrigins([ORIGIN1]);
+    expect(sdk.isOriginAllowed(ORIGIN1)).toEqual(true);
+    expect(sdk.isOriginAllowed(ORIGIN2)).toEqual(false);
   });
 
   it('isInsideShell should report result depending on top end self references in window are same', () => {
