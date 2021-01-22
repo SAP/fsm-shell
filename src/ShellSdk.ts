@@ -105,8 +105,11 @@ export class ShellSdk {
     } catch {
       return;
     }
+    const idxToRemove = this.allowedOrigins.findIndex(
+      (allowedOrigin) => allowedOrigin === urlObj.origin
+    );
     this.allowedOrigins = this.allowedOrigins.filter(
-      (allowedOrigin) => allowedOrigin !== urlObj.origin
+      (_allowedOrigin, originIdx) => originIdx !== idxToRemove
     );
   }
 
