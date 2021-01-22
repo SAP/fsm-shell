@@ -259,6 +259,7 @@ export class ShellSdk {
     }
 
     if (
+      event.source !== window.parent &&
       this.allowedOrigins &&
       Array.isArray(this.allowedOrigins) &&
       this.allowedOrigins.length !== 0 &&
