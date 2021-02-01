@@ -19,3 +19,11 @@ export { OutletsRequestContextResponse } from './outlets/outlets-request-context
 
 export { OutletsDeleteAssignmentRequest } from './outlets-delete-assignment/outlets-delete-assignment-request.model';
 export { OutletsDeleteAssignmentResponse } from './outlets-delete-assignment/outlets-delete-assignment-response.model';
+
+export {
+  AuthResponseType,
+  AuthRequest,
+} from './authentication/auth-request.model';
+export { AuthResponse } from './authentication/auth-response.model';
+
+export { RequireContextRequest } from './require-context/require-context-request.model';
