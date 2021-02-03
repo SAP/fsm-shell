@@ -5,11 +5,11 @@
 
 ## Description
 
-SAP FSM (Field Service Management) shell is an extendable Web-Application. FSM shell _host_ is the extendable part of the Web-Application and a FSM shell _client_ is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/).
+[SAP FSM (Field Service Management)](https://www.sap.com/products/field-service-management.html) shell is an extendable Web-Application. FSM shell _host_ is the extendable part of the Web-Application and a FSM shell _client_ is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US).
 
 FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
 and plugins to communicate with the shell host by using set of predefined events and api described
-below in [API Documentation](#API-Documentation).
+below in API Documentation.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ Minimal supported JavaScript version: ES5
 
 ## Support
 
-In case you need further help, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
+In case you need further help, check out the [SAP Field Service Management Help Portal](https://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
 
 ## License
 

@@ -52,7 +52,7 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `authToken` can only be accessed by applications and will not be exposed to plugins.
+  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access_token using the auth value. _Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event_
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
 
@@ -320,15 +320,15 @@ Request value stored under specified key in cloud storage
   });
   ```
 
-## Plugin specific events
+## Extension specific events
 
-ShellSdk provide a set of features which are specifically designed to allow communications with plugins running inside an application as part of the extention feature.
+ShellSdk provide a set of features which are specifically designed to allow communications with extensions running inside an application.
 
 - ### VIEW STATE
 
   View State event provide a shared context between all local instance.
 
-  As you might need to share between your application and plugins a general context to provide consistent UI, ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in a plugin for security reason, and will throw generic error object.
+  As you might need to share between your application and extensions a general context to provide consistent UI, ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in an extension for security reason, and will throw generic error object.
 
   ```typescript
   this.sdk.setViewState('TECHNICIAN', id);
@@ -350,7 +350,7 @@ ShellSdk provide a set of features which are specifically designed to allow comm
   SHELL_EVENTS.Version1.TO_APP
   ```
 
-  You can send any data from any plugin to the main application using the `TO_APP` event.
+  You can send any data from any extension to the main application using the `TO_APP` event.
 
   ```
   this.sdk.emit(SHELL_EVENTS.Version1.TO_APP, {
