@@ -34,6 +34,10 @@ Just add the fsm-shell to your `HTML` and you'll be ready to go.
 
 ```html
 <script src="https://unpkg.com/fsm-shell"></script>
+<script>
+  const { ShellSdk, SHELL_EVENTS } = FSMShell;
+  // ...
+</script>
 ```
 
 <!-- panels:end -->
