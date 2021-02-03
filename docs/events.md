@@ -19,6 +19,9 @@ Must be sent on application startup to get initial application context from the 
     clientIdentifier: string;
     clientSecret: string;
     cloudStorageKeys?: CloudStorageKey[];
+    auth?: {
+      response_type: 'token'
+    }
   }
   ```
 
@@ -41,12 +44,47 @@ Must be sent on application startup to get initial application context from the 
     userAccountFeatureFlagsUserId: string;
     erpType: string;
     erpUserId: string;
+    auth?: {
+      access_token: string,
+      token_type: string,
+      expires_in: number
+    }
   }
   ```
 
   The property `authToken` can only be accessed by applications and will not be exposed to plugins.
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
+
+- ### REQUIRE_AUTHENTICATION
+
+```
+SHELL_EVENTS.Version1.REQUIRE_AUTHENTICATION
+```
+
+Request restricted token for using by an extension
+
+- Request payload
+
+  type: object
+
+  ```typescript
+  {
+    response_type: 'token';
+  }
+  ```
+
+* Response payload
+
+  type: object
+
+  ```typescript
+  {
+    access_token: string,
+    token_type: string,
+    expires_in: number
+  }
+  ```
 
 - ### GET_PERMISSIONS
 

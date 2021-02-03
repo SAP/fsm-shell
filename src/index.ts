@@ -1,4 +1,3 @@
-
 import { ShellSdk } from './ShellSdk';
 export { ShellSdk };
 
@@ -6,6 +5,7 @@ import { SHELL_EVENTS, EventType, ErrorType } from './ShellEvents';
 export { SHELL_EVENTS, EventType, ErrorType };
 
 import {
+  RequireContextRequest,
   GetItemResponse,
   SetItemRequest,
   Permission,
@@ -18,11 +18,14 @@ import {
   OutletsRequestContextRequest,
   OutletsRequestContextResponse,
   OutletsDeleteAssignmentRequest,
-  OutletsDeleteAssignmentResponse
-}
-from './models/index';
+  OutletsDeleteAssignmentResponse,
+  AuthResponseType,
+  AuthRequest,
+  AuthResponse,
+} from './models/index';
 
 export {
+  RequireContextRequest,
   GetItemResponse,
   SetItemRequest,
   Permission,
@@ -35,5 +38,8 @@ export {
   OutletsRequestContextRequest,
   OutletsRequestContextResponse,
   OutletsDeleteAssignmentRequest,
-  OutletsDeleteAssignmentResponse
+  OutletsDeleteAssignmentResponse,
+  AuthResponseType,
+  AuthRequest,
+  AuthResponse,
 };
