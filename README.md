@@ -39,7 +39,7 @@ Documentation server will start before tests running `npm run e2e:ci`
 
 ## Support
 
-In case you need further help, check out the [SAP Field Service Management Help Portal](https://docs.coresystems.net/) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
+In case you need further help, check out the [SAP Field Service Management Help Portal](hhttps://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
 
 ## License
 
