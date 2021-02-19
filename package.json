@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/SAP/fsm-shell#readme",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "@types/jasmine": "^3.5.12",
     "@types/jasminewd2": "^2.0.8",
     "@types/sinon": "^9.0.4",
@@ -70,7 +71,9 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "~3.1.6"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@luigi-project/client": "^1.10.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && lint-staged"

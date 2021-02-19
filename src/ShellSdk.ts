@@ -1,6 +1,7 @@
 import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
+import * as LuigiClient from '@luigi-project/client';
 
 // tslint:disable
 function uuidv4() {
@@ -15,6 +16,7 @@ function uuidv4() {
 const DEFAULT_MAXIMUM_DEPTH = 1;
 
 export class ShellSdk {
+  public LuigiClient = LuigiClient;
   public static VERSION = SHELL_VERSION_INFO.VERSION;
   public static BUILD_TS = SHELL_VERSION_INFO.BUILD_TS;
 
