@@ -19,6 +19,8 @@ export type EventType =
   | 'V1.OUTLET.REQUEST_CONTEXT'
   | 'V1.OUTLET.LOADING_SUCCESS'
   | 'V1.OUTLET.LOADING_FAIL'
+  | 'V1.MODAL.OPEN'
+  | 'V1.MODAL.CLOSE'
   | string;
 
 export const SHELL_EVENTS = {
@@ -43,6 +45,10 @@ export const SHELL_EVENTS = {
       REQUEST_CONTEXT: 'V1.OUTLET.REQUEST_CONTEXT',
       LOADING_SUCCESS: 'V1.OUTLET.LOADING_SUCCESS',
       LOADING_FAIL: 'V1.OUTLET.LOADING_FAIL',
+    },
+    MODAL: {
+      OPEN: 'V1.MODAL.OPEN',
+      CLOSE: 'V1.MODAL.CLOSE',
     },
   },
   Version2: {

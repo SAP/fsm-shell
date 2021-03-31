@@ -52,7 +52,7 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access_token using the auth value. _Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event_
+  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access*token using the auth value. \_Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event*
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
 
@@ -317,6 +317,43 @@ Request value stored under specified key in cloud storage
   ```typescript
   sdk.on(SHELL_EVENTS.Version1.GET_FEATURE_FLAG, (response) => {
     console.log(`${response.key} is now ${response.value}`);
+  });
+  ```
+
+## Modal specific events
+
+Applciations can request do display a modal with a specified URL. Events include opening, closing, and confirmation a modal has been closed.
+
+- ### MODAL.OPEN
+
+  Open a modal using `SHELL_EVENTS.Version1.MODAL.OPEN` event from your application. You can specify `modalSettings` like at title or size.
+
+  ```
+  this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
+    url: 'https://example.com'
+    modalSettings: {
+      title: 'My title',
+      size: 'l'| 'm'|'s',
+    }
+  });
+  ```
+
+- ### MODAL.CLOSE
+
+  Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
+
+  ```
+  this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE, {
+    [key: string]: any
+  });
+  ```
+
+  An application can listen to the same event to trigger code on closing. This event is only received if the application emited the OPEN event.
+
+  ```typescript
+  this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSED, (content) => {
+    // React to the he closing of the app
+    // If MODAL.CLOSE was passed an argument, it will be provided here.
   });
   ```
 

@@ -397,4 +397,53 @@ describe('Outlets', () => {
     expect(postMessageParent.called).toBe(false);
     expect(postMessageOutlet.called).toBe(true);
   });
+
+  it('should only open modals with url from allowedOrigins', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+    sdk.setAllowedOrigins([EXTENSION_ORIGIN]);
+
+    const postMessageOutlet = sinon.spy();
+    const iframe = ({
+      src: EXTENSION_SRC,
+      contentWindow: ({
+        postMessage: postMessageOutlet,
+      } as any) as Window,
+    } as any) as HTMLIFrameElement;
+    sdk.registerOutlet(iframe);
+
+    const requestContext = sinon.spy();
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      origin: EXTENSION_ORIGIN,
+      data: {
+        type: SHELL_EVENTS.Version1.MODAL.OPEN,
+        value: {
+          url: EXTENSION_ORIGIN + '/my-modal-url/',
+        },
+      },
+    });
+    expect(postMessageParent.called).toBe(true);
+    postMessageParent.resetHistory();
+
+    windowMockCallback({
+      source: iframe.contentWindow,
+      origin: EXTENSION_ORIGIN,
+      data: {
+        type: SHELL_EVENTS.Version1.MODAL.OPEN,
+        value: {
+          url: 'https://example.com/my-modal-url/',
+        },
+      },
+    });
+    expect(postMessageParent.called).toBe(false);
+    postMessageParent.resetHistory();
+  });
 });
