@@ -20,6 +20,7 @@ export class ShellSdk {
 
   private static _instance: ShellSdk;
   private isRoot: boolean; // Is root if on `init`, target value is null.
+  private isInsideModal: boolean;
 
   private postMessageHandler:
     | (<T>(type: EventType, value: T, to?: string[]) => void)
@@ -48,6 +49,7 @@ export class ShellSdk {
     this.initMessageApi();
     this.debugger = new Debugger(winRef, debugId);
     this.isRoot = target == null;
+    this.isInsideModal = false;
   }
 
   public static init(
@@ -82,6 +84,10 @@ export class ShellSdk {
 
     const winRef = window;
     return winRef.self !== winRef.top;
+  }
+
+  public isInsideShellModal(): boolean {
+    return this.isInsideModal;
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
@@ -478,6 +484,7 @@ export class ShellSdk {
           ? JSON.parse(payload.value)
           : payload.value;
       const viewState = context.viewState;
+      this.isInsideModal = !!context.isInsideShellModal;
       if (viewState) {
         for (const key of Object.keys(viewState)) {
           const thisSubscribers = this.subscribersViewStateMap.get(`${key}`);

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Messages to handle MODAL open and close event
+- Add `isInsideShellModal()` method to know if app is running inside Shell Modal
 
 ## [1.9.2] - 2021-02-25
 
