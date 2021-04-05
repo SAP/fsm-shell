@@ -322,7 +322,7 @@ Request value stored under specified key in cloud storage
 
 ## Modal specific events
 
-Applciations can request do display a modal with a specified URL. Events include opening, closing, and confirmation a modal has been closed.
+Applciations can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application run inside a Shell modal.
 
 - ### MODAL.OPEN
 
