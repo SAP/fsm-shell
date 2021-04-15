@@ -20,6 +20,8 @@ export { OutletsRequestContextResponse } from './outlets/outlets-request-context
 export { OutletsDeleteAssignmentRequest } from './outlets-delete-assignment/outlets-delete-assignment-request.model';
 export { OutletsDeleteAssignmentResponse } from './outlets-delete-assignment/outlets-delete-assignment-response.model';
 
+export { SetTitleRequest } from './generic/set-title.request';
+
 export {
   AuthResponseType,
   AuthRequest,

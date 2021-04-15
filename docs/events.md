@@ -52,7 +52,7 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access_token using the auth value. _Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event_
+  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access*token using the auth value. \_Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event*
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
 
@@ -319,6 +319,27 @@ Request value stored under specified key in cloud storage
     console.log(`${response.key} is now ${response.value}`);
   });
   ```
+
+- ### SET_TITLE
+
+  ```
+  SHELL_EVENTS.Version1.SET_TITLE
+  ```
+
+  Set title of the shell browser window to value provided in payload
+
+  - Request payload
+
+    type: SetTitleRequest  
+    object containing `title` key which holds value to set title to
+
+    ```typescript
+    {
+      title: string;
+    }
+    ```
+
+  - No response will be sent
 
 ## Extension specific events
 
