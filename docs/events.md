@@ -320,6 +320,27 @@ Request value stored under specified key in cloud storage
   });
   ```
 
+- ### SET_TITLE
+
+  ```
+  SHELL_EVENTS.Version1.SET_TITLE
+  ```
+
+  Set title of the shell browser window to value provided in payload
+
+  - Request payload
+
+    type: SetTitleRequest  
+    object containing `title` key which holds value to set title to
+
+    ```typescript
+    {
+      title: string;
+    }
+    ```
+
+  - No response will be sent
+
 ## Extension specific events
 
 ShellSdk provide a set of features which are specifically designed to allow communications with extensions running inside an application.
