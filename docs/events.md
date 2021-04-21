@@ -326,7 +326,8 @@ Request value stored under specified key in cloud storage
   SHELL_EVENTS.Version1.SET_TITLE
   ```
 
-  Set title of the shell browser window to value provided in payload
+  Set title of the shell browser window to value provided in payload.
+  Previous title will be internally stored in the shell host application.
 
   - Request payload
 
@@ -338,6 +339,19 @@ Request value stored under specified key in cloud storage
       title: string;
     }
     ```
+
+  - No response will be sent
+
+- ### RESTORE_TITLE
+
+  ```
+  SHELL_EVENTS.Version1.RESTORE_TITLE
+  ```
+
+  Restore document title to the value internally stored during previous SET_TITLE 
+  event handling. If no stored title found, handling this event will do nothing.
+
+  - No request payload need to be provided
 
   - No response will be sent
 
