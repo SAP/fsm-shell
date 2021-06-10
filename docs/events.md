@@ -320,6 +320,41 @@ Request value stored under specified key in cloud storage
   });
   ```
 
+- ### SET_TITLE
+
+  ```
+  SHELL_EVENTS.Version1.SET_TITLE
+  ```
+
+  Set title of the shell browser window to value provided in payload.
+  Previous title will be internally stored in the shell host application.
+
+  - Request payload
+
+    type: SetTitleRequest  
+    object containing `title` key which holds value to set title to
+
+    ```typescript
+    {
+      title: string;
+    }
+    ```
+
+  - No response will be sent
+
+- ### RESTORE_TITLE
+
+  ```
+  SHELL_EVENTS.Version1.RESTORE_TITLE
+  ```
+
+  Restore document title to the value internally stored during previous SET_TITLE
+  event handling. If no stored title found, handling this event will do nothing.
+
+  - No request payload need to be provided
+
+  - No response will be sent
+
 ## Modal specific events
 
 Applciations can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application run inside a Shell modal.
