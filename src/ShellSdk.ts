@@ -34,6 +34,7 @@ export class ShellSdk {
   private outletsMap: Map<HTMLIFrameElement, string>;
 
   private allowedOrigins: string[] = [];
+  private ignoredOrigins: string[] = [];
 
   private constructor(
     private target: Window,
@@ -122,6 +123,35 @@ export class ShellSdk {
     }
     return this.allowedOrigins.some(
       (allowedOrigin) => allowedOrigin === urlObj.origin
+    );
+  }
+
+  public setIgnoredOrigins(ignoredOrigins: string[] = []) {
+    this.ignoredOrigins = ignoredOrigins;
+  }
+
+  public addIgnoredOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    this.ignoredOrigins.push(urlObj.origin);
+  }
+
+  public removeIgnoredOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    const idxToRemove = this.ignoredOrigins.findIndex(
+      (ignoredOrigins) => ignoredOrigins === urlObj.origin
+    );
+    this.ignoredOrigins = this.ignoredOrigins.filter(
+      (_ignoredOrigins, originIdx) => originIdx !== idxToRemove
     );
   }
 
@@ -255,6 +285,16 @@ export class ShellSdk {
   */
   private onMessage = (event: MessageEvent) => {
     if (!event.data || typeof event.data.type !== 'string') {
+      return;
+    }
+
+    if (
+      event.source !== window.parent &&
+      this.ignoredOrigins &&
+      Array.isArray(this.ignoredOrigins) &&
+      this.ignoredOrigins.length !== 0 &&
+      this.ignoredOrigins.indexOf(event.origin) !== -1
+    ) {
       return;
     }
 

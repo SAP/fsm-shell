@@ -444,4 +444,55 @@ describe('Shell Sdk', () => {
     const isInsideShell = ShellSdk.isInsideShell();
     expect(isInsideShell).toEqual(window.top !== window.self);
   });
+
+  it('should ignore events from IgnoredOrigins', () => {
+    const postMessageParent = sinon.spy();
+    sdk = ShellSdk.init(
+      ({
+        postMessage: postMessageParent,
+      } as any) as Window,
+      sdkOrigin,
+      windowMock
+    );
+
+    sdk.setIgnoredOrigins([ORIGIN1]);
+    sdk.setAllowedOrigins([ORIGIN2]);
+
+    const data = {
+      type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+      value: {
+        message: 'test data',
+      },
+    };
+
+    const requestContext = sinon.spy();
+
+    sdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, requestContext);
+
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    windowMockCallback({ origin: ORIGIN2, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.removeIgnoredOrigin(ORIGIN1);
+    sdk.addAllowedOrigin(ORIGIN1);
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+
+    sdk.addIgnoredOrigin(ORIGIN1);
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(false);
+    requestContext.resetHistory();
+
+    sdk.setIgnoredOrigins([]);
+    sdk.setAllowedOrigins([ORIGIN1]);
+
+    windowMockCallback({ origin: ORIGIN1, data });
+    expect(requestContext.called).toBe(true);
+    requestContext.resetHistory();
+  });
 });
