@@ -23,7 +23,7 @@ contain full url, in this case origin will be extracted from it.
 ```javascript
 sdk = ShellSdk.init();
 sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
-sdk.add('https://example3.com/extension');
+sdk.addAllowedOrigin('https://example3.com/extension');
 // now allowed origins are: ['https://example.com', 'https://example2.com', 'https://example3.com']
 ```
 
@@ -35,7 +35,7 @@ contain full url, in this case origin will be extracted from it.
 ```javascript
 sdk = ShellSdk.init();
 sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
-sdk.add('https://example.com/extension');
+sdk.addAllowedOrigin('https://example.com/extension');
 // now allowed origins are: ['https://example2.com']
 ```
 
@@ -50,3 +50,16 @@ sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
 const isAllowed = sdk.isOriginAllowed('https://example.com/extension');
 // isAllowed will be set to true
 ```
+
+## Ignored origins
+
+In some cases, a specific origin might need to be ignored by ShellSdk. As using **allowed origins** to filter those will display a `console.error` message, it is possible to use as an alternative the **ignored origins** as following:
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setIgnoredOrigins(['https://example.com', 'https://example2.com']);
+sdk.addIgnoredOrigin('https://example.com/extension');
+// now ignored origins are: ['https://example.com/extension']
+```
+
+Messages from those origins will be silently ignored by ShellSdk.
