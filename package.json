@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -46,7 +46,7 @@
     "husky": "^4.2.5",
     "jasmine-core": "^3.6.0",
     "jasmine-spec-reporter": "^5.0.2",
-    "karma": "^5.1.1",
+    "karma": "^6.3.4",
     "karma-bamboo-reporter": "^0.1.2",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
