@@ -29,3 +29,5 @@ export {
 export { AuthResponse } from './authentication/auth-response.model';
 
 export { RequireContextRequest } from './require-context/require-context-request.model';
+
+export { OutletsMapValue } from './outlets/outlets-map-value.model';

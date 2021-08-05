@@ -16,6 +16,10 @@ describe('Outlets', () => {
   let windowMockEventType: string;
   let windowMockCallback: Function;
 
+  const TARGET_OUTLET_NAME_1 = 'Outlet_1';
+  const TARGET_OUTLET_NAME_2 = 'Outlet_2';
+  const TARGET_OUTLET_INSIDE_OUTLET_NAME_1 = 'Outlet_Inside_Outlet_1';
+
   beforeEach(() => {
     windowMock = {
       addEventListener: (eventType, callback) => {
@@ -38,13 +42,13 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
+    const iframe = {
+      contentWindow: {
         postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
+      } as any as Window,
+    } as any as HTMLIFrameElement;
 
-    sdk.registerOutlet(iframe);
+    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
     sdk.unregisterOutlet(iframe);
 
     windowMockCallback({
@@ -78,16 +82,22 @@ describe('Outlets', () => {
     sdk.onViewState('TECHNICIAN', (id) => (technicianId = id));
 
     // Define two outlets with different frame
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet(
+      {
+        contentWindow: {
+          postMessage,
+        } as any as Window,
+      } as any as HTMLIFrameElement,
+      TARGET_OUTLET_NAME_1
+    );
+    sdk.registerOutlet(
+      {
+        contentWindow: {
+          postMessage,
+        } as any as Window,
+      } as any as HTMLIFrameElement,
+      TARGET_OUTLET_NAME_2
+    );
 
     windowMockCallback({
       data: {
@@ -153,11 +163,14 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet(
+      {
+        contentWindow: {
+          postMessage,
+        } as any as Window,
+      } as any as HTMLIFrameElement,
+      TARGET_OUTLET_NAME_1
+    );
 
     windowMockCallback({
       data: {
@@ -173,9 +186,9 @@ describe('Outlets', () => {
   it('should not handle TO_APP message from an outlet but send parent', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -185,13 +198,13 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
+    const iframe = {
       src: EXTENSION_SRC,
-      contentWindow: ({
+      contentWindow: {
         postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
-    sdk.registerOutlet(iframe);
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
 
     windowMockCallback({
       source: iframe.contentWindow,
@@ -210,9 +223,9 @@ describe('Outlets', () => {
   it('should ignore SET_VIEW_STATE message from an outlet for security reason', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -222,13 +235,13 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
+    const iframe = {
       src: EXTENSION_SRC,
-      contentWindow: ({
+      contentWindow: {
         postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
-    sdk.registerOutlet(iframe);
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
 
     const consoleSpy = sinon.spy(console, 'warn');
 
@@ -257,9 +270,9 @@ describe('Outlets', () => {
   it('should outlet send to parent loading_success on require_context', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -269,12 +282,12 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
-      contentWindow: ({
+    const iframe = {
+      contentWindow: {
         postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
-    sdk.registerOutlet(iframe);
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
 
     windowMockCallback({
       data: {
@@ -297,11 +310,14 @@ describe('Outlets', () => {
 
     // postMessage catch messages send to outlets
     const postMessage = sinon.spy();
-    sdk.registerOutlet(({
-      contentWindow: ({
-        postMessage,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement);
+    sdk.registerOutlet(
+      {
+        contentWindow: {
+          postMessage,
+        } as any as Window,
+      } as any as HTMLIFrameElement,
+      TARGET_OUTLET_NAME_1
+    );
 
     windowMockCallback({
       data: {
@@ -344,9 +360,9 @@ describe('Outlets', () => {
   it('should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if reached maximum depth', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock,
       null,
@@ -357,13 +373,13 @@ describe('Outlets', () => {
     sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
 
     const postMessageOutlet = sinon.spy();
-    const iframe = ({
+    const iframe = {
       src: EXTENSION_SRC,
-      contentWindow: ({
+      contentWindow: {
         postMessage: postMessageOutlet,
-      } as any) as Window,
-    } as any) as HTMLIFrameElement;
-    sdk.registerOutlet(iframe);
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
 
     windowMockCallback({
       source: iframe.contentWindow,
@@ -396,5 +412,123 @@ describe('Outlets', () => {
 
     expect(postMessageParent.called).toBe(false);
     expect(postMessageOutlet.called).toBe(true);
+  });
+
+  it('should add the target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension', () => {
+    let type: any;
+    let value: any;
+    let origin: string;
+    let from: string[];
+
+    const POST_MESSAGE_PARENT = sinon.spy((payload, _origin) => {
+      type = payload.type;
+      value = payload.value;
+      from = payload.from;
+      origin = _origin;
+    });
+    sdk = ShellSdk.init(
+      {
+        postMessage: POST_MESSAGE_PARENT,
+      } as any as Window,
+      sdkOrigin,
+      windowMock,
+      null,
+      3
+    );
+
+    // postMessage catch messages send to outlets
+    const POST_MESSAGE = sinon.spy();
+    const IFRAME = {
+      src: EXTENSION_SRC,
+      contentWindow: {
+        postMessage: POST_MESSAGE,
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+
+    sdk.registerOutlet(IFRAME, TARGET_OUTLET_NAME_1);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          clientIdentifier: 'example-plugin',
+        },
+      },
+      origin: EXTENSION_ORIGIN,
+      source: IFRAME.contentWindow,
+    });
+
+    const OUTLET = (sdk as any).outletsMap.get(IFRAME);
+
+    expect(POST_MESSAGE.called).toBe(false);
+    expect(POST_MESSAGE_PARENT.called).toBe(true);
+    expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
+    expect(value).toEqual({
+      clientIdentifier: 'example-plugin',
+      targetOutletName: OUTLET.targetOutletName,
+    });
+    expect(from).toEqual([OUTLET.uuid]);
+    expect(origin).toEqual(sdkOrigin);
+  });
+
+  it('should not override target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension', () => {
+    let type: any;
+    let value: any;
+    let origin: string;
+    let from: string[];
+
+    const POST_MESSAGE_PARENT = sinon.spy((payload, _origin) => {
+      type = payload.type;
+      value = payload.value;
+      from = payload.from;
+      origin = _origin;
+    });
+    sdk = ShellSdk.init(
+      {
+        postMessage: POST_MESSAGE_PARENT,
+      } as any as Window,
+      sdkOrigin,
+      windowMock,
+      null,
+      3
+    );
+
+    // postMessage catch messages send to outlets
+    const POST_MESSAGE = sinon.spy();
+    const IFRAME = {
+      src: EXTENSION_SRC,
+      contentWindow: {
+        postMessage: POST_MESSAGE,
+      } as any as Window,
+    } as any as HTMLIFrameElement;
+
+    sdk.registerOutlet(IFRAME, TARGET_OUTLET_NAME_1);
+
+    const UUID4 = '0d719835-b2fb-4683-b02c-f4da1d80f842';
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          clientIdentifier: 'example-plugin',
+          targetOutletName: TARGET_OUTLET_INSIDE_OUTLET_NAME_1,
+        },
+        from: [UUID4],
+      },
+      origin: EXTENSION_ORIGIN,
+      source: IFRAME.contentWindow,
+    });
+
+    const OUTLET = (sdk as any).outletsMap.get(IFRAME);
+
+    expect(POST_MESSAGE.called).toBe(false);
+    expect(POST_MESSAGE_PARENT.called).toBe(true);
+    expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
+    expect(value).toEqual({
+      clientIdentifier: 'example-plugin',
+      targetOutletName: TARGET_OUTLET_INSIDE_OUTLET_NAME_1,
+    });
+    expect(from).toEqual([UUID4, OUTLET.uuid]);
+    expect(origin).toEqual(sdkOrigin);
   });
 });
