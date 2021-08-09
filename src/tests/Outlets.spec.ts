@@ -465,7 +465,7 @@ describe('Outlets', () => {
     expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
     expect(value).toEqual({
       clientIdentifier: 'example-plugin',
-      targetOutletName: OUTLET.targetOutletName,
+      targetOutletName: OUTLET.name,
     });
     expect(from).toEqual([OUTLET.uuid]);
     expect(origin).toEqual(sdkOrigin);

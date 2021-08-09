@@ -1,7 +1,7 @@
 import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
-import { OutletsMapValue } from './models/outlets/outlets-map-value.model';
+import { Outlet } from './models/outlets/outlet.model';
 
 // tslint:disable
 function uuidv4() {
@@ -32,7 +32,7 @@ export class ShellSdk {
   private subscribersViewStateMap: Map<string, Function[]>;
 
   private debugger: Debugger;
-  private outletsMap: Map<HTMLIFrameElement, OutletsMapValue>;
+  private outletsMap: Map<HTMLIFrameElement, Outlet>;
 
   private allowedOrigins: string[] = [];
   private ignoredOrigins: string[] = [];
@@ -158,10 +158,10 @@ export class ShellSdk {
 
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
-  public registerOutlet(frame: HTMLIFrameElement, _targetOutletName: string) {
+  public registerOutlet(frame: HTMLIFrameElement, _name: string) {
     this.outletsMap.set(frame, {
       uuid: uuidv4(),
-      targetOutletName: _targetOutletName,
+      name: _name,
     });
   }
 
@@ -382,7 +382,7 @@ export class ShellSdk {
                 payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT &&
                 from.length === 0
               ) {
-                payload.value.targetOutletName = outlet.targetOutletName;
+                payload.value.targetOutletName = outlet.name;
               }
               // this is the uuid outlet used for routing of source object
               from = [...from, outlet.uuid];

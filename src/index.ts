@@ -23,7 +23,7 @@ import {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
-  OutletsMapValue,
+  Outlet,
 } from './models/index';
 
 export {
@@ -45,5 +45,5 @@ export {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
-  OutletsMapValue,
+  Outlet,
 };
