@@ -23,6 +23,7 @@ import {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+  Outlet,
 } from './models/index';
 
 export {
@@ -44,4 +45,5 @@ export {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+  Outlet,
 };
