@@ -1,4 +1,4 @@
 export interface Outlet {
   uuid: string;
-  name: string;
+  name: string | undefined;
 }

@@ -158,7 +158,7 @@ export class ShellSdk {
 
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
-  public registerOutlet(frame: HTMLIFrameElement, _name: string) {
+  public registerOutlet(frame: HTMLIFrameElement, _name: string | undefined) {
     this.outletsMap.set(frame, {
       uuid: uuidv4(),
       name: _name,
@@ -380,7 +380,8 @@ export class ShellSdk {
             if (outlet && outlet.uuid) {
               if (
                 payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT &&
-                from.length === 0
+                from.length === 0 &&
+                outlet.name !== undefined
               ) {
                 payload.value.targetOutletName = outlet.name;
               }
