@@ -414,62 +414,126 @@ describe('Outlets', () => {
     expect(postMessageOutlet.called).toBe(true);
   });
 
-  it('should add the target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension', () => {
-    let type: any;
-    let value: any;
-    let origin: string;
-    let from: string[];
+  it(
+    'should add the target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension' +
+      'in case target outlet name is defined',
+    () => {
+      let type: any;
+      let value: any;
+      let origin: string;
+      let from: string[];
 
-    const POST_MESSAGE_PARENT = sinon.spy((payload, _origin) => {
-      type = payload.type;
-      value = payload.value;
-      from = payload.from;
-      origin = _origin;
-    });
-    sdk = ShellSdk.init(
-      {
-        postMessage: POST_MESSAGE_PARENT,
-      } as any as Window,
-      sdkOrigin,
-      windowMock,
-      null,
-      3
-    );
+      const POST_MESSAGE_PARENT = sinon.spy((payload, _origin) => {
+        type = payload.type;
+        value = payload.value;
+        from = payload.from;
+        origin = _origin;
+      });
+      sdk = ShellSdk.init(
+        {
+          postMessage: POST_MESSAGE_PARENT,
+        } as any as Window,
+        sdkOrigin,
+        windowMock,
+        null,
+        3
+      );
 
-    // postMessage catch messages send to outlets
-    const POST_MESSAGE = sinon.spy();
-    const IFRAME = {
-      src: EXTENSION_SRC,
-      contentWindow: {
-        postMessage: POST_MESSAGE,
-      } as any as Window,
-    } as any as HTMLIFrameElement;
+      // postMessage catch messages send to outlets
+      const POST_MESSAGE = sinon.spy();
+      const IFRAME = {
+        src: EXTENSION_SRC,
+        contentWindow: {
+          postMessage: POST_MESSAGE,
+        } as any as Window,
+      } as any as HTMLIFrameElement;
 
-    sdk.registerOutlet(IFRAME, TARGET_OUTLET_NAME_1);
+      sdk.registerOutlet(IFRAME, TARGET_OUTLET_NAME_1);
 
-    windowMockCallback({
-      data: {
-        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
-        value: {
-          clientIdentifier: 'example-plugin',
+      windowMockCallback({
+        data: {
+          type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+          value: {
+            clientIdentifier: 'example-plugin',
+          },
         },
-      },
-      origin: EXTENSION_ORIGIN,
-      source: IFRAME.contentWindow,
-    });
+        origin: EXTENSION_ORIGIN,
+        source: IFRAME.contentWindow,
+      });
 
-    const OUTLET = (sdk as any).outletsMap.get(IFRAME);
+      const OUTLET = (sdk as any).outletsMap.get(IFRAME);
 
-    expect(POST_MESSAGE.called).toBe(false);
-    expect(POST_MESSAGE_PARENT.called).toBe(true);
-    expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
-    expect(value).toEqual({
-      clientIdentifier: 'example-plugin',
-      targetOutletName: OUTLET.name,
-    });
-    expect(from).toEqual([OUTLET.uuid]);
-    expect(origin).toEqual(sdkOrigin);
-  });
+      expect(POST_MESSAGE.called).toBe(false);
+      expect(POST_MESSAGE_PARENT.called).toBe(true);
+      expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
+      expect(value).toEqual({
+        clientIdentifier: 'example-plugin',
+        targetOutletName: OUTLET.name,
+      });
+      expect(from).toEqual([OUTLET.uuid]);
+      expect(origin).toEqual(sdkOrigin);
+    }
+  );
+
+  it(
+    'should not add the target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension' +
+      'in case target outlet name is undefined',
+    () => {
+      let type: any;
+      let value: any;
+      let origin: string;
+      let from: string[];
+
+      const POST_MESSAGE_PARENT = sinon.spy((payload, _origin) => {
+        type = payload.type;
+        value = payload.value;
+        from = payload.from;
+        origin = _origin;
+      });
+      sdk = ShellSdk.init(
+        {
+          postMessage: POST_MESSAGE_PARENT,
+        } as any as Window,
+        sdkOrigin,
+        windowMock,
+        null,
+        3
+      );
+
+      // postMessage catch messages send to outlets
+      const POST_MESSAGE = sinon.spy();
+      const IFRAME = {
+        src: EXTENSION_SRC,
+        contentWindow: {
+          postMessage: POST_MESSAGE,
+        } as any as Window,
+      } as any as HTMLIFrameElement;
+
+      sdk.registerOutlet(IFRAME, undefined);
+
+      windowMockCallback({
+        data: {
+          type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+          value: {
+            clientIdentifier: 'example-plugin',
+          },
+        },
+        origin: EXTENSION_ORIGIN,
+        source: IFRAME.contentWindow,
+      });
+
+      const OUTLET = (sdk as any).outletsMap.get(IFRAME);
+
+      expect(POST_MESSAGE.called).toBe(false);
+      expect(POST_MESSAGE_PARENT.called).toBe(true);
+      expect(type).toEqual(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
+      expect(value).toEqual({
+        clientIdentifier: 'example-plugin',
+      });
+      expect(from).toEqual([OUTLET.uuid]);
+      expect(origin).toEqual(sdkOrigin);
+    }
+  );
 
   it('should not override target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension', () => {
     let type: any;
