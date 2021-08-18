@@ -44,6 +44,9 @@ Must be sent on application startup to get initial application context from the 
     userAccountFeatureFlagsUserId: string;
     erpType: string;
     erpUserId: string;
+    extension: {
+      deploymentId: string;
+    }
     auth?: {
       access_token: string,
       token_type: string,
