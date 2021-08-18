@@ -22,8 +22,11 @@ Must be sent on application startup to get initial application context from the 
     auth?: {
       response_type: 'token'
     }
+    targetOutletName?: string;
   }
   ```
+
+  The property `targetOutletName` is added automatically by the FSM-Shell in case the request is sent by an extension inside an outlet. It should not be added by the extension itself.
 
 * Response payload
 
@@ -48,11 +51,16 @@ Must be sent on application startup to get initial application context from the 
       access_token: string,
       token_type: string,
       expires_in: number
+    },
+    extension?: {
+      deploymentId: string;
     }
   }
   ```
 
   The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access_token using the auth value. _Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event_
+
+  The property `extension` is only exposed to extensions. It contains information about the requesting extension. Currently, it only contains the property `deploymentId`.
 
   REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
 
@@ -348,7 +356,7 @@ Request value stored under specified key in cloud storage
   SHELL_EVENTS.Version1.RESTORE_TITLE
   ```
 
-  Restore document title to the value internally stored during previous SET_TITLE 
+  Restore document title to the value internally stored during previous SET_TITLE
   event handling. If no stored title found, handling this event will do nothing.
 
   - No request payload need to be provided
