@@ -1,6 +1,7 @@
 import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
+import { Outlet } from './models/outlets/outlet.model';
 
 // tslint:disable
 function uuidv4() {
@@ -32,9 +33,10 @@ export class ShellSdk {
   private subscribersViewStateMap: Map<string, Function[]>;
 
   private debugger: Debugger;
-  private outletsMap: Map<HTMLIFrameElement, string>;
+  private outletsMap: Map<HTMLIFrameElement, Outlet>;
 
   private allowedOrigins: string[] = [];
+  private ignoredOrigins: string[] = [];
 
   private constructor(
     private target: Window,
@@ -131,10 +133,42 @@ export class ShellSdk {
     );
   }
 
+  public setIgnoredOrigins(ignoredOrigins: string[] = []) {
+    this.ignoredOrigins = ignoredOrigins;
+  }
+
+  public addIgnoredOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    this.ignoredOrigins.push(urlObj.origin);
+  }
+
+  public removeIgnoredOrigin(url: string) {
+    let urlObj: URL;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      return;
+    }
+    const idxToRemove = this.ignoredOrigins.findIndex(
+      (ignoredOrigins) => ignoredOrigins === urlObj.origin
+    );
+    this.ignoredOrigins = this.ignoredOrigins.filter(
+      (_ignoredOrigins, originIdx) => originIdx !== idxToRemove
+    );
+  }
+
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
-  public registerOutlet(frame: HTMLIFrameElement) {
-    this.outletsMap.set(frame, uuidv4());
+  public registerOutlet(frame: HTMLIFrameElement, _name: string | undefined) {
+    this.outletsMap.set(frame, {
+      uuid: uuidv4(),
+      name: _name,
+    });
   }
 
   public unregisterOutlet(frame: HTMLIFrameElement) {
@@ -266,6 +300,16 @@ export class ShellSdk {
 
     if (
       event.source !== window.parent &&
+      this.ignoredOrigins &&
+      Array.isArray(this.ignoredOrigins) &&
+      this.ignoredOrigins.length !== 0 &&
+      this.ignoredOrigins.indexOf(event.origin) !== -1
+    ) {
+      return;
+    }
+
+    if (
+      event.source !== window.parent &&
       this.allowedOrigins &&
       Array.isArray(this.allowedOrigins) &&
       this.allowedOrigins.length !== 0 &&
@@ -348,10 +392,17 @@ export class ShellSdk {
               this.origin
             );
           } else {
-            const uuid = this.outletsMap.get(iFrameElement);
-            if (uuid) {
+            const outlet = this.outletsMap.get(iFrameElement);
+            if (outlet && outlet.uuid) {
+              if (
+                payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT &&
+                from.length === 0 &&
+                outlet.name !== undefined
+              ) {
+                payload.value.targetOutletName = outlet.name;
+              }
               // this is the uuid outlet used for routing of source object
-              from = [...from, uuid];
+              from = [...from, outlet.uuid];
               this.debugger.traceEvent(
                 'outgoing',
                 payload.type,
@@ -434,14 +485,14 @@ export class ShellSdk {
         this.outletsMap.forEach((value, key) => {
           if (
             payload.to &&
-            payload.to.indexOf(value) !== -1 &&
+            payload.to.indexOf(value.uuid) !== -1 &&
             key.contentWindow
           ) {
             key.contentWindow.postMessage(
               {
                 type: payload.type,
                 value: payload.value,
-                to: payload.to.filter((id) => id !== value),
+                to: payload.to.filter((id) => id !== value.uuid),
               },
               this.origin
             );

@@ -23,10 +23,13 @@ import {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+<<<<<<< HEAD
   ModalOpenRequest,
-  Outlet,
   ModalCloseRequest,
   ModalSize,
+=======
+  Outlet,
+>>>>>>> master
 } from './models/index';
 
 export {
@@ -48,8 +51,11 @@ export {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+<<<<<<< HEAD
   ModalOpenRequest,
-  Outlet,
   ModalCloseRequest,
   ModalSize,
+=======
+  Outlet,
+>>>>>>> master
 };

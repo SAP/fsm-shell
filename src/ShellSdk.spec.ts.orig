@@ -446,6 +446,7 @@ describe('Shell Sdk', () => {
     expect(isInsideShell).toEqual(window.top !== window.self);
   });
 
+<<<<<<< HEAD
   it('IsInsideShellModal() return true when REQUIRE_CONTEXT has isInsideShellModal: true', () => {
     let technicianId: number;
     let servicecallId: number;
@@ -463,8 +464,7 @@ describe('Shell Sdk', () => {
     });
 
     expect(sdk.isInsideShellModal()).toEqual(true);
-  });
-
+=======
   it('should ignore events from IgnoredOrigins', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
@@ -514,5 +514,6 @@ describe('Shell Sdk', () => {
     windowMockCallback({ origin: ORIGIN1, data });
     expect(requestContext.called).toBe(true);
     requestContext.resetHistory();
+>>>>>>> master
   });
 });

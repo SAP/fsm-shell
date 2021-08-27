@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.com/SAP/fsm-shell.svg?branch=master)](https://travis-ci.com/SAP/fsm-shell)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/fsm-shell/badge.svg?branch=master)](https://coveralls.io/github/SAP/fsm-shell?branch=master)
 [![npm version](https://badge.fury.io/js/fsm-shell.svg)](https://badge.fury.io/js/fsm-shell)
+[![REUSE status](https://api.reuse.software/badge/github.com/Sap/fsm-shell)](https://api.reuse.software/info/github.com/Sap/fsm-shell)
 
 # Client library for applications rendered in FSM shell host
 
@@ -43,5 +44,4 @@ In case you need further help, check out the [SAP Field Service Management Help 
 
 ## License
 
-Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
-This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the [LICENSE](./LICENSE) file.
+Copyright (c) 2021 SAP SE or an SAP affiliate company. All rights reserved. This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](./LICENSES/Apache-2.0.txt) file.
