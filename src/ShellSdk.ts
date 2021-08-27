@@ -468,7 +468,8 @@ export class ShellSdk {
           event.origin,
           payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE
             ? null
-            : payload.from
+            : payload.from,
+          event
         );
       }
     }
