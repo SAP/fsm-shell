@@ -58,7 +58,7 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access_token using the auth value. _Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event_
+  The property `authToken` can only be accessed by applications and will not be exposed to extensions. Extensions should require an access*token using the auth value. \_Also see [REQUIRE_AUTHENTICATION](#REQUIRE_AUTHENTICATION) event*
 
   The property `extension` is only exposed to extensions. It contains information about the requesting extension. Currently, it only contains the property `deploymentId`.
 
@@ -418,3 +418,22 @@ ShellSdk provide a set of features which are specifically designed to allow comm
   ```typescript
   shellSdk.on(SHELL_EVENTS.ERROR, (error) => {});
   ```
+
+## Events versioning
+
+Event name includes version part which allow to keep back compatibility when data formats in request or
+response payload needs to be changed.
+
+Below sample event name for the event which has version 2:
+
+```
+SHELL_EVENTS.Version2.GET_PERMISSIONS
+```
+
+Events supporting new data formats will be published under next
+version, while previous data formats still available under previous version number. This way application
+able to keep using previous event version without immediate need to switch to the new data formats. Switch
+to the next event version can be done later when particular application ready for new payload data format.
+
+Whilst previous event versions can be used in alredy developed applications for back compatibility, it is
+recommended to use latest event versions when building new applications which using fsm-shell library.
