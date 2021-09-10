@@ -21,6 +21,7 @@ export class ShellSdk {
 
   private static _instance: ShellSdk;
   private isRoot: boolean; // Is root if on `init`, target value is null.
+  private isInsideModal: boolean;
 
   private postMessageHandler:
     | (<T>(type: EventType, value: T, to?: string[]) => void)
@@ -50,6 +51,7 @@ export class ShellSdk {
     this.initMessageApi();
     this.debugger = new Debugger(winRef, debugId);
     this.isRoot = target == null;
+    this.isInsideModal = false;
   }
 
   public static init(
@@ -84,6 +86,10 @@ export class ShellSdk {
 
     const winRef = window;
     return winRef.self !== winRef.top;
+  }
+
+  public isInsideShellModal(): boolean {
+    return this.isInsideModal;
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
@@ -350,14 +356,24 @@ export class ShellSdk {
             return;
           }
 
+          let from = payload.from || [];
+
           // If it come from an outlet
           if (payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE) {
             console.warn(
               '[ShellSDk] A plugin tried to update viewState using SetViewState which is not allowed for security reason.'
             );
             return;
+          } else if (
+            payload.type === SHELL_EVENTS.Version1.MODAL.OPEN &&
+            from.length === 0 &&
+            !this.allowedOrigins.some((o) => payload.value.url.startsWith(o))
+          ) {
+            // If we are not root and first to receive OPEN, we block request opening a modal which has a different
+            // origin than the one allowed by the outlet
+            console.warn('[ShellSDk] MODAL OPEN url is not in allowedList.');
+            return;
           }
-          let from = payload.from || [];
           // If we receive from outlet request_context to fetch plugin from target, we return LOADING_FAIL
           // if too many depth exchanges
           if (
@@ -503,7 +519,8 @@ export class ShellSdk {
           event.origin,
           payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE
             ? null
-            : payload.from
+            : payload.from,
+          event
         );
       }
     }
@@ -519,6 +536,7 @@ export class ShellSdk {
           ? JSON.parse(payload.value)
           : payload.value;
       const viewState = context.viewState;
+      this.isInsideModal = !!context.isInsideShellModal;
       if (viewState) {
         for (const key of Object.keys(viewState)) {
           const thisSubscribers = this.subscribersViewStateMap.get(`${key}`);

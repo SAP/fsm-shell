@@ -38,6 +38,16 @@
 
   since: `1.2.6`
 
+- ## Determine if an app runs inside Shell's modal or not
+
+  using the function isInsideShellModal you can check at runtime
+
+  ```typescript
+  console.log(ShellSdk.isInsideShellModal()); // true/false
+  ```
+
+  since: `1.10.0`
+
 - ## Sending event to the shell host application
 
   event to the shell host should be sent by using _emit_ method from _ShellSdk_

@@ -23,7 +23,10 @@ import {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+  ModalOpenRequest,
   Outlet,
+  ModalCloseRequest,
+  ModalSize,
 } from './models/index';
 
 export {
@@ -45,5 +48,8 @@ export {
   AuthResponseType,
   AuthRequest,
   AuthResponse,
+  ModalOpenRequest,
   Outlet,
+  ModalCloseRequest,
+  ModalSize,
 };
