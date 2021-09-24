@@ -1,5 +1,4 @@
-
 export interface OutletsDeleteAssignmentResponse<T> {
-  target: string,
+  target: string;
   error?: string;
 }

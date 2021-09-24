@@ -195,6 +195,7 @@ describe('Shell Sdk', () => {
 
     expect(technicianId).toEqual(42);
     expect(servicecallId).toEqual(1337);
+    expect(sdk.isInsideShellModal()).toEqual(false);
   });
 
   it('should trigger onViewState after request_context then send to parent loading_success', () => {
@@ -443,6 +444,25 @@ describe('Shell Sdk', () => {
   it('isInsideShell should report result depending on top end self references in window are same', () => {
     const isInsideShell = ShellSdk.isInsideShell();
     expect(isInsideShell).toEqual(window.top !== window.self);
+  });
+
+  it('IsInsideShellModal() return true when REQUIRE_CONTEXT has isInsideShellModal: true', () => {
+    let technicianId: number;
+    let servicecallId: number;
+
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+          isInsideShellModal: true,
+        },
+      },
+    });
+
+    expect(sdk.isInsideShellModal()).toEqual(true);
   });
 
   it('should ignore events from IgnoredOrigins', () => {
