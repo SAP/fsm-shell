@@ -173,6 +173,8 @@ Request permissions for specified object from the shell
 
 - ### GET_SETTINGS
 
+  With this event you can get company specific settings. You can find the available settings in the FSM admin page in "Companies -> select a company -> Company Settings". Here you can create your own settings and fetch them with this event. You can also fetch the existing settings, but consider that many of them are more specific to FSM applications and have a internal mapping. Therefore, you can not fetch them with the key of the company settings from the admin page. In case you need some of these settings, then please contact us. [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find more information about companies. 
+
   ```
   SHELL_EVENTS.Version1.GET_SETTINGS
   ```
@@ -199,12 +201,22 @@ Request permissions for specified object from the shell
   - Listenner
 
     ```typescript
-    sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (value) => {
+    sdk.on(SHELL_EVENTS.Version1.GET_SETTINGS, (value) => {
       console.log(`item is now ${value}`);
     });
     ```
 
+> Note: Below in the table you can see some common keys.
+
+| Key | value type | Description |
+|---|---|---|
+| userPerson | object | User specific information like name, mail and crowdType |
+| CoreSystems.FSM.StandaloneCompany | boolean | [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find information about standalone companies |
+
+
 - ### GET_STORAGE_ITEM
+
+With this event you can get user specific settings. You can find the available settings in the FSM admin page in "Users -> select a user -> User Settings". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html) you can find more information about users. 
 
 <!-- tabs:start -->
 
@@ -262,6 +274,14 @@ Request value stored under specified key in cloud storage
   ```
 
 <!-- tabs:end -->
+
+> Note: Below in the table you can see some common keys.
+
+| Key | value type | Description |
+|---|---|---|
+| Cockpit_SelectedCompanyName | string | Name of the current selected company |
+| Cockpit_SelectedLocale | string | Current selected locale |
+
 
 - ### SET_STORAGE_ITEM
 
