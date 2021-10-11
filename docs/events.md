@@ -96,6 +96,8 @@ Request restricted token for using by an extension
 
 - ### GET_PERMISSIONS
 
+  With this event you can get permission objects. You can find the available permission object types in the FSM admin page in "User Groups -> select an item -> Permissions -> Object Type". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/permissions-objects.html) you can also find more information about the permission objects. 
+
 <!-- tabs:start -->
 
 #### **Version 2**
@@ -112,8 +114,8 @@ Request permissions for specified object from the shell
 
   ```typescript
   {
-    objectName: string;
-    owners?: string[];
+    objectName: string; // permission object type
+    owners?: string[]; // usernames
   }
   ```
 
@@ -170,6 +172,14 @@ Request permissions for specified object from the shell
   ```
 
 <!-- tabs:end -->
+
+
+> Note: Below in the table you can see some common object types.
+
+| objectName | Description |
+|---|---|
+| ACTIVITY | Permissions about the business data object "Activity" |
+| SERVICECALL | Permissions about the business data object "ServiceCall" |
 
 - ### GET_SETTINGS
 
@@ -310,6 +320,8 @@ Request value stored under specified key in cloud storage
 
 - ### GET_FEATURE_FLAG
 
+  Feature flags are in internally used flags in FSM to control some new features when the preview mode is off.
+
   ```
   SHELL_EVENTS.Version1.GET_FEATURE_FLAG
   ```
@@ -393,7 +405,7 @@ Applciations can request do display a modal with a specified URL. Events include
 
   ```
   this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
-    url: 'https://example.com'
+    url: 'https://example.com',
     modalSettings: {
       title: 'My title',
       size: 'l'| 'm'|'s',
