@@ -115,7 +115,7 @@ Request permissions for specified object from the shell
   ```typescript
   {
     objectName: string; // permission object type
-    owners?: string[]; // usernames
+    owners?: string[]; // person Ids
   }
   ```
 
