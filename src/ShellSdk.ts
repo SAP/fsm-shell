@@ -244,17 +244,17 @@ export class ShellSdk {
     }
 
     if (!!this.validator && !!eventValidationConfiguration[type]) {
-      const validateionConfig =
+      const validationConfig =
         this.validationMode === 'client'
           ? eventValidationConfiguration[type].request
           : eventValidationConfiguration[type].response;
 
-      if (!!validateionConfig) {
-        if (!validateionConfig.validationFunction) {
-          validateionConfig.validationFunction =
-            this.validator.getValidationFunction(validateionConfig.schema);
+      if (!!validationConfig) {
+        if (!validationConfig.validationFunction) {
+          validationConfig.validationFunction =
+            this.validator.getValidationFunction(validationConfig.schema);
         }
-        const validationResult = validateionConfig.validationFunction(value);
+        const validationResult = validationConfig.validationFunction(value);
         if (!validationResult.isValid) {
           throw new PayloadValidationError(
             'Paiload validation failed',
