@@ -257,7 +257,7 @@ export class ShellSdk {
         const validationResult = validationConfig.validationFunction(value);
         if (!validationResult.isValid) {
           throw new PayloadValidationError(
-            'Paiload validation failed',
+            'Payload validation failed',
             validationResult.error
           );
         }
