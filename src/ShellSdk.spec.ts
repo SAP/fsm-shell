@@ -1,5 +1,6 @@
 import { ShellSdk } from './ShellSdk';
 import { SHELL_EVENTS } from './ShellEvents';
+import { PayloadValidationError } from './validation/payload-validation-error';
 import * as sinon from 'sinon';
 
 const ORIGIN1 = 'https://s1.exemple.com';
@@ -7,7 +8,11 @@ const ORIGIN2 = 'https://s2.exemple.com';
 
 describe('Shell Sdk', () => {
   let sdk: ShellSdk;
-  let sdkTarget: any;
+  let sdkTarget:
+    | any
+    | {
+        postMessage: sinon.SinonStub;
+      };
   let sdkOrigin: string;
   let data: any;
 
@@ -38,7 +43,7 @@ describe('Shell Sdk', () => {
     expect(sdk).toBeDefined();
   });
   it('should create instance as Root', () => {
-    sdk = ShellSdk.init((null as any) as Window, sdkOrigin, windowMock);
+    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
     expect(sdk).toBeDefined();
   });
 
@@ -147,9 +152,9 @@ describe('Shell Sdk', () => {
   it('should confirm context with request_context_done event', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -201,9 +206,9 @@ describe('Shell Sdk', () => {
   it('should trigger onViewState after request_context then send to parent loading_success', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -245,9 +250,9 @@ describe('Shell Sdk', () => {
   it('should only accept events from allowedOrigins', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -307,9 +312,9 @@ describe('Shell Sdk', () => {
   it('should add allowed origin', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -344,9 +349,9 @@ describe('Shell Sdk', () => {
   it('should remove allowed origin', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -381,9 +386,9 @@ describe('Shell Sdk', () => {
   it('should remove only one allowed origin', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -429,9 +434,9 @@ describe('Shell Sdk', () => {
 
   it('should indicate if origin allowed', () => {
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: () => {},
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -468,9 +473,9 @@ describe('Shell Sdk', () => {
   it('should ignore events from IgnoredOrigins', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
-      ({
+      {
         postMessage: postMessageParent,
-      } as any) as Window,
+      } as any as Window,
       sdkOrigin,
       windowMock
     );
@@ -514,5 +519,79 @@ describe('Shell Sdk', () => {
     windowMockCallback({ origin: ORIGIN1, data });
     expect(requestContext.called).toBe(true);
     requestContext.resetHistory();
+  });
+
+  describe('payload validation', () => {
+    it('should trigger validation and indicate success', () => {
+      const shellSdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+      const validationStub = sinon.stub().returns({
+        isValid: true,
+      });
+
+      shellSdk.setValidator({
+        getValidationFunction: () => validationStub,
+      });
+
+      shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, { key: 'value' });
+
+      expect(validationStub.getCalls().length).toEqual(1);
+      expect(
+        (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
+      ).toEqual(1);
+    });
+
+    it('should trigger validation and indicate error', () => {
+      const shellSdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+      const errorMock = new Error('Validation Failed');
+
+      const validationStub = sinon.stub().returns({
+        isValid: false,
+        error: errorMock,
+      });
+
+      shellSdk.setValidator({
+        getValidationFunction: () => validationStub,
+      });
+
+      let isInvalid = false;
+      let error: PayloadValidationError | null = null;
+
+      try {
+        shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_AUTHENTICATION, {
+          key: 'value',
+        });
+      } catch (e) {
+        isInvalid = true;
+        error = e;
+      }
+
+      expect(validationStub.getCalls().length).toEqual(1);
+      expect(
+        (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
+      ).toEqual(0);
+      expect(error.name).toEqual('PayloadValidationError');
+      expect(error.detail).toEqual(errorMock);
+      expect(isInvalid).toEqual(true);
+    });
+
+    it('should not trigger validation for events without schema configuration', () => {
+      const shellSdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+      const validationStub = sinon.stub().returns({
+        isValid: true,
+      });
+
+      shellSdk.setValidator({
+        getValidationFunction: () => validationStub,
+      });
+
+      shellSdk.emit(SHELL_EVENTS.Version1.RESTORE_TITLE, null);
+
+      expect(validationStub.getCalls().length).toEqual(0);
+      expect(
+        (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
+      ).toEqual(1);
+    });
   });
 });
