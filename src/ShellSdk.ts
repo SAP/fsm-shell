@@ -2,6 +2,11 @@ import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
 import { Outlet } from './models/outlets/outlet.model';
+import { PayloadValidator } from './validation/interfaces/payload-validator';
+import { eventValidationConfiguration } from './validation/schemas/validation-configuration';
+import { PayloadValidationError } from './validation/payload-validation-error';
+
+export type ValidationMode = 'host' | 'client';
 
 // tslint:disable
 function uuidv4() {
@@ -22,6 +27,8 @@ export class ShellSdk {
   private static _instance: ShellSdk;
   private isRoot: boolean; // Is root if on `init`, target value is null.
   private isInsideModal: boolean;
+  private validator: null | PayloadValidator = null;
+  private validationMode: ValidationMode = 'client';
 
   private postMessageHandler:
     | (<T>(type: EventType, value: T, to?: string[]) => void)
@@ -162,6 +169,14 @@ export class ShellSdk {
     );
   }
 
+  public setValidator(
+    validator: PayloadValidator,
+    validationMode: ValidationMode = 'client'
+  ) {
+    this.validator = validator;
+    this.validationMode = validationMode;
+  }
+
   // Called by outlet component to assign an generated uuid to an iframe. This is key
   // to allow one to one communication between a pluging and shell-host
   public registerOutlet(frame: HTMLIFrameElement, _name: string | undefined) {
@@ -227,6 +242,28 @@ export class ShellSdk {
     if (!this.postMessageHandler) {
       throw new Error("ShellSdk wasn't initialized, message handler not set.");
     }
+
+    if (!!this.validator && !!eventValidationConfiguration[type]) {
+      const validateionConfig =
+        this.validationMode === 'client'
+          ? eventValidationConfiguration[type].request
+          : eventValidationConfiguration[type].response;
+
+      if (!!validateionConfig) {
+        if (!validateionConfig.validationFunction) {
+          validateionConfig.validationFunction =
+            this.validator.getValidationFunction(validateionConfig.schema);
+        }
+        const validationResult = validateionConfig.validationFunction(value);
+        if (!validationResult.isValid) {
+          throw new PayloadValidationError(
+            'Paiload validation failed',
+            validationResult.error
+          );
+        }
+      }
+    }
+
     // Only root can send a message to a specific node
     this.postMessageHandler(type, value, this.isRoot ? to : undefined);
   }
