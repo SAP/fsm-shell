@@ -3,7 +3,10 @@ import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
 import { Outlet } from './models/outlets/outlet.model';
 import { PayloadValidator } from './validation/interfaces/payload-validator';
-import { eventValidationConfiguration } from './validation/schemas/validation-configuration';
+import {
+  getEventValidationConfiguration,
+  EventValidationConfiguration,
+} from './validation/schemas/validation-configuration';
 import { PayloadValidationError } from './validation/payload-validation-error';
 
 export type ValidationMode = 'host' | 'client';
@@ -29,6 +32,7 @@ export class ShellSdk {
   private isInsideModal: boolean;
   private validator: null | PayloadValidator = null;
   private validationMode: ValidationMode = 'client';
+  private eventValidationConfiguration: EventValidationConfiguration;
 
   private postMessageHandler:
     | (<T>(type: EventType, value: T, to?: string[]) => void)
@@ -59,6 +63,7 @@ export class ShellSdk {
     this.debugger = new Debugger(winRef, debugId);
     this.isRoot = target == null;
     this.isInsideModal = false;
+    this.eventValidationConfiguration = getEventValidationConfiguration();
   }
 
   public static init(
@@ -243,11 +248,11 @@ export class ShellSdk {
       throw new Error("ShellSdk wasn't initialized, message handler not set.");
     }
 
-    if (!!this.validator && !!eventValidationConfiguration[type]) {
+    if (!!this.validator && !!this.eventValidationConfiguration[type]) {
       const validationConfig =
         this.validationMode === 'client'
-          ? eventValidationConfiguration[type].request
-          : eventValidationConfiguration[type].response;
+          ? this.eventValidationConfiguration[type].request
+          : this.eventValidationConfiguration[type].response;
 
       if (!!validationConfig) {
         if (!validationConfig.validationFunction) {

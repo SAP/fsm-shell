@@ -48,152 +48,153 @@ export interface EventValidationConfiguration {
   };
 }
 
-export const eventValidationConfiguration: EventValidationConfiguration = {
-  [SHELL_EVENTS.Version1.REQUIRE_AUTHENTICATION]: {
-    request: {
-      schema: authRequest_v1_schema,
-      validationFunction: null,
+export const getEventValidationConfiguration =
+  (): EventValidationConfiguration => ({
+    [SHELL_EVENTS.Version1.REQUIRE_AUTHENTICATION]: {
+      request: {
+        schema: authRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: authResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: authResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.REQUIRE_CONTEXT]: {
-    request: {
-      schema: requireContextRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.REQUIRE_CONTEXT]: {
+      request: {
+        schema: requireContextRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.GET_STORAGE_ITEM]: {
-    request: {
-      schema: getItemRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.GET_STORAGE_ITEM]: {
+      request: {
+        schema: getItemRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getItemResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getItemResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version2.GET_STORAGE_ITEM]: {
-    request: {
-      schema: getItemRequest_v2_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version2.GET_STORAGE_ITEM]: {
+      request: {
+        schema: getItemRequest_v2_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getItemResponse_v2_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getItemResponse_v2_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.SET_STORAGE_ITEM]: {
-    request: {
-      schema: setItemRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.SET_STORAGE_ITEM]: {
+      request: {
+        schema: setItemRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.GET_FEATURE_FLAG]: {
-    request: {
-      schema: getFeatureFlagRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.GET_FEATURE_FLAG]: {
+      request: {
+        schema: getFeatureFlagRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getFeatureFlagResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getFeatureFlagResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.SET_TITLE]: {
-    request: {
-      schema: setTitleRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.SET_TITLE]: {
+      request: {
+        schema: setTitleRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.MODAL.OPEN]: {
-    request: {
-      schema: modalOpenRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.MODAL.OPEN]: {
+      request: {
+        schema: modalOpenRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.MODAL.CLOSE]: {
-    request: {
-      schema: modalCloseRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.MODAL.CLOSE]: {
+      request: {
+        schema: modalCloseRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.GET_PERMISSIONS]: {
-    request: {
-      schema: getPermissionsRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.GET_PERMISSIONS]: {
+      request: {
+        schema: getPermissionsRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getPermissionsResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getPermissionsResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version2.GET_PERMISSIONS]: {
-    request: {
-      schema: getPermissionsRequest_v2_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version2.GET_PERMISSIONS]: {
+      request: {
+        schema: getPermissionsRequest_v2_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getPermissionsResponse_v2_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getPermissionsResponse_v2_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.GET_SETTINGS]: {
-    request: {
-      schema: getSettingsRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.GET_SETTINGS]: {
+      request: {
+        schema: getSettingsRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getSettingsResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: getSettingsResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.SET_VIEW_STATE]: {
-    request: {
-      schema: setViewStateRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.SET_VIEW_STATE]: {
+      request: {
+        schema: setViewStateRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: setViewStateResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: setViewStateResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT]: {
-    request: {
-      schema: outletsRequestContextRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT]: {
+      request: {
+        schema: outletsRequestContextRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: outletsRequestContextResponse_v1_schema,
+        validationFunction: null,
+      },
     },
-    response: {
-      schema: outletsRequestContextResponse_v1_schema,
-      validationFunction: null,
-    },
-  },
 
-  [SHELL_EVENTS.Version1.OUTLET.ADD_PLUGIN]: {
-    request: {
-      schema: outletsAddPluginRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.OUTLET.ADD_PLUGIN]: {
+      request: {
+        schema: outletsAddPluginRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
 
-  [SHELL_EVENTS.Version1.OUTLET.REMOVE_PLUGIN]: {
-    request: {
-      schema: outletsRemovePluginRequest_v1_schema,
-      validationFunction: null,
+    [SHELL_EVENTS.Version1.OUTLET.REMOVE_PLUGIN]: {
+      request: {
+        schema: outletsRemovePluginRequest_v1_schema,
+        validationFunction: null,
+      },
     },
-  },
-};
+  });

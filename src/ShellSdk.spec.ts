@@ -593,5 +593,51 @@ describe('Shell Sdk', () => {
         (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
       ).toEqual(1);
     });
+
+    it('should have separate event validation configuration for each shellSdk instance', () => {
+      const shellSdk1 = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+      const validationStub1 = sinon.stub().returns({
+        isValid: true,
+      });
+
+      shellSdk1.setValidator({
+        getValidationFunction: () => validationStub1,
+      });
+
+      shellSdk1.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, { key: 'value' });
+
+      expect(validationStub1.getCalls().length).toEqual(1);
+      expect(
+        (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
+      ).toEqual(1);
+
+      const shellSdk2 = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+      const validationStub2 = sinon.stub().returns({
+        isValid: false,
+      });
+
+      sdkTarget = {
+        postMessage: sinon.stub(),
+      };
+
+      shellSdk2.setValidator({
+        getValidationFunction: () => validationStub2,
+      });
+
+      let isError = false;
+      try {
+        shellSdk2.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, { key: 'value' });
+      } catch (_error) {
+        isError = true;
+      }
+
+      expect(validationStub2.getCalls().length).toEqual(1);
+      expect(
+        (sdkTarget.postMessage as sinon.SinonStub).getCalls().length
+      ).toEqual(0);
+      expect(isError).toEqual(true);
+    });
   });
 });
