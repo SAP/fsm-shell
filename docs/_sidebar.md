@@ -12,6 +12,8 @@
 
   - [ShellSdk Events](events.md)
 
+  - [Events payload validation](validation.md)
+
   - [Security](security.md)
 
   - [Debugging](debugging.md)
