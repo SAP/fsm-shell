@@ -5,6 +5,20 @@ import { SHELL_EVENTS, EventType, ErrorType } from './ShellEvents';
 export { SHELL_EVENTS, EventType, ErrorType };
 
 import {
+  PayloadValidator,
+  PayloadValidationFunction,
+  PayloadValidationResponse,
+} from './validation/interfaces/payload-validator';
+export {
+  PayloadValidator,
+  PayloadValidationFunction,
+  PayloadValidationResponse,
+};
+
+import { PayloadValidationError } from './validation/payload-validation-error';
+export { PayloadValidationError };
+
+import {
   RequireContextRequest,
   GetItemResponse,
   SetItemRequest,
