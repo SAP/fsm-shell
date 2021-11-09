@@ -10,7 +10,7 @@ application.
 In order to keep moderate size of fsm-shell package it doesn't include any library for JSON schema validation
 and consuming application must provide it to fsm-shell library when validation need to be enabled. Next chapter
 contains detailed instructions on how validation should be enabled and how to provide external library  
-for JSON scehema validation to fsm-shell.
+for JSON schema validation to fsm-shell.
 
 When validation enabled it will be executed for each outgoing event when `shellSdk.emit` method called. In
 case if validation passed successfully, event will be sent to the host application. If validation fails then
@@ -23,17 +23,17 @@ validation library by service which implements `PayloadValidator` interface defi
 
 `PayloadValidator` interface has following definition
 
-```typescript
+```javascript
 interface PayloadValidator {
   getValidationFunction(schema: object): PayloadValidationFunction;
 }
 ```
 
-The only method defined in that inteface is `getValidationFunction` which should define 1 argument in
+The only method defined in that interface is `getValidationFunction` which should define 1 argument in
 which JSON schema object will be provided. That schema should be used for further payload validation.
 The method must return validation function with signature as following:
 
-```typescript
+```javascript
 type PayloadValidationFunction = (data: any) => PayloadValidationResponse;
 ```
 
@@ -42,7 +42,7 @@ in `getValidationFunction` method call. Typically validation will be done by usi
 JSON schema validation. Validation function should return validation result of `PayloadValidationResponse` type
 which shown below:
 
-```typescript
+```javascript
 interface PayloadValidationResponse {
   isValid: boolean;
   error?: any;
@@ -64,7 +64,7 @@ It is recommended to call `setValidator` method right after initializing ShellSd
 
 Below shown sample code snippet for enabling validation:
 
-```typescript
+```javascript
 import { ShellSdk } from 'fsm-shell';
 ...
 const shellSdk = ShellSdk.init(parent, '*');
@@ -77,13 +77,13 @@ Validation if enabled will be triggered each time when outgoing event will be em
 `shellSdk.emit` method. If payload validation failed, exception will be raised. To catch the exception call to `shellSdk.emit` method should be wrapped to `try... catch` block and `catch` section should
 contain code to handle the validation error.
 
-```
+```javascript
 try {
-  shellSdk.emit(event, payload)
+  shellSdk.emit(event, payload);
 } catch (error) {
   if (error instanceof PayloadValidationError) {
     console.log('Payload validation failed: ', error.message);
-    console.log('Details: ', error.detail)
+    console.log('Details: ', error.detail);
   }
 }
 ```
@@ -95,7 +95,7 @@ Additional error information can be accessed via `error.detail` property.
 Below sample implementation of payload validation service which using Ajv validator 3rd party library
 for validating payload aginst JSON schema provided by fsm-shell.
 
-```
+```javascript
 import { Injectable } from '@angular/core';
 import { PayloadValidator, PayloadValidationFunction } from 'fsm-shell';
 import * as Ajv from 'ajv';
