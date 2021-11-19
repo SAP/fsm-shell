@@ -1,4 +1,3 @@
-export interface OutletsRequestDynamicContextRequest<T> {
+export interface OutletsRequestDynamicContextRequest {
   target: string;
-  showMocks?: boolean;
 }

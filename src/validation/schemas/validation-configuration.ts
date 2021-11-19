@@ -31,6 +31,8 @@ import { outletsRequestContextRequest_v1_schema } from './outlets/outlets-reques
 import { outletsRequestContextResponse_v1_schema } from './outlets/outlets-request-context-response.v1.schema';
 import { outletsAddPluginRequest_v1_schema } from './outlets/outlets-add-plugin-request.v1.schema';
 import { outletsRemovePluginRequest_v1_schema } from './outlets/outlets-remove-plugin-request.v1.schema';
+import { outletsRequestDynamicContextRequest_v1_schema } from './outlets/outlets-request-dynamic-context-request.v1.schema';
+import { outletsRequestDynamicContextResponse_v1_schema } from './outlets/outlets-request-dynamic-context-response.v1.schema';
 
 import { SHELL_EVENTS } from '../../ShellEvents';
 
@@ -180,6 +182,17 @@ export const getEventValidationConfiguration =
       },
       response: {
         schema: outletsRequestContextResponse_v1_schema,
+        validationFunction: null,
+      },
+    },
+
+    [SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT]: {
+      request: {
+        schema: outletsRequestDynamicContextRequest_v1_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: outletsRequestDynamicContextResponse_v1_schema,
         validationFunction: null,
       },
     },

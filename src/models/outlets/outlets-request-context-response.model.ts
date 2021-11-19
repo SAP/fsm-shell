@@ -1,7 +1,6 @@
-
-export interface OutletsRequestContextResponse<T> {
-  target: string;
-  isRootNodeHttps: boolean;
-  isConfigurationMode?: boolean;
+export interface OutletsRequestContextResponse {
+  target?: string;
+  isRootNodeHttps?: boolean;
+  isConfigurationMode: boolean;
   plugin?: any;
 }

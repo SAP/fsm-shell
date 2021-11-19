@@ -1,3 +1,3 @@
-export interface ModalCloseRequest<T> {
+export interface ModalCloseRequest {
   [key: string]: any;
 }
