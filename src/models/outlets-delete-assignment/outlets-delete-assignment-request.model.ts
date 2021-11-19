@@ -1,4 +1,4 @@
-
-export interface OutletsDeleteAssignmentRequest<T> {
+export interface OutletsDeleteAssignmentRequest {
   target: string;
+  assignmentId?: string;
 }

@@ -1,5 +1,5 @@
 export type ModalSize = 'l' | 'm' | 's';
-export interface ModalOpenRequest<T> {
+export interface ModalOpenRequest {
   url: string;
   modalSettings?: {
     title?: string;
