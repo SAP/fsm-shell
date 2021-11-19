@@ -10,6 +10,7 @@ export const outletsRequestContextRequest_v1_schema = {
     showMocks: {
       type: 'boolean',
     },
+    outletSettings: {},
   },
   required: ['target'],
 };
