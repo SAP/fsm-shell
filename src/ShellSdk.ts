@@ -495,11 +495,17 @@ export class ShellSdk {
       }
 
       // If ShellSdk receive OUTLET.REQUEST_CONTEXT with only `isConfigurationMode` we propagate to all outlets
+      // If ShellSdk receive OUTLET.REQUEST_DYNAMIC_CONTEXT with only `areDynamicOutletsEnabled` we propagate to all outlets
       if (
-        payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
-        payload.value.hasOwnProperty('isConfigurationMode') &&
-        !payload.value.hasOwnProperty('target') &&
-        !payload.value.hasOwnProperty('plugin')
+        (payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+          payload.value.hasOwnProperty('isConfigurationMode') &&
+          !payload.value.hasOwnProperty('target') &&
+          !payload.value.hasOwnProperty('plugin')) ||
+        (payload.type ===
+          SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT &&
+          payload.value.hasOwnProperty('areDynamicOutletsEnabled') &&
+          !payload.value.hasOwnProperty('target') &&
+          !payload.value.hasOwnProperty('plugins'))
       ) {
         this.outletsMap.forEach((value, key) => {
           if (key.contentWindow) {

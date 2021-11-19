@@ -1,4 +1,5 @@
-export interface OutletsRequestContextRequest<T> {
+export interface OutletsRequestContextRequest {
   target: string;
+  assignmentId?: string;
   showMocks?: boolean;
 }

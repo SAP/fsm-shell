@@ -4,6 +4,9 @@ export const outletsRequestContextRequest_v1_schema = {
     target: {
       type: 'string',
     },
+    assignmentId: {
+      type: 'string',
+    },
     showMocks: {
       type: 'boolean',
     },

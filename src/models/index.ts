@@ -17,6 +17,9 @@ export { GetFeatureFlagResponse } from './feature-flag/get-feature-flag-response
 export { SetViewStateRequest } from './view-state/set-view-state-request.model';
 export { SetViewStateResponse } from './view-state/set-view-state-response.model';
 
+export { OutletsRequestDynamicContextRequest } from './outlets/outlets-request-dynamic-context-request.model';
+export { OutletsRequestDynamicContextResponse } from './outlets/outlets-request-dynamic-context-response.model';
+
 export { OutletsRequestContextRequest } from './outlets/outlets-request-context-request.model';
 export { OutletsRequestContextResponse } from './outlets/outlets-request-context-response.model';
 

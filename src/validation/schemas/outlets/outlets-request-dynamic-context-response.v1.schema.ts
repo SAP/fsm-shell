@@ -1,4 +1,4 @@
-export const outletsRequestContextResponse_v1_schema = {
+export const outletsRequestDynamicContextResponse_v1_schema = {
   type: 'object',
   properties: {
     target: {
@@ -10,7 +10,10 @@ export const outletsRequestContextResponse_v1_schema = {
     isConfigurationMode: {
       type: 'boolean',
     },
-    plugin: {},
+    areDynamicOutletsEnabled: {
+      type: 'boolean',
+    },
+    plugins: [],
   },
-  required: ['isConfigurationMode'],
+  required: ['areDynamicOutletsEnabled'],
 };

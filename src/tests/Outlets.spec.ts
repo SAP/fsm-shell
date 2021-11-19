@@ -357,6 +357,72 @@ describe('Outlets', () => {
     expect(postMessage.called).toBe(false);
   });
 
+  it(
+    'should propagate SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT to all registered outlets' +
+      'in case it only contains property areDynamicOutletsEnabled',
+    () => {
+      sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+      // postMessage catch messages send to outlets
+      const postMessage = sinon.spy();
+
+      sdk.registerOutlet(
+        {
+          contentWindow: {
+            postMessage,
+          } as any as Window,
+        } as any as HTMLIFrameElement,
+        TARGET_OUTLET_NAME_1
+      );
+
+      sdk.registerOutlet(
+        {
+          contentWindow: {
+            postMessage,
+          } as any as Window,
+        } as any as HTMLIFrameElement,
+        TARGET_OUTLET_NAME_2
+      );
+
+      windowMockCallback({
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT,
+          value: {
+            areDynamicOutletsEnabled: true,
+            target: 'someTarget',
+          },
+        },
+      });
+
+      expect(postMessage.called).toBe(false);
+      postMessage.resetHistory();
+
+      windowMockCallback({
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT,
+          value: {
+            areDynamicOutletsEnabled: true,
+          },
+        },
+      });
+
+      expect(postMessage.callCount).toBe(2);
+      postMessage.resetHistory();
+
+      windowMockCallback({
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT,
+          value: {
+            areDynamicOutletsEnabled: true,
+            plugins: [],
+          },
+        },
+      });
+
+      expect(postMessage.called).toBe(false);
+    }
+  );
+
   it('should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if reached maximum depth', () => {
     const postMessageParent = sinon.spy();
     sdk = ShellSdk.init(
