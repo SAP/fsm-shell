@@ -4,6 +4,7 @@ export const outletsRequestDynamicContextRequest_v1_schema = {
     target: {
       type: 'string',
     },
+    outletSettings: {},
   },
   required: ['target'],
 };
