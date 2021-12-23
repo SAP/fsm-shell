@@ -12,7 +12,23 @@ export const requireContextRequest_v1_schema = {
     cloudStorageKeys: {
       type: 'array',
       items: {
-        type: 'string',
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string'
+          },
+          dataVersion: {
+            type: 'number'
+          },
+          companyDependent: {
+            type: 'boolean'
+          }
+        },
+        required: [
+          'name',
+          'dataVersion',
+          'companyDependent'
+        ]
       },
     },
     auth: authRequest_v1_schema,
