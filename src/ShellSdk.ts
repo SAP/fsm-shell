@@ -416,10 +416,12 @@ export class ShellSdk {
             console.warn('[ShellSDk] MODAL OPEN url is not in allowedList.');
             return;
           }
-          // If we receive from outlet request_context to fetch plugin from target, we return LOADING_FAIL
-          // if too many depth exchanges
+          // If ShellSdk receives from outlet REQUEST_CONTEXT or from dynamic outlet REQUEST_DYNAMIC_CONTEXT
+          // to fetch plugin(s) from target, return LOADING_FAIL if too many depth exchanges.
           if (
-            payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT &&
+            (payload.type === SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT ||
+              payload.type ===
+                SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT) &&
             from.length >= this.outletMaximumDepth
           ) {
             source.postMessage(

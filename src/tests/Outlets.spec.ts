@@ -423,62 +423,127 @@ describe('Outlets', () => {
     }
   );
 
-  it('should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if reached maximum depth', () => {
-    const postMessageParent = sinon.spy();
-    sdk = ShellSdk.init(
-      {
-        postMessage: postMessageParent,
-      } as any as Window,
-      sdkOrigin,
-      windowMock,
-      null,
-      3
-    );
+  it(
+    'should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if payload type is ' +
+      'SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT and reached maximum depth',
+    () => {
+      const postMessageParent = sinon.spy();
+      sdk = ShellSdk.init(
+        {
+          postMessage: postMessageParent,
+        } as any as Window,
+        sdkOrigin,
+        windowMock,
+        null,
+        3
+      );
 
-    let handleMessage = sinon.spy();
-    sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
+      let handleMessage = sinon.spy();
+      sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
 
-    const postMessageOutlet = sinon.spy();
-    const iframe = {
-      src: EXTENSION_SRC,
-      contentWindow: {
-        postMessage: postMessageOutlet,
-      } as any as Window,
-    } as any as HTMLIFrameElement;
-    sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
+      const postMessageOutlet = sinon.spy();
+      const iframe = {
+        src: EXTENSION_SRC,
+        contentWindow: {
+          postMessage: postMessageOutlet,
+        } as any as Window,
+      } as any as HTMLIFrameElement;
+      sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
 
-    windowMockCallback({
-      source: iframe.contentWindow,
-      origin: EXTENSION_ORIGIN,
-      data: {
-        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
-        value: {
-          target: 'test',
+      windowMockCallback({
+        source: iframe.contentWindow,
+        origin: EXTENSION_ORIGIN,
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+          value: {
+            target: 'test',
+          },
+          from: ['a', 'b'],
         },
-        from: ['a', 'b'],
-      },
-    });
+      });
 
-    expect(postMessageParent.called).toBe(true);
-    expect(postMessageOutlet.called).toBe(false);
-    postMessageParent.resetHistory();
-    postMessageOutlet.resetHistory();
+      expect(postMessageParent.called).toBe(true);
+      expect(postMessageOutlet.called).toBe(false);
+      postMessageParent.resetHistory();
+      postMessageOutlet.resetHistory();
 
-    windowMockCallback({
-      source: iframe.contentWindow,
-      origin: EXTENSION_ORIGIN,
-      data: {
-        type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
-        value: {
-          target: 'test',
+      windowMockCallback({
+        source: iframe.contentWindow,
+        origin: EXTENSION_ORIGIN,
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_CONTEXT,
+          value: {
+            target: 'test',
+          },
+          from: ['a', 'b', 'c'],
         },
-        from: ['a', 'b', 'c'],
-      },
-    });
+      });
 
-    expect(postMessageParent.called).toBe(false);
-    expect(postMessageOutlet.called).toBe(true);
-  });
+      expect(postMessageParent.called).toBe(false);
+      expect(postMessageOutlet.called).toBe(true);
+    }
+  );
+
+  it(
+    'should return SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL if payload type is ' +
+      'SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT and reached maximum depth',
+    () => {
+      const postMessageParent = sinon.spy();
+      sdk = ShellSdk.init(
+        {
+          postMessage: postMessageParent,
+        } as any as Window,
+        sdkOrigin,
+        windowMock,
+        null,
+        3
+      );
+
+      let handleMessage = sinon.spy();
+      sdk.on(SHELL_EVENTS.Version1.OUTLET.LOADING_FAIL, handleMessage);
+
+      const postMessageOutlet = sinon.spy();
+      const iframe = {
+        src: EXTENSION_SRC,
+        contentWindow: {
+          postMessage: postMessageOutlet,
+        } as any as Window,
+      } as any as HTMLIFrameElement;
+      sdk.registerOutlet(iframe, TARGET_OUTLET_NAME_1);
+
+      windowMockCallback({
+        source: iframe.contentWindow,
+        origin: EXTENSION_ORIGIN,
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT,
+          value: {
+            target: 'test',
+          },
+          from: ['a', 'b'],
+        },
+      });
+
+      expect(postMessageParent.called).toBe(true);
+      expect(postMessageOutlet.called).toBe(false);
+      postMessageParent.resetHistory();
+      postMessageOutlet.resetHistory();
+
+      windowMockCallback({
+        source: iframe.contentWindow,
+        origin: EXTENSION_ORIGIN,
+        data: {
+          type: SHELL_EVENTS.Version1.OUTLET.REQUEST_DYNAMIC_CONTEXT,
+          value: {
+            target: 'test',
+          },
+          from: ['a', 'b', 'c'],
+        },
+      });
+
+      expect(postMessageParent.called).toBe(false);
+      expect(postMessageOutlet.called).toBe(true);
+    }
+  );
 
   it(
     'should add the target outlet name for message SHELL_EVENTS.Version1.REQUIRE_CONTEXT from an extension' +
