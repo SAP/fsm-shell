@@ -11,6 +11,9 @@ export const outletsRequestContextRequest_v1_schema = {
       type: 'boolean',
     },
     outletSettings: {},
+    isPartOfDynamicOutlet: {
+      type: 'boolean',
+    },
   },
   required: ['target'],
 };

@@ -3,4 +3,5 @@ export interface OutletsRequestContextRequest {
   assignmentId?: string;
   showMocks?: boolean;
   outletSettings?: { [name: string]: any };
+  isPartOfDynamicOutlet?: boolean;
 }
