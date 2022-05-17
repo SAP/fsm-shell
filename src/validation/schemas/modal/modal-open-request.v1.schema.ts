@@ -14,6 +14,9 @@ export const modalOpenRequest_v1_schema = {
           type: 'string',
           enum: ['l', 'm', 's'],
         },
+        backdropClickCloseable: {
+          type: 'boolean',
+        },
       },
     },
   },

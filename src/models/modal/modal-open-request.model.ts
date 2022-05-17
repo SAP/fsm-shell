@@ -4,5 +4,6 @@ export interface ModalOpenRequest {
   modalSettings?: {
     title?: string;
     size?: ModalSize;
+    backdropClickCloseable?: boolean;
   };
 }
