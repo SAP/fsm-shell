@@ -5,5 +5,6 @@ export interface ModalOpenRequest {
     title?: string;
     size?: ModalSize;
     backdropClickCloseable?: boolean;
+    isScrollbarHidden?: boolean;
   };
 }
