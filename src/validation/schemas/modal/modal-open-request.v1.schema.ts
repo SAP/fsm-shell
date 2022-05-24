@@ -17,6 +17,9 @@ export const modalOpenRequest_v1_schema = {
         backdropClickCloseable: {
           type: 'boolean',
         },
+        isScrollbarHidden: {
+          type: 'boolean',
+        },
       },
     },
   },
