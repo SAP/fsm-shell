@@ -15,5 +15,5 @@ export const outletsRequestDynamicContextResponse_v1_schema = {
     },
     plugins: [],
   },
-  required: ['areDynamicOutletsEnabled'],
+  required: [],
 };
