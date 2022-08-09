@@ -24,6 +24,7 @@ export type EventType =
   | 'V1.OUTLET.LOADING_FAIL'
   | 'V1.MODAL.OPEN'
   | 'V1.MODAL.CLOSE'
+  | 'V1.MODAL.CLOSED'
   | string;
 
 export const SHELL_EVENTS = {
@@ -55,6 +56,7 @@ export const SHELL_EVENTS = {
     MODAL: {
       OPEN: 'V1.MODAL.OPEN',
       CLOSE: 'V1.MODAL.CLOSE',
+      CLOSED: 'V1.MODAL.CLOSED',
     },
   },
   Version2: {
