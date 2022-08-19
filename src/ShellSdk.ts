@@ -562,6 +562,18 @@ export class ShellSdk {
       !!subscribers
     );
 
+    let context = null;
+    if (
+      !this.isRoot &&
+      payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT
+    ) {
+      context =
+        typeof payload.value === 'string'
+          ? JSON.parse(payload.value)
+          : payload.value;
+      this.isInsideModal = !!context.isInsideShellModal;
+    }
+
     if (!!subscribers) {
       for (const subscriber of subscribers) {
         subscriber(
@@ -581,12 +593,7 @@ export class ShellSdk {
       !this.isRoot &&
       payload.type === SHELL_EVENTS.Version1.REQUIRE_CONTEXT
     ) {
-      const context =
-        typeof payload.value === 'string'
-          ? JSON.parse(payload.value)
-          : payload.value;
       const viewState = context.viewState;
-      this.isInsideModal = !!context.isInsideShellModal;
       if (viewState) {
         for (const key of Object.keys(viewState)) {
           const thisSubscribers = this.subscribersViewStateMap.get(`${key}`);
