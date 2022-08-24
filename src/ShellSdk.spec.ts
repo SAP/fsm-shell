@@ -452,9 +452,6 @@ describe('Shell Sdk', () => {
   });
 
   it('IsInsideShellModal() return true when REQUIRE_CONTEXT has isInsideShellModal: true', () => {
-    let technicianId: number;
-    let servicecallId: number;
-
     sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
 
     windowMockCallback({
@@ -468,6 +465,37 @@ describe('Shell Sdk', () => {
     });
 
     expect(sdk.isInsideShellModal()).toEqual(true);
+  });
+
+  it('IsInsideShellModal() return false when REQUIRE_CONTEXT has no isInsideShellModal property', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+        },
+      },
+    });
+
+    expect(sdk.isInsideShellModal()).toEqual(false);
+  });
+
+  it('IsInsideShellModal() return false when instantiated as root', () => {
+    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+          isInsideShellModal: true,
+        },
+      },
+    });
+
+    expect(sdk.isInsideShellModal()).toEqual(false);
   });
 
   it('should ignore events from IgnoredOrigins', () => {
