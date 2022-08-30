@@ -96,7 +96,7 @@ Request restricted token for using by an extension
 
 - ### GET_PERMISSIONS
 
-  With this event you can get permission objects. You can find the available permission object types in the FSM admin page in "User Groups -> select an item -> Permissions -> Object Type". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/permissions-objects.html) you can also find more information about the permission objects.
+  With this event you can get permission objects. You can find the available permission object types in the FSM admin page in "User Groups -> select an item -> Permissions -> Object Type". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/permissions-objects.html) you can also find more information about the permission objects. 
 
 <!-- tabs:start -->
 
@@ -173,16 +173,17 @@ Request permissions for specified object from the shell
 
 <!-- tabs:end -->
 
+
 > Note: Below in the table you can see some common object types.
 
-| objectName  | Description                                              |
-| ----------- | -------------------------------------------------------- |
-| ACTIVITY    | Permissions about the business data object "Activity"    |
+| objectName | Description |
+|---|---|
+| ACTIVITY | Permissions about the business data object "Activity" |
 | SERVICECALL | Permissions about the business data object "ServiceCall" |
 
 - ### GET_SETTINGS
 
-  With this event you can get company specific settings. You can find the available settings in the FSM admin page in "Companies -> select a company -> Company Settings". Here you can create your own settings and fetch them with this event. You can also fetch the existing settings, but consider that many of them are more specific to FSM applications and have a internal mapping. Therefore, you can not fetch them with the key of the company settings from the admin page. In case you need some of these settings, then please contact us. [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find more information about companies.
+  With this event you can get company specific settings. You can find the available settings in the FSM admin page in "Companies -> select a company -> Company Settings". Here you can create your own settings and fetch them with this event. You can also fetch the existing settings, but consider that many of them are more specific to FSM applications and have a internal mapping. Therefore, you can not fetch them with the key of the company settings from the admin page. In case you need some of these settings, then please contact us. [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find more information about companies. 
 
   ```
   SHELL_EVENTS.Version1.GET_SETTINGS
@@ -217,14 +218,15 @@ Request permissions for specified object from the shell
 
 > Note: Below in the table you can see some common keys.
 
-| Key                               | value type | Description                                                                                                                  |
-| --------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| userPerson                        | object     | User specific information like name, mail and crowdType                                                                      |
-| CoreSystems.FSM.StandaloneCompany | boolean    | [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find information about standalone companies |
+| Key | value type | Description |
+|---|---|---|
+| userPerson | object | User specific information like name, mail and crowdType |
+| CoreSystems.FSM.StandaloneCompany | boolean | [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find information about standalone companies |
+
 
 - ### GET_STORAGE_ITEM
 
-With this event you can get user specific settings. You can find the available settings in the FSM admin page in "Users -> select a user -> User Settings". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html) you can find more information about users.
+With this event you can get user specific settings. You can find the available settings in the FSM admin page in "Users -> select a user -> User Settings". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html) you can find more information about users. 
 
 <!-- tabs:start -->
 
@@ -285,10 +287,11 @@ Request value stored under specified key in cloud storage
 
 > Note: Below in the table you can see some common keys.
 
-| Key                         | value type | Description                          |
-| --------------------------- | ---------- | ------------------------------------ |
-| Cockpit_SelectedCompanyName | string     | Name of the current selected company |
-| Cockpit_SelectedLocale      | string     | Current selected locale              |
+| Key | value type | Description |
+|---|---|---|
+| Cockpit_SelectedCompanyName | string | Name of the current selected company |
+| Cockpit_SelectedLocale | string | Current selected locale |
+
 
 - ### SET_STORAGE_ITEM
 
@@ -414,7 +417,7 @@ Applciations can request do display a modal with a specified URL. Events include
 
   Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
 
-  ```
+  ```typescript
   this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE, {
     [key: string]: any
   });
