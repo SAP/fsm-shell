@@ -7,4 +7,5 @@ export interface ModalOpenRequest {
     backdropClickCloseable?: boolean;
     isScrollbarHidden?: boolean;
   };
+  data?: any;
 }
