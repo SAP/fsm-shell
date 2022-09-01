@@ -402,6 +402,7 @@ Applciations can request do display a modal with a specified URL. Events include
 - ### MODAL.OPEN
 
   Open a modal using `SHELL_EVENTS.Version1.MODAL.OPEN` event from your application. You can specify `modalSettings` like at title or size.
+  Additionally, you can provide identification data using the `data` property, and you will receive it back on a subsequent `Version1.MODAL.CLOSE` event when the modal closes.
 
   ```
   this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
@@ -409,7 +410,8 @@ Applciations can request do display a modal with a specified URL. Events include
     modalSettings: {
       title: 'My title',
       size: 'l'| 'm'|'s',
-    }
+    },
+    data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' }
   });
   ```
 
