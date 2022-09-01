@@ -428,6 +428,7 @@ Applciations can request do display a modal with a specified URL. Events include
   ```typescript
   this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSE, (content) => {
     // React to the closing of the app
+    // If MODAL.OPEN was passed an argument, it will be provided here.
   });
   ```
 
