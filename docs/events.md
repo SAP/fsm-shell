@@ -411,7 +411,7 @@ Applciations can request do display a modal with a specified URL. Events include
       title: 'My title',
       size: 'l'| 'm'|'s',
     },
-    data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' }
+    data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' } // no schema, you can pass anything as 'data'
   });
   ```
 
