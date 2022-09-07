@@ -23,5 +23,8 @@ export const modalOpenRequest_v1_schema = {
       },
     },
   },
+  data: {
+    type: 'object',
+  },
   required: ['url'],
 };
