@@ -46,7 +46,7 @@
   console.log(ShellSdk.isInsideShellModal()); // true/false
   ```
 
-  since: `1.10.0`
+  added in `1.10.0`, fixed in `1.15.7`
 
 - ## Sending event to the shell host application
 

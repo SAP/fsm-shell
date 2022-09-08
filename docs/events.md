@@ -402,6 +402,7 @@ Applciations can request do display a modal with a specified URL. Events include
 - ### MODAL.OPEN
 
   Open a modal using `SHELL_EVENTS.Version1.MODAL.OPEN` event from your application. You can specify `modalSettings` like at title or size.
+  Additionally, you can provide identification data using the `data` property, and you will receive it back on a subsequent `Version1.MODAL.CLOSE` event when the modal closes.
 
   ```
   this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
@@ -409,7 +410,8 @@ Applciations can request do display a modal with a specified URL. Events include
     modalSettings: {
       title: 'My title',
       size: 'l'| 'm'|'s',
-    }
+    },
+    data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' } // no schema, you can pass anything as 'data'
   });
   ```
 
@@ -417,7 +419,7 @@ Applciations can request do display a modal with a specified URL. Events include
 
   Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
 
-  ```
+  ```typescript
   this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE, {
     [key: string]: any
   });
@@ -426,9 +428,9 @@ Applciations can request do display a modal with a specified URL. Events include
   An application can listen to the same event to trigger code on closing. This event is only received if the application emited the OPEN event.
 
   ```typescript
-  this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSED, (content) => {
-    // React to the he closing of the app
-    // If MODAL.CLOSE was passed an argument, it will be provided here.
+  this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSE, (content) => {
+    // React to the closing of the app
+    // If MODAL.OPEN was passed an argument, it will be provided here.
   });
   ```
 
