@@ -33,6 +33,7 @@
   using the static function isInsideShell you can check at runtime
 
   ```typescript
+  // ShellSdk.isInsideShell static class function
   console.log(ShellSdk.isInsideShell()); // true/false
   ```
 
@@ -43,7 +44,8 @@
   using the function isInsideShellModal you can check at runtime
 
   ```typescript
-  console.log(ShellSdk.isInsideShellModal()); // true/false
+  // shellSdk is an instance of ShellSdk
+  console.log(shellSdk.isInsideShellModal()); // true/false
   ```
 
   added in `1.10.0`, fixed in `1.15.7`
