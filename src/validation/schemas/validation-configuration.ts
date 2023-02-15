@@ -14,6 +14,7 @@ import { getFeatureFlagResponse_v1_schema } from './feature-flag/get-feature-fla
 import { setTitleRequest_v1_schema } from './generic/set-title-request.v1.schema';
 
 import { modalOpenRequest_v1_schema } from './modal/modal-open-request.v1.schema';
+import { modalOpenRequest_v2_schema } from './modal/modal-open-request.v2.schema';
 import { modalCloseRequest_v1_schema } from './modal/modal-close-request.v1.schema';
 
 import { getPermissionsRequest_v1_schema } from './permissions/get-permissions-request.v1.schema';
@@ -120,6 +121,13 @@ export const getEventValidationConfiguration =
     [SHELL_EVENTS.Version1.MODAL.OPEN]: {
       request: {
         schema: modalOpenRequest_v1_schema,
+        validationFunction: null,
+      },
+    },
+
+    [SHELL_EVENTS.Version2.MODAL.OPEN]: {
+      request: {
+        schema: modalOpenRequest_v2_schema,
         validationFunction: null,
       },
     },

@@ -394,40 +394,222 @@ Request value stored under specified key in cloud storage
 
 ## Modal specific events
 
-Applciations can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application run inside a Shell modal.
+Applciations can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application is running inside a Shell modal.
 
 - ### MODAL.OPEN
 
-  Open a modal using `SHELL_EVENTS.Version1.MODAL.OPEN` event from your application. You can specify `modalSettings` like a title or the modal size.
-  Additionally, you can provide identification data using the `data` property, and you will receive it back on a subsequent `Version1.MODAL.CLOSE` event when the modal closes.
+With this event you can request the Shell host to open a Modal and display the content specified using the `url` property. The `url` value must be in the `allowedOrigins` list. See [Security](./security.md). The modal is displayed on top of the currently displayed extension. You can specify a number of style settings and interaction options using the `modalSettings` property.
 
-  ```
-  this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
-    url: 'https://example.com',
-    modalSettings: {
-      title: 'My title',
-      size: 'l'| 'm' | 's',
-    },
-    data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' } // no schema, you can pass anything as 'data'
-  });
-  ```
+Additionally, you can provide identification data using the `data` property, and you will receive it back on a subsequent `Version1.MODAL.CLOSE` event when the modal closes.
+
+<!-- tabs:start -->
+
+#### **Version 2**
+
+```
+V2.MODAL.OPEN
+```
+
+Open a modal using `SHELL_EVENTS.Version2.MODAL.OPEN` event from your application.
+In `modalSettings` you can specify the following properties:
+
+- `title`
+
+  type: `string`
+
+  sets title for modal.
+
+- `showTitleHeader`
+
+  type: `boolean`
+
+  set to `true` to show title as a header in the modal
+
+- `hasBackdrop`
+
+  type: `boolean`
+
+  Default is `true`. Set to `false` to disable modal backdrop.
+
+- `backdropClickCloseable`
+
+  type: `boolean`
+
+  Default is `true`. Set to `false` to disable closing the modal by clicking the backdrop.
+
+- `escKeyCloseable`
+
+  type: `boolean`
+
+  Default is `true`. Set to `false` to disable closing teh modal by pressing the ESC key.
+
+- `focusTrapped`
+
+  type: `boolean`
+
+  Default is `true`. Set to `false` to enable focus elements in the rest of the page while modal is active.
+
+- `fullScreen`
+
+  type: `boolean`
+
+  Set to `true` to make the modal fullscreen.
+
+- `mobile`
+
+  type: `boolean`
+
+  Set to `true` to signify modal should be displayed for mobile.
+  Should not be used with `fullScreen` setting.
+
+- `mobileOuterSpacing`
+
+  type: `boolean`
+
+  Set to `true` to add spacing between modal and edge of screen for mobile. Should only be used with `mobile` setting.
+
+- `draggable`
+
+  type: `boolean`
+
+  Set to `true` to allow the modal to be dragged on the screen.
+
+- `resizable`
+
+  type: `boolean`
+
+  Set to `true` to allow modal resizing.
+
+- `isScrollbarHidden`
+
+  type: `boolean`
+
+  Set to `true` to hide scrollbars inside modal.
+
+- `width`
+
+  type: `string` (CSS Property)
+
+  Set exact width of modal.
+
+- `height`
+
+  type: `string` (CSS Property)
+
+  Set exact height of modal.
+
+- `minWidth`
+
+  type: `string` (CSS Property)
+
+  Set minimum width of Modal.
+
+- `maxWidth`
+
+  type: `string` (CSS Property)
+
+  Set maximum width of Modal.
+
+- `minHeight`
+
+  type: `string` (CSS Property)
+
+  Set minimum height of Modal.
+
+- `maxHeight`
+
+  type: `string` (CSS Property)
+
+  Set maximum height of Modal.
+
+CSS Property Examples: `'100px', '25%', '10em', '12rem'`
+
+```typescript
+this.sdk.emit(SHELL_EVENTS.Version2.MODAL.OPEN, {
+  url: 'https://example.com',
+  modalSettings: {
+    title: 'My title', // string
+    showTitleHeader: true,
+
+    hasBackdrop: false,
+    backdropClickCloseable: false,
+    escKeyCloseable: true,
+    focusTrapped: false,
+    draggable: true,
+    resizable: true,
+
+    isScrollbarHidden: false,
+    width: '25px';
+    height: '25px';
+  },
+  data: { startTime: (new Date()).toString() } // no schema, you can pass any data relevant to your extension
+});
+```
+
+#### **Version 1 (to be deprecated)**
+
+```
+V1.MODAL.OPEN
+```
+
+Open a modal using `SHELL_EVENTS.Version1.MODAL.OPEN` event from your application.
+In `modalSettings` you can specify the following properties:
+
+- `title`
+
+  type: `string`
+
+  sets title for modal.
+
+- `size`
+
+  type: `string`
+
+  values: `'l' | 'm' | 's'`
+
+- `backdropClickCloseable`
+
+  type: `boolean`
+
+  controls if the modal can be dismissed by clicking the backdrop.
+
+- `isScrollbarHidden`
+
+  type: `boolean`
+
+  used to hide scrollbar inside modal
+
+```typescript
+this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
+  url: 'https://example.com',
+  modalSettings: {
+    title: 'My title', // string
+    size: 'l' | 'm' | 's',
+    backdropClickCloseable: true, // boolean
+    isScrollbarHidden: false, // boolean
+  },
+  data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' }, // no schema, you can pass any data relevant to your extension
+});
+```
+
+<!-- tabs:end -->
 
 - ### MODAL.CLOSE
 
-  Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
+Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
 
-  ```typescript
-  this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE);
-  ```
+```typescript
+this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE);
+```
 
-  An application can listen to the same event to trigger code on closing. This event is only received if the application emited the OPEN event.
+An application can listen to the same event to trigger code on closing. This event is only received if the application emited the OPEN event.
 
-  ```typescript
-  this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSE, (data) => {
-    // React to the closing of the modal
-    // If MODAL.OPEN was passed an argument, it will be provided here.
-  });
-  ```
+```typescript
+this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSE, (data) => {
+  // React to the closing of the modal
+  // If MODAL.OPEN was passed an argument, it will be provided here.
+});
+```
 
 ## Extension specific events
 

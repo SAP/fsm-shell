@@ -6,7 +6,11 @@ export { UiPermissions } from './permissions/ui-permissions.model';
 export { GetItemResponse } from './cloud-storage/get-item-response.model';
 export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
-export { ModalSize, ModalOpenRequest } from './modal/modal-open-request.model';
+export {
+  ModalSize,
+  ModalOpenRequestV1,
+} from './modal/modal-open-request.v1.model';
+export { ModalOpenRequestV2 } from './modal/modal-open-request.v2.model';
 export { ModalCloseRequest } from './modal/modal-close-request.model';
 
 export { SettingsResponse } from './settings/settings-response.model';

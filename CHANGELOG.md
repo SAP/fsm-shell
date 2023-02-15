@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2023-02-15
+
+### Added
+
+- added V2.MODAL.OPEN
+
+### Updated
+
+- updated V1.MODAL.OPEN modal name to specify it is V1
+
 ## [1.16.1] - 2022-03-30
 
 ### Added
@@ -13,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added 'isPreviewMode' property to OutletsRequestContextResponse type
 - added 'isPreviewMode' property to OutletsRequestDynamicContextResponse type
 
-## [1.16.0] - 2022-09-06
+## [1.16.0] - 2022-06-09
 
 ### Added
 
@@ -29,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - isInsideShellModal() method always returning false
 
-## [1.15.6] - 2022-08-03
+## [1.15.6] - 2022-03-08
 
 ### Updated
 
