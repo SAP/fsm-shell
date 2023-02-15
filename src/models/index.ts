@@ -8,7 +8,7 @@ export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
 export {
   ModalSize,
-  ModalOpenRequestV1,
+  ModalOpenRequest,
 } from './modal/modal-open-request.v1.model';
 export { ModalOpenRequestV2 } from './modal/modal-open-request.v2.model';
 export { ModalCloseRequest } from './modal/modal-close-request.model';
