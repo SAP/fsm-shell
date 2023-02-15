@@ -402,6 +402,8 @@ With this event you can request the Shell host to open a Modal and display the c
 
 Additionally, you can provide identification data using the `data` property, and you will receive it back on a subsequent `Version1.MODAL.CLOSE` event when the modal closes.
 
+The Shell Modal is powered using [Fundamental Library for Core](https://sap.github.io/fundamental-ngx/#/core/home)'s Dialog Component. See [Playground](https://sap.github.io/fundamental-ngx/#/core/dialog#playground).
+
 <!-- tabs:start -->
 
 #### **Version 2**
@@ -583,10 +585,10 @@ In `modalSettings` you can specify the following properties:
 this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
   url: 'https://example.com',
   modalSettings: {
-    title: 'My title', // string
-    size: 'l' | 'm' | 's',
-    backdropClickCloseable: true, // boolean
-    isScrollbarHidden: false, // boolean
+    title: 'My title',
+    size: 'l',
+    backdropClickCloseable: true,
+    isScrollbarHidden: false,
   },
   data: { id: 'bc251c53-a71f-4924-bf3b-b265be96b71b' }, // no schema, you can pass any data relevant to your extension
 });
