@@ -1,4 +1,3 @@
-export type ModalSize = 'l' | 'm' | 's';
 export interface ModalOpenRequestV2 {
   url: string;
   modalSettings?: {
