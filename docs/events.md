@@ -490,41 +490,43 @@ In `modalSettings` you can specify the following properties:
 
 - `width`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set exact width of modal.
 
 - `height`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set exact height of modal.
 
 - `minWidth`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set minimum width of Modal.
 
 - `maxWidth`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set maximum width of Modal.
 
 - `minHeight`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set minimum height of Modal.
 
 - `maxHeight`
 
-  type: `string` (CSS Property)
+  type: `string` (Size Property)
 
   Set maximum height of Modal.
 
-CSS Property Examples: `'100px', '25%', '10em', '12rem'`
+Size Property Examples: `'100px', '25%', '10em', '12rem', '25vh'`
+NOTE: For security reasons we currently only allow fixed values for Size Properties.
+If your use case requires more advanced specification (e.g using the CSS minmax function), please submit a request and we will enhance the specification.
 
 ```typescript
 this.sdk.emit(SHELL_EVENTS.Version2.MODAL.OPEN, {
