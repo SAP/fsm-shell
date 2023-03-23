@@ -419,13 +419,13 @@ In `modalSettings` you can specify the following properties:
 
   type: `string`
 
-  sets title for modal.
+  sets title for modal. Is displayed in Header if `showHeader` is true.
 
-- `showTitleHeader`
+- `showHeader`
 
   type: `boolean`
 
-  set to `true` to show title as a header in the modal
+  set to `true` to show the modal's header - displays the title and a close button
 
 - `hasBackdrop`
 
