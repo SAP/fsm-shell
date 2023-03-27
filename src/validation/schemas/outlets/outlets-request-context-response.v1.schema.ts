@@ -10,7 +10,7 @@ export const outletsRequestContextResponse_v1_schema = {
     isConfigurationMode: {
       type: 'boolean',
     },
-    isPreviewEnabled: {
+    isPreviewActive: {
       type: 'boolean',
     },
     plugin: {},

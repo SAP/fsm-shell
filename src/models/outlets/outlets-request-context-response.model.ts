@@ -3,5 +3,5 @@ export interface OutletsRequestContextResponse {
   isRootNodeHttps?: boolean;
   isConfigurationMode: boolean;
   plugin?: any;
-  isPreviewEnabled: boolean;
+  isPreviewActive: boolean;
 }
