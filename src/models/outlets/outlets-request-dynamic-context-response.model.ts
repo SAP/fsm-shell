@@ -4,4 +4,5 @@ export interface OutletsRequestDynamicContextResponse {
   isConfigurationMode?: boolean;
   areDynamicOutletsEnabled?: boolean;
   plugins?: any[];
+  isPreviewActive: boolean;
 }

@@ -13,6 +13,9 @@ export const outletsRequestDynamicContextResponse_v1_schema = {
     areDynamicOutletsEnabled: {
       type: 'boolean',
     },
+    isPreviewActive: {
+      type: 'boolean',
+    },
     plugins: [],
   },
   required: [],
