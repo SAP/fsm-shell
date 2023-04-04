@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- added 'INVALID_EXTENSION' to ErrorType enum
+- added 'isPreviewMode' property to OutletsRequestContextResponse type
 - added 'isPreviewMode' property to OutletsRequestDynamicContextResponse type
 
 ## [1.16.0] - 2022-09-06
