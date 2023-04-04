@@ -58,7 +58,7 @@
     "lint-staged": "^10.2.11",
     "lodash": "^4.17.19",
     "minimist": "^1.2.5",
-    "mocha": "^8.1.1",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
