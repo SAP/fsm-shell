@@ -66,6 +66,7 @@ export enum ErrorType {
   OUTLET_TIMEOUT = 'OUTLET_TIMEOUT',
   OUTLET_MAXIMUM_DEPTH = 'OUTLET_MAXIMUM_DEPTH',
   OUTLET_HTTPS_ERROR = 'OUTLET_HTTPS_ERROR',
+  INVALID_EXTENSION = 'INVALID_EXTENSION',
 }
 
 const getKeyValues = (source: any, initial: string[] = []): string[] => {
