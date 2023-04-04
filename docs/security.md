@@ -1,5 +1,8 @@
 # Security
 
+The Shell SDK manages browser window (MessageEvents)[https://developer.mozilla.org/en-US/docs/Web/API/Window/message_event]. By default, all events received from foreign origins (excluding the parent window) are **ignored**.
+In order to accept messages from a specific origin, you must add it to the list of AllowedOrigins using one of the below methods.
+
 ## Allowed origins only
 
 You can use the method `.setAllowedOrigins` to restrict message handling to a list of allowed origins.
@@ -11,7 +14,12 @@ sdk.setAllowedOrigins(['https://example.com', 'https://example2.com']);
 
 To help debugging, an error will be displayed if an event come from an other origin.
 
-You disable this settings, call `.setAllowedOrigins` with an empy parameter.
+To disable this setting, call `.setAllowedOrigins("*")` to allow all origins.
+
+```javascript
+sdk = ShellSdk.init();
+sdk.setAllowedOrigins('*');
+```
 
 ### Allowed origins may be managed dynamically at runtime using following methods:
 

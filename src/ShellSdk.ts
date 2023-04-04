@@ -105,7 +105,17 @@ export class ShellSdk {
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
-    this.allowedOrigins = allowedOrigins === '*' ? [] : allowedOrigins;
+    if (allowedOrigins === '*') {
+      this.allowedOrigins = [];
+      return;
+    }
+
+    try {
+      this.validateOrigins(allowedOrigins);
+    } catch (e) {
+      console.error(e);
+    }
+    this.allowedOrigins = allowedOrigins;
   }
 
   public addAllowedOrigin(url: string) {
@@ -146,6 +156,11 @@ export class ShellSdk {
   }
 
   public setIgnoredOrigins(ignoredOrigins: string[] = []) {
+    try {
+      this.validateOrigins(ignoredOrigins);
+    } catch (e) {
+      console.error(e);
+    }
     this.ignoredOrigins = ignoredOrigins;
   }
 
@@ -172,6 +187,20 @@ export class ShellSdk {
     this.ignoredOrigins = this.ignoredOrigins.filter(
       (_ignoredOrigins, originIdx) => originIdx !== idxToRemove
     );
+  }
+
+  private validateOrigins(urls: string[]) {
+    for (const url of urls) {
+      let urlObj: URL;
+      try {
+        urlObj = new URL(url);
+        if (!urlObj.origin) {
+          throw new Error('Invalid origin');
+        }
+      } catch {
+        throw new Error(`${url} is not a valid URL`);
+      }
+    }
   }
 
   public setValidator(
