@@ -18,8 +18,6 @@ export interface DialogSettings {
   mobileOuterSpacing?: boolean;
   draggable?: boolean;
   resizable?: boolean;
-  verticalPadding?: boolean;
-  responsivePadding?: boolean;
 
   width?: string;
   height?: string;
