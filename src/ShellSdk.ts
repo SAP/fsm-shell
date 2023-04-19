@@ -407,7 +407,8 @@ export class ShellSdk {
             );
             return;
           } else if (
-            payload.type === SHELL_EVENTS.Version1.MODAL.OPEN &&
+            (payload.type === SHELL_EVENTS.Version1.MODAL.OPEN ||
+              payload.type === SHELL_EVENTS.Version2.MODAL.OPEN) &&
             from.length === 0 &&
             !this.allowedOrigins.some((o) => payload.value.url.startsWith(o))
           ) {

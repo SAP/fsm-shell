@@ -23,6 +23,7 @@ export type EventType =
   | 'V1.OUTLET.LOADING_FAIL'
   | 'V1.MODAL.OPEN'
   | 'V1.MODAL.CLOSE'
+  | 'V2.MODAL.OPEN'
   | string;
 
 export const SHELL_EVENTS = {
@@ -58,6 +59,9 @@ export const SHELL_EVENTS = {
   Version2: {
     GET_STORAGE_ITEM: 'V2.GET_STORAGE_ITEM',
     GET_PERMISSIONS: 'V2.GET_PERMISSIONS',
+    MODAL: {
+      OPEN: 'V2.MODAL.OPEN',
+    },
   },
   ERROR: 'ERROR',
 };
