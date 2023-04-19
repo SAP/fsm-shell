@@ -10,7 +10,10 @@ export {
   ModalSize,
   ModalOpenRequest,
 } from './modal/modal-open-request.v1.model';
-export { ModalOpenRequestV2 } from './modal/modal-open-request.v2.model';
+export {
+  ModalOpenRequestV2,
+  DialogSettings,
+} from './modal/modal-open-request.v2.model';
 export { ModalCloseRequest } from './modal/modal-close-request.model';
 
 export { SettingsResponse } from './settings/settings-response.model';

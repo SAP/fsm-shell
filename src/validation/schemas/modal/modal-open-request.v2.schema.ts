@@ -41,12 +41,6 @@ export const modalOpenRequest_v2_schema = {
         resizable: {
           type: 'boolean',
         },
-        verticalPadding: {
-          type: 'boolean',
-        },
-        responsivePadding: {
-          type: 'boolean',
-        },
 
         width: {
           type: 'string',

@@ -1,27 +1,30 @@
-export interface ModalOpenRequestV2 {
+export interface ModalOpenRequestV2 extends DialogSettings {
   url: string;
-  modalSettings?: {
+  modalSettings?: DialogSettings & {
     title?: string;
     showHeader?: boolean;
-
-    hasBackdrop?: boolean;
-    backdropClickCloseable?: boolean;
-    escKeyCloseable?: boolean;
-    focusTrapped?: boolean;
-    fullScreen?: boolean;
-    mobile?: boolean;
-    mobileOuterSpacing?: boolean;
-    draggable?: boolean;
-    resizable?: boolean;
-
-    width?: string;
-    height?: string;
-    minHeight?: string;
-    maxHeight?: string;
-    minWidth?: string;
-    maxWidth?: string;
-
     isScrollbarHidden?: boolean;
   };
   data?: any;
+}
+
+export interface DialogSettings {
+  hasBackdrop?: boolean;
+  backdropClickCloseable?: boolean;
+  escKeyCloseable?: boolean;
+  focusTrapped?: boolean;
+  fullScreen?: boolean;
+  mobile?: boolean;
+  mobileOuterSpacing?: boolean;
+  draggable?: boolean;
+  resizable?: boolean;
+  verticalPadding?: boolean;
+  responsivePadding?: boolean;
+
+  width?: string;
+  height?: string;
+  minHeight?: string;
+  maxHeight?: string;
+  minWidth?: string;
+  maxWidth?: string;
 }
