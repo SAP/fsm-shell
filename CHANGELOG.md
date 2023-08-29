@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- read V1.CLOSE Event, since it is still used internally
+- readd V1.CLOSE Event, since it is still used internally
 
 ## [1.17.0] - 2023-04-19
 
