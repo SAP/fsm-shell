@@ -100,13 +100,49 @@ Request restricted token for using by an extension
 
 <!-- tabs:start -->
 
+#### **Version 3**
+
+```
+SHELL_EVENTS.Version3.GET_PERMISSIONS
+```
+
+Request permissions for specified object from the Shell. The version 3 uses a different permission calculation than the versions 1 and 2: If the user has the permission NONE for a CRUD operation, _false_ is provided for this CRUD operation. If the user has any other permission (ALL, OWN, ORG_LEVEL or any further permission) for a CRUD operation, _true_ is provided for this CRUD operation. Because of this, there is no need for the property _owners_.
+
+- Request payload
+
+  type: PermissionRequestV3
+
+  ```typescript
+  {
+    objectName: string; // permission object type
+  }
+  ```
+
+- Response payload
+
+  type: PermissionResponseV3
+
+  ```typescript
+  {
+    objectName: string;
+    permission: {
+      CREATE: boolean;
+      READ: boolean;
+      UPDATE: boolean;
+      DELETE: boolean;
+      UI_PERMISSIONS: number[];
+    };
+  }
+
+  ```
+
 #### **Version 2**
 
 ```
 SHELL_EVENTS.Version2.GET_PERMISSIONS
 ```
 
-Request permissions for specified object from the shell
+Request permissions for specified object from the Shell
 
 - Request payload
 
@@ -144,7 +180,7 @@ Request permissions for specified object from the shell
 SHELL_EVENTS.Version1.GET_PERMISSIONS
 ```
 
-Request permissions for specified object from the shell
+Request permissions for specified object from the Shell
 
 - Request payload
 

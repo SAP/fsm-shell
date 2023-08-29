@@ -5,6 +5,7 @@ export type EventType =
   | 'V1.REQUIRE_PERMISSIONS'
   | 'V1.GET_PERMISSIONS'
   | 'V2.GET_PERMISSIONS'
+  | 'V3.GET_PERMISSIONS'
   | 'V1.GET_SETTINGS'
   | 'V1.GET_STORAGE_ITEM'
   | 'V2.GET_STORAGE_ITEM'
@@ -64,6 +65,9 @@ export const SHELL_EVENTS = {
     MODAL: {
       OPEN: 'V2.MODAL.OPEN',
     },
+  },
+  Version3: {
+    GET_PERMISSIONS: 'V3.GET_PERMISSIONS',
   },
   ERROR: 'ERROR',
 };

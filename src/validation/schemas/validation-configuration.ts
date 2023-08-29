@@ -19,8 +19,10 @@ import { modalCloseRequest_v1_schema } from './modal/modal-close-request.v1.sche
 
 import { getPermissionsRequest_v1_schema } from './permissions/get-permissions-request.v1.schema';
 import { getPermissionsRequest_v2_schema } from './permissions/get-permissions-request.v2.schema';
+import { getPermissionsRequest_v3_schema } from './permissions/get-permissions-request.v3.schema';
 import { getPermissionsResponse_v1_schema } from './permissions/get-permissions-response.v1.schema';
 import { getPermissionsResponse_v2_schema } from './permissions/get-permissions-response.v2.schema';
+import { getPermissionsResponse_v3_schema } from './permissions/get-permissions-response.v3.schema';
 
 import { getSettingsRequest_v1_schema } from './settings/get-settings-request.v1.schema';
 import { getSettingsResponse_v1_schema } from './settings/get-settings-response.v1.schema';
@@ -157,6 +159,17 @@ export const getEventValidationConfiguration =
       },
       response: {
         schema: getPermissionsResponse_v2_schema,
+        validationFunction: null,
+      },
+    },
+
+    [SHELL_EVENTS.Version3.GET_PERMISSIONS]: {
+      request: {
+        schema: getPermissionsRequest_v3_schema,
+        validationFunction: null,
+      },
+      response: {
+        schema: getPermissionsResponse_v3_schema,
         validationFunction: null,
       },
     },
