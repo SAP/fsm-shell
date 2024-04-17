@@ -1,5 +1,7 @@
 # API Documentation
 
+If this is your first time using the Shell-SDK, then we recommend to have a look on our [usage samples](./usage-sample.md).
+
 ## Events
 
 - ### REQUIRE_CONTEXT
@@ -106,7 +108,7 @@ Request restricted token for using by an extension
 SHELL_EVENTS.Version3.GET_PERMISSIONS
 ```
 
-Request permissions for specified object from the Shell. The version 3 uses a different permission calculation than the versions 1 and 2: If the user has the permission NONE for a CRUD operation, _false_ is provided for this CRUD operation. If the user has any other permission (ALL, OWN, ORG_LEVEL or any further permission) for a CRUD operation, _true_ is provided for this CRUD operation. Because of this, there is no need for the property _owners_.
+Request permissions for specified object from the Shell. The version 3 uses a different permission calculation than the versions 1 and 2: If the user has the permission NONE for a CRUD operation, _false_ is provided for this CRUD operation. If the user has any other permission (ALL, OWN, ORG*LEVEL or any further permission) for a CRUD operation, \_true* is provided for this CRUD operation. Because of this, there is no need for the property _owners_.
 
 - Request payload
 

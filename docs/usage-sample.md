@@ -90,6 +90,28 @@
     Shell->>Application: SHELL_EVENTS.Version1.REQUIRE_CONTEXT
   ```
 
+- ## Subscribing to errors coming from shell host application
+
+  We highly recommend to include this event to your application, because it is the main way to catch errors communicated from the Shell.
+
+  ```typescript
+  shellSdk.emit(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, {
+    clientIdentifier: '<your-app-client-identifier>',
+    clientSecret: '<your-app-client-secret>',
+  });
+
+  shellSdk.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT, handler);
+  shellSdk.on(SHELL_EVENTS.ERROR, errorhandler);
+
+  const handler = (context, origin) => {
+    // Will be not triggered in case of an error
+  };
+
+  const errorhandler = (error) => {
+    // Error with information of the failed event sent to Shell
+  };
+  ```
+
 - ## Unsubscribing from event
 
   to unsibscribe use _off_ method from _ShellSdk_
