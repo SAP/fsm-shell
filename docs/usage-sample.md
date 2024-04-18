@@ -112,6 +112,15 @@
   };
   ```
 
+  A proper error handling should include :
+
+  - User notification that an error happened.
+  - Wait time before the same event (error causing) is send again to Shell.
+  - Limit amount of retry. When the same error happens again and again, don't continue to call the event in an infinity loop.
+
+  Missing proper error handling can result in too many (misuse) API calls.
+  In worst case such a violation can result in deactivation of the extension.
+
 - ## Unsubscribing from event
 
   to unsibscribe use _off_ method from _ShellSdk_
