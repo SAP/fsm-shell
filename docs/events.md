@@ -1,5 +1,7 @@
 # API Documentation
 
+If this is your first time using the Shell-SDK, then we recommend to have a look on our [usage samples](./usage-sample.md).
+
 ## Events
 
 - ### REQUIRE_CONTEXT
