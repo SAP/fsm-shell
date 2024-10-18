@@ -19,6 +19,9 @@ export const requireContextRequest_v1_schema = {
     targetOutletName: {
       type: 'string',
     },
+    targetExtensionAssignmentId: {
+      type: 'string',
+    },
   },
   required: ['clientIdentifier', 'clientSecret'],
 };

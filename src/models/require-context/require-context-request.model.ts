@@ -6,4 +6,5 @@ export interface RequireContextRequest {
   cloudStorageKeys?: string[];
   auth?: AuthRequest;
   targetOutletName?: string;
+  targetExtensionAssignmentId?: string;
 }
