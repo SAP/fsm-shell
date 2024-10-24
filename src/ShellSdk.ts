@@ -445,6 +445,10 @@ export class ShellSdk {
                 outlet.name !== undefined
               ) {
                 payload.value.targetOutletName = outlet.name;
+                const extensionAssignmentId = (iFrameElement as any).extensionAssignmentId;
+                if(extensionAssignmentId){
+                  payload.value.targetExtensionAssignmentId = extensionAssignmentId;
+                }
               }
               // this is the uuid outlet used for routing of source object
               from = [...from, outlet.uuid];

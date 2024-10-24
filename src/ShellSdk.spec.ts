@@ -94,6 +94,40 @@ describe('Shell Sdk', () => {
     });
   });
 
+  it('should post message if request is from registered outlet and include targetOutletName and targetExtensionAssignmentId', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const outletName = 'test-outlet-name';
+    const outletExtensionAssignmentId = 'test-extension-assignment-id';
+    const MOCK_IFRAME: any = {
+      src: ORIGIN1,
+      contentWindow: ORIGIN1,
+      extensionAssignmentId: outletExtensionAssignmentId
+    }
+    sdk.registerOutlet(MOCK_IFRAME, outletName);
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.REQUIRE_CONTEXT,
+        value: {
+          message: 'test data',
+        },
+      },
+      source: ORIGIN1,
+      origin: ORIGIN1
+    });
+
+    const arg1 = sdkTarget.postMessage.getCall(0).args[0];
+    const arg2 = sdkTarget.postMessage.getCall(0).args[1];
+
+    sinon.assert.calledOnce(sdkTarget.postMessage);
+    expect(arg1.type).toBe(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
+    expect(arg1.value.message).toBe('test data');
+    expect(arg1.value.targetOutletName).toBe(outletName);
+    expect(arg1.value.targetExtensionAssignmentId).toBe(outletExtensionAssignmentId);
+    expect(arg2).toBe(sdkOrigin);
+  });
+
   it('should call multiple subscribers on message event', () => {
     let handler1Called: boolean = false;
     let handler2Called: boolean = false;
