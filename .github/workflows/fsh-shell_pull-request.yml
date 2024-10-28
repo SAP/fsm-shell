@@ -1,0 +1,20 @@
+name: fsm-shell pull request
+run-name: '[ON_PR fsm-shell] ${{ github.sha }}'
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on:
+      - aws
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ghcom-actions/actions-setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm i
+      - name: Unit tests
+        run: npm run test
