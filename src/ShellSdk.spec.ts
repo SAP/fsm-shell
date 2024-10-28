@@ -44,7 +44,7 @@ describe('Shell Sdk', () => {
   });
   it('should create instance as Root', () => {
     sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
-    expect(sdk).not.toBeDefined();
+    expect(sdk).toBeDefined();
   });
 
   it('should return same instance', () => {
