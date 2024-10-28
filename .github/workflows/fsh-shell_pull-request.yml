@@ -7,8 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on:
-      - aws
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ghcom-actions/actions-setup-node@v2
