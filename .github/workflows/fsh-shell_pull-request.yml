@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ghcom-actions/actions-setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
       - name: Install dependencies
         run: npm i
       - name: Unit tests
-        run: npm run test
+        run: npm run test:ci:headless
