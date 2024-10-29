@@ -102,8 +102,8 @@ describe('Shell Sdk', () => {
     const MOCK_IFRAME: any = {
       src: ORIGIN1,
       contentWindow: ORIGIN1,
-      extensionAssignmentId: outletExtensionAssignmentId,
-    };
+      extensionAssignmentId: outletExtensionAssignmentId
+    }
     sdk.registerOutlet(MOCK_IFRAME, outletName);
 
     windowMockCallback({
@@ -114,7 +114,7 @@ describe('Shell Sdk', () => {
         },
       },
       source: ORIGIN1,
-      origin: ORIGIN1,
+      origin: ORIGIN1
     });
 
     const arg1 = sdkTarget.postMessage.getCall(0).args[0];
@@ -124,9 +124,7 @@ describe('Shell Sdk', () => {
     expect(arg1.type).toBe(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
     expect(arg1.value.message).toBe('test data');
     expect(arg1.value.targetOutletName).toBe(outletName);
-    expect(arg1.value.targetExtensionAssignmentId).toBe(
-      outletExtensionAssignmentId
-    );
+    expect(arg1.value.targetExtensionAssignmentId).toBe(outletExtensionAssignmentId);
     expect(arg2).toBe(sdkOrigin);
   });
 
