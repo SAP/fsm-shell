@@ -49,6 +49,7 @@ jobs:
           echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_TEST }} > .npmrc
       - name: Publish
         run: |
+          cd npm_public
           echo "Test-1"
           ls -a
           echo "Test-2"
