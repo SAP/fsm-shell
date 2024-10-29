@@ -1,0 +1,55 @@
+name: fsm-shell push
+run-name: '[ON_PUSH fsm-shell] ${{ github.sha }}'
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm i
+      - name: Unit tests
+        run: npm run test:ci:headless
+
+  # test-build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '18'
+  #     - name: Install dependencies
+  #       run: npm i
+  #     - name: Run build
+  #       run: npm run build
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm i
+      - name: Run build
+        run: npm run build
+      - name: Publish
+        run: |
+          echo "Test-1"
+          ls
+          apk add unzip
+          apk add zip
+          zip -r shell-client.zip release/* ./package.json ./package-lock.json ./LICENSE
+          echo "Test-2"
+          ls
+          unzip ./shell-client.zip -d ./
+          echo "Test-3"
+          ls
