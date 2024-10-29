@@ -42,14 +42,15 @@ jobs:
       - name: Run build
         run: npm run build
       - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_TEST }}
         run: |
+          mkdir npm_public
+          mv release package.json package-lock.json npm_public
+          cd npm_public
           echo "Test-1"
-          ls
-          apk add unzip
-          apk add zip
-          zip -r shell-client.zip release/* ./package.json ./package-lock.json ./LICENSE
+          ls -a
           echo "Test-2"
-          ls
-          unzip ./shell-client.zip -d ./
-          echo "Test-3"
-          ls
+          echo //registry.npmjs.org/:_authToken=$NPM_TOKEN_TEST > .npmrc
+          echo "Test-4"
+          cat .npmrc
