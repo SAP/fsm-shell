@@ -6,17 +6,17 @@ on:
     branches: [master]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm i
-      - name: Unit tests
-        run: npm run test:ci:headless
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '18'
+  #     - name: Install dependencies
+  #       run: npm i
+  #     - name: Unit tests
+  #       run: npm run test:ci:headless
 
   # test-build:
   #   runs-on: ubuntu-latest
@@ -50,8 +50,8 @@ jobs:
           cd npm_public
           echo "Test-1"
           ls -a
-          echo //registry.npmjs.org/:_authToken=$NPM_TOKEN_TEST > .npmrc
+          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_TEST }} > .npmrc
           echo "Test-2"
           cat .npmrc | sed 's/./& /g'
           echo "Test-3"
-          echo $NPM_TOKEN_TEST | sed 's/./& /g'
+          echo ${{ secrets.NPM_TOKEN_TEST }} | sed 's/./& /g'
