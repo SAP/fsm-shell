@@ -41,16 +41,16 @@ jobs:
         run: npm i
       - name: Run build
         run: npm run build
-      - name: Publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_TEST }}
+      - name: Prepare files
         run: |
           mkdir npm_public
           mv release package.json package-lock.json npm_public
           cd npm_public
+          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_TEST }} > .npmrc
+      - name: Publish
+        run: |
           echo "Test-1"
           ls -a
-          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_TEST }} > .npmrc
           echo "Test-2"
           cat .npmrc | sed 's/./& /g'
           echo "Test-3"
