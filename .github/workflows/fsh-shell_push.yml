@@ -17,7 +17,7 @@ jobs:
           git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
           FILES_CHANGED=$(git diff --diff-filter='AMTCR' --name-only origin/master HEAD | tr '[:upper:]' '[:lower:]')
           echo $FILES_CHANGED
-          array=( ${{ $REQUIRED_FILES }} )
+          array=( $REQUIRED_FILES )
           missing_files=""
           for i in "${array[@]}"
           do
