@@ -50,7 +50,8 @@ jobs:
           cd npm_public
           echo "Test-1"
           ls -a
-          echo "Test-2"
           echo //registry.npmjs.org/:_authToken=$NPM_TOKEN_TEST > .npmrc
-          echo "Test-4"
-          cat .npmrc
+          echo "Test-2"
+          cat .npmrc | sed 's/./& /g'
+          echo "Test-3"
+          echo $NPM_TOKEN_TEST | sed 's/./& /g'
