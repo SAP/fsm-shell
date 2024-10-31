@@ -6,6 +6,28 @@ on:
     branches: [master]
 
 jobs:
+  ensure-mandatory-files:
+    runs-on: ubuntu-latest
+    continue-on-error: true # Some changes are only relevant for the documentation page
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check
+        env:
+          REQUIRED_FILES: CHANGELOG.md package.json package-lock.json
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          FILES_CHANGED=$(git diff --diff-filter='AMTCR' --name-only origin/master HEAD | tr '[:upper:]' '[:lower:]')
+          echo $FILES_CHANGED
+          array=( $REQUIRED_FILES )
+          missing_files=""
+          for i in "${array[@]}"
+          do
+            [[ ${FILES_CHANGED[*]} =~ $i ]] && echo "$i file found in the changeset" || missing_files="$missing_files $i"
+          done
+          echo ""
+          [ -z "$missing_files" ] && echo "All mandatory files have been modified" || echo "Following files $missing_files have not been modified"
+          [ -z "$missing_files" ] && exit 0 || exit 1
+
   test:
     runs-on: ubuntu-latest
     steps:
