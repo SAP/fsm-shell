@@ -56,6 +56,17 @@ where:
   details describing validation error. It is up to consuming application which additional information
   include in this property.
 
+**Important:** Most schemas within fsm-shell support the following JSON Schema standards:
+- draft-04
+- draft-06
+- draft-07
+
+The only current exception is outletsRequestDynamicContextResponse_v1_schema, which supports:
+- draft-06
+- draft-07
+
+We recommend using an external JSON Schema validation library that supports at least draft-07. Please note that future schemas may no longer support draft-04.
+
 ## Enabling validation
 
 To enable validation the consumer of fsm-shell library should call `setValidator` method on ShellSdk instance.
@@ -121,3 +132,8 @@ export class ShellPayloadValidationService implements PayloadValidator {
 
 }
 ```
+
+**Hint:** If Ajv is use, it is recommended to use v6 as it supports the following JSON Schema standards:
+- draft-04
+- draft-06
+- draft-07

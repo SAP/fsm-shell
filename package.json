@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -38,6 +38,7 @@
     "@types/jasmine": "^3.5.12",
     "@types/jasminewd2": "^2.0.8",
     "@types/sinon": "^9.0.4",
+    "ajv": "~6.12.6",
     "copyfiles": "^2.3.0",
     "coveralls": "^3.1.0",
     "cypress": "^4.12.1",
@@ -69,7 +70,7 @@
     "start-server-and-test": "^1.12.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "~3.1.6"
+    "typescript": "~3.9.10"
   },
   "dependencies": {},
   "husky": {

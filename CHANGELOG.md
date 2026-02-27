@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2026-03-03
+
+### Changed
+
+- Fix schema outletsRequestDynamicContextResponse_v1_schema to apply draft-06 and draft-07 JSON validation standards
+- Enhance schema getFeatureFlagRequest_v1_schema to support array next to object as correct request payload
+- Add unit test to make sure that all schemas are valid and follow draft-04, draft-06 and draft-07 JSON validation standards (besides outletsRequestDynamicContextResponse_v1_schema)
+  - outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins", which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not support this "optional array" inside "optional array", while draft-06 and draft-07 do.
+- Enhance model OutletsRequestContextResponse and OutletsRequestDynamicContextResponse by defining property plugin(s) better
+- Update typescript version to avoid warnings during execution of unit tests
+
 ## [1.20.0] - 2024-10-10
 
 ### Added

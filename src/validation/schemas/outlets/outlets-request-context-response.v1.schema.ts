@@ -13,7 +13,36 @@ export const outletsRequestContextResponse_v1_schema = {
     isPreviewActive: {
       type: 'boolean',
     },
-    plugin: {},
+    plugin: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string'
+        },
+        url: {
+          type: 'string'
+        },
+        optimalHeight: {
+          type: 'string'
+        },
+        useShellSDK: {
+          type: 'boolean'
+        },
+        isActive: {
+          type: 'boolean'
+        },
+        sandboxPolicies: {
+          type: 'array',
+          items: {
+            type: 'string'
+          }
+        },
+        assignmentId: {
+          type: 'string'
+        }
+      },
+      required: ['name', 'url', 'isActive']
+    },
   },
   required: ['isConfigurationMode'],
 };

@@ -3,6 +3,16 @@ export interface OutletsRequestDynamicContextResponse {
   isRootNodeHttps?: boolean;
   isConfigurationMode?: boolean;
   areDynamicOutletsEnabled?: boolean;
-  plugins?: any[];
+  plugins?: PluginForDynamicOutlet[];
   isPreviewActive: boolean;
+}
+
+interface PluginForDynamicOutlet {
+  name: string;
+  url: string;
+  optimalHeight?: string;
+  useShellSDK?: boolean;
+  isActive: boolean;
+  sandboxPolicies?: string[];
+  assignmentId: string;
 }
