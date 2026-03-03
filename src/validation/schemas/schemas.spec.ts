@@ -230,63 +230,72 @@ describe('Schemas', () => {
   (draft4MetaSchema as any).$id = 'http://json-schema.org/draft-04/schema#';
   let ajv04 = new Ajv({ meta: draft4MetaSchema });
 
-  function validateSchemaHelper(ajv: Ajv.Ajv, schema: object) {
-    const result = ajv.validateSchema(schema);
-    // If the schema is invalid, log the errors to help with debugging
-    if (result === false) {
-      console.log(JSON.stringify(ajv.errors, null, 2));
+  function validateSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object) {
+    const isValid = ajv.validateSchema(schema);
+    // If the schema is invalid, throw an error with the validation errors from Ajv. This will help us identify and fix any issues with the schemas.
+    if (isValid === false) {
+      const errorObject = {
+        schemaName,
+        errors: { ...ajv.errors }
+      };
+      throw new Error(JSON.stringify(errorObject, null, 2));
+    } else {
+      expect(isValid).toBeTrue();
     }
-    expect(result).toBeTrue();
   }
 
   function validateSchemasSupporting04and06and07(ajv: Ajv.Ajv) {
-    validateSchemaHelper(ajv, authRequest_v1_schema);
-    validateSchemaHelper(ajv, authResponse_v1_schema);
-    validateSchemaHelper(ajv, getItemRequest_v1_schema);
-    validateSchemaHelper(ajv, getItemRequest_v2_schema);
-    validateSchemaHelper(ajv, getItemResponse_v1_schema);
-    validateSchemaHelper(ajv, getItemResponse_v2_schema);
-    validateSchemaHelper(ajv, setItemRequest_v1_schema);
-    validateSchemaHelper(ajv, getFeatureFlagRequest_v1_schema);
-    validateSchemaHelper(ajv, getFeatureFlagResponse_v1_schema);
-    validateSchemaHelper(ajv, setTitleRequest_v1_schema);
-    validateSchemaHelper(ajv, modalOpenRequest_v1_schema);
-    validateSchemaHelper(ajv, modalOpenRequest_v2_schema);
-    validateSchemaHelper(ajv, modalCloseRequest_v1_schema);
-    validateSchemaHelper(ajv, getPermissionsRequest_v1_schema);
-    validateSchemaHelper(ajv, getPermissionsRequest_v2_schema);
-    validateSchemaHelper(ajv, getPermissionsRequest_v3_schema);
-    validateSchemaHelper(ajv, getPermissionsResponse_v1_schema);
-    validateSchemaHelper(ajv, getPermissionsResponse_v2_schema);
-    validateSchemaHelper(ajv, getPermissionsResponse_v3_schema);
-    validateSchemaHelper(ajv, requireContextRequest_v1_schema);
-    validateSchemaHelper(ajv, getSettingsRequest_v1_schema);
-    validateSchemaHelper(ajv, getSettingsResponse_v1_schema);
-    validateSchemaHelper(ajv, setViewStateRequest_v1_schema);
-    validateSchemaHelper(ajv, setViewStateResponse_v1_schema);
-    validateSchemaHelper(ajv, outletsRequestContextRequest_v1_schema);
-    validateSchemaHelper(ajv, outletsRequestContextResponse_v1_schema);
-    validateSchemaHelper(ajv, outletsAddPluginRequest_v1_schema);
-    validateSchemaHelper(ajv, outletsRemovePluginRequest_v1_schema);
-    validateSchemaHelper(ajv, outletsRequestDynamicContextRequest_v1_schema);
+    validateSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema);
+    validateSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema);
+    validateSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema);
+    validateSchemaHelper(ajv, 'getItemResponse_v1_schema', getItemResponse_v1_schema);
+    validateSchemaHelper(ajv, 'getItemResponse_v2_schema', getItemResponse_v2_schema);
+    validateSchemaHelper(ajv, 'setItemRequest_v1_schema', setItemRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getFeatureFlagResponse_v1_schema', getFeatureFlagResponse_v1_schema);
+    validateSchemaHelper(ajv, 'setTitleRequest_v1_schema', setTitleRequest_v1_schema);
+    validateSchemaHelper(ajv, 'modalOpenRequest_v1_schema', modalOpenRequest_v1_schema);
+    validateSchemaHelper(ajv, 'modalOpenRequest_v2_schema', modalOpenRequest_v2_schema);
+    validateSchemaHelper(ajv, 'modalCloseRequest_v1_schema', modalCloseRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getPermissionsRequest_v1_schema', getPermissionsRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema);
+    validateSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema);
+    validateSchemaHelper(ajv, 'getPermissionsResponse_v1_schema', getPermissionsResponse_v1_schema);
+    validateSchemaHelper(ajv, 'getPermissionsResponse_v2_schema', getPermissionsResponse_v2_schema);
+    validateSchemaHelper(ajv, 'getPermissionsResponse_v3_schema', getPermissionsResponse_v3_schema);
+    validateSchemaHelper(ajv, 'requireContextRequest_v1_schema', requireContextRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getSettingsResponse_v1_schema', getSettingsResponse_v1_schema);
+    validateSchemaHelper(ajv, 'setViewStateRequest_v1_schema', setViewStateRequest_v1_schema);
+    validateSchemaHelper(ajv, 'setViewStateResponse_v1_schema', setViewStateResponse_v1_schema);
+    validateSchemaHelper(ajv, 'outletsRequestContextRequest_v1_schema', outletsRequestContextRequest_v1_schema);
+    validateSchemaHelper(ajv, 'outletsRequestContextResponse_v1_schema', outletsRequestContextResponse_v1_schema);
+    validateSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema);
+    validateSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema);
+    validateSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema);
   }
 
   function validateSchemasSupportingOnly06and07(ajv: Ajv.Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
-    validateSchemaHelper(ajv, outletsRequestDynamicContextResponse_v1_schema);
+    validateSchemaHelper(ajv, 'outletsRequestDynamicContextResponse_v1_schema', outletsRequestDynamicContextResponse_v1_schema);
   }
 
-  function validateValidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schema: object, data: any) {
+  function validateValidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object, data: any) {
     const validationFunction = ajv.compile(schema);
     const isValid = validationFunction(data);
-
+    // If the data is invalid, throw an error with the validation errors from Ajv. This will help us identify and fix any issues with the schemas or the test data.
     if (isValid === false) {
-      console.log(JSON.stringify(validationFunction.errors, null, 2));
+      const errorObject = {
+        schemaName,
+        errors: { ...validationFunction.errors }
+      };
+      throw new Error(JSON.stringify(errorObject, null, 2));
+    } else {
+      expect(isValid).toBeTrue();
     }
-    
-    expect(isValid).toBeTrue();
   }
 
   /**
@@ -294,47 +303,52 @@ describe('Schemas', () => {
    * Therefore, we are not including it in the valid data tests since it would not be meaningful.
    */
   function validateValidDataAgainstSchemaSupporting04and06and07(ajv: Ajv.Ajv) {
-    validateValidDataAgainstSchemaHelper(ajv, authRequest_v1_schema, validAuthRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, authResponse_v1_schema, validAuthResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getItemRequest_v1_schema, validGetItemRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getItemRequest_v2_schema, validGetItemRequest_v2);
-    validateValidDataAgainstSchemaHelper(ajv, getItemResponse_v2_schema, validGetItemResponse_v2);
-    validateValidDataAgainstSchemaHelper(ajv, setItemRequest_v1_schema, validSetItemRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getFeatureFlagResponse_v1_schema, validGetFeatureFlagResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, setTitleRequest_v1_schema, validSetTitleRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, modalOpenRequest_v1_schema, validModalOpenRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, modalOpenRequest_v2_schema, validModalOpenRequest_v2);
-    validateValidDataAgainstSchemaHelper(ajv, modalCloseRequest_v1_schema, validModalCloseRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v1_schema, validGetPermissionsRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v2_schema, validGetPermissionsRequest_v2);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v3_schema, validGetPermissionsRequest_v3);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v1_schema, validGetPermissionsResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v2_schema, validGetPermissionsResponse_v2);
-    validateValidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v3_schema, validGetPermissionsResponse_v3);
-    validateValidDataAgainstSchemaHelper(ajv, requireContextRequest_v1_schema, validRequireContextRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getSettingsRequest_v1_schema, validGetSettingsRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, getSettingsResponse_v1_schema, validGetSettingsResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, setViewStateRequest_v1_schema, validSetViewStateRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, setViewStateResponse_v1_schema, validSetViewStateResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, outletsRequestContextRequest_v1_schema, validOutletsRequestContextRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, outletsRequestContextResponse_v1_schema, validOutletsRequestContextResponse_v1);
-    validateValidDataAgainstSchemaHelper(ajv, outletsAddPluginRequest_v1_schema, validOutletsAddPluginRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, outletsRemovePluginRequest_v1_schema, validOutletsRemovePluginRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, outletsRequestDynamicContextRequest_v1_schema, validOutletsRequestDynamicContextRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema, validAuthRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema, validAuthResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema, validGetItemRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, validGetItemRequest_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getItemResponse_v2_schema', getItemResponse_v2_schema, validGetItemResponse_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'setItemRequest_v1_schema', setItemRequest_v1_schema, validSetItemRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagResponse_v1_schema', getFeatureFlagResponse_v1_schema, validGetFeatureFlagResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'setTitleRequest_v1_schema', setTitleRequest_v1_schema, validSetTitleRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v1_schema', modalOpenRequest_v1_schema, validModalOpenRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v2_schema', modalOpenRequest_v2_schema, validModalOpenRequest_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'modalCloseRequest_v1_schema', modalCloseRequest_v1_schema, validModalCloseRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v1_schema', getPermissionsRequest_v1_schema, validGetPermissionsRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema, validGetPermissionsRequest_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema, validGetPermissionsRequest_v3);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v1_schema', getPermissionsResponse_v1_schema, validGetPermissionsResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v2_schema', getPermissionsResponse_v2_schema, validGetPermissionsResponse_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v3_schema', getPermissionsResponse_v3_schema, validGetPermissionsResponse_v3);
+    validateValidDataAgainstSchemaHelper(ajv, 'requireContextRequest_v1_schema', requireContextRequest_v1_schema, validRequireContextRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsResponse_v1_schema', getSettingsResponse_v1_schema, validGetSettingsResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'setViewStateRequest_v1_schema', setViewStateRequest_v1_schema, validSetViewStateRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'setViewStateResponse_v1_schema', setViewStateResponse_v1_schema, validSetViewStateResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestContextRequest_v1_schema', outletsRequestContextRequest_v1_schema, validOutletsRequestContextRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestContextResponse_v1_schema', outletsRequestContextResponse_v1_schema, validOutletsRequestContextResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema, validOutletsAddPluginRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema, validOutletsRemovePluginRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema, validOutletsRequestDynamicContextRequest_v1);
   }
 
   function validateValidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
-    validateValidDataAgainstSchemaHelper(ajv, outletsRequestDynamicContextResponse_v1_schema, validOutletsRequestDynamicContextResponse_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextResponse_v1_schema', outletsRequestDynamicContextResponse_v1_schema, validOutletsRequestDynamicContextResponse_v1);
   }
 
-  function validateInvalidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schema: object, data: any) {
+  function validateInvalidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object, data: any) {
     const validationFunction = ajv.compile(schema);
-    const isValid = validationFunction(data);    
-    expect(isValid).toBeFalse();
+    const isValid = validationFunction(data);
+    // If the data is valid even if it is expected to be invalid, throw an error with the schema name to indicate the test failure.
+    if (isValid === true) {
+      throw new Error(`Expected validation to fail for schema: ${schemaName}`);
+    } else {
+      expect(isValid).toBeFalse();
+    }
   }
 
   /**
@@ -342,41 +356,41 @@ describe('Schemas', () => {
    * Therefore, we are not including it in the invalid data tests since it would not be meaningful.
    */
   function validateInvalidDataAgainstSchemaSupporting04and06and07(ajv: Ajv.Ajv) {
-    validateInvalidDataAgainstSchemaHelper(ajv, authRequest_v1_schema, invalidAuthRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, authResponse_v1_schema, invalidAuthResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getItemRequest_v1_schema, invalidGetItemRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getItemRequest_v2_schema, invalidGetItemRequest_v2);
-    validateInvalidDataAgainstSchemaHelper(ajv, getItemResponse_v2_schema, invalidGetItemResponse_v2);
-    validateInvalidDataAgainstSchemaHelper(ajv, setItemRequest_v1_schema, invalidSetItemRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getFeatureFlagRequest_v1_schema, invalidGetFeatureFlagRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getFeatureFlagResponse_v1_schema, invalidGetFeatureFlagResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, setTitleRequest_v1_schema, invalidSetTitleRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, modalOpenRequest_v1_schema, invalidModalOpenRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, modalOpenRequest_v2_schema, invalidModalOpenRequest_v2);
-    validateInvalidDataAgainstSchemaHelper(ajv, modalCloseRequest_v1_schema, invalidModalCloseRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v1_schema, invalidGetPermissionsRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v2_schema, invalidGetPermissionsRequest_v2);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsRequest_v3_schema, invalidGetPermissionsRequest_v3);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v1_schema, invalidGetPermissionsResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v2_schema, invalidGetPermissionsResponse_v2);
-    validateInvalidDataAgainstSchemaHelper(ajv, getPermissionsResponse_v3_schema, invalidGetPermissionsResponse_v3);
-    validateInvalidDataAgainstSchemaHelper(ajv, requireContextRequest_v1_schema, invalidRequireContextRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getSettingsRequest_v1_schema, invalidGetSettingsRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, getSettingsResponse_v1_schema, invalidGetSettingsResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, setViewStateRequest_v1_schema, invalidSetViewStateRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, setViewStateResponse_v1_schema, invalidSetViewStateResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsRequestContextRequest_v1_schema, invalidOutletsRequestContextRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsRequestContextResponse_v1_schema, invalidOutletsRequestContextResponse_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsAddPluginRequest_v1_schema, invalidOutletsAddPluginRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsRemovePluginRequest_v1_schema, invalidOutletsRemovePluginRequest_v1);
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsRequestDynamicContextRequest_v1_schema, invalidOutletsRequestDynamicContextRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema, invalidAuthRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema, invalidAuthResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema, invalidGetItemRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, invalidGetItemRequest_v2);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getItemResponse_v2_schema', getItemResponse_v2_schema, invalidGetItemResponse_v2);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'setItemRequest_v1_schema', setItemRequest_v1_schema, invalidSetItemRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, invalidGetFeatureFlagRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getFeatureFlagResponse_v1_schema', getFeatureFlagResponse_v1_schema, invalidGetFeatureFlagResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'setTitleRequest_v1_schema', setTitleRequest_v1_schema, invalidSetTitleRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v1_schema', modalOpenRequest_v1_schema, invalidModalOpenRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v2_schema', modalOpenRequest_v2_schema, invalidModalOpenRequest_v2);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'modalCloseRequest_v1_schema', modalCloseRequest_v1_schema, invalidModalCloseRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v1_schema', getPermissionsRequest_v1_schema, invalidGetPermissionsRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema, invalidGetPermissionsRequest_v2);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema, invalidGetPermissionsRequest_v3);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v1_schema', getPermissionsResponse_v1_schema, invalidGetPermissionsResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v2_schema', getPermissionsResponse_v2_schema, invalidGetPermissionsResponse_v2);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v3_schema', getPermissionsResponse_v3_schema, invalidGetPermissionsResponse_v3);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'requireContextRequest_v1_schema', requireContextRequest_v1_schema, invalidRequireContextRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, invalidGetSettingsRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getSettingsResponse_v1_schema', getSettingsResponse_v1_schema, invalidGetSettingsResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'setViewStateRequest_v1_schema', setViewStateRequest_v1_schema, invalidSetViewStateRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'setViewStateResponse_v1_schema', setViewStateResponse_v1_schema, invalidSetViewStateResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRequestContextRequest_v1_schema', outletsRequestContextRequest_v1_schema, invalidOutletsRequestContextRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRequestContextResponse_v1_schema', outletsRequestContextResponse_v1_schema, invalidOutletsRequestContextResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema, invalidOutletsAddPluginRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema, invalidOutletsRemovePluginRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema, invalidOutletsRequestDynamicContextRequest_v1);
   }
 
   function validateInvalidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
-    validateInvalidDataAgainstSchemaHelper(ajv, outletsRequestDynamicContextResponse_v1_schema, invalidOutletsRequestDynamicContextResponse_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextResponse_v1_schema', outletsRequestDynamicContextResponse_v1_schema, invalidOutletsRequestDynamicContextResponse_v1);
   }
 
   it('should be valid draft-04 JSON schemas', () => {

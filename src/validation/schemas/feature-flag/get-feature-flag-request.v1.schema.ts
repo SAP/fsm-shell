@@ -15,16 +15,7 @@ export const getFeatureFlagRequest_v1_schema = {
   },
   anyOf: [
     {
-      type: 'object',
-      properties: {
-        key: {
-          type: 'string'
-        },
-        defaultValue: {
-          type: 'boolean'
-        }
-      },
-      required: ['key', 'defaultValue']
+      $ref: '#/$defs/payload'
     },
     {
       type: 'array',
