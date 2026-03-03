@@ -56,6 +56,12 @@ where:
   details describing validation error. It is up to consuming application which additional information
   include in this property.
 
+**Important:** All schemas within fsm-shell support the following JSON Schema standards [^1]:
+- draft-06
+- draft-07
+
+[^1]: Currently, most of the schemas within fsm-shell support also the JSON Schema standard draft-04. However, future schemas may no longer support draft-04. Therefore, we recommend using an external JSON Schema validation library that supports the JSON Schema standards draft-06 and/or draft-07.
+
 ## Enabling validation
 
 To enable validation the consumer of fsm-shell library should call `setValidator` method on ShellSdk instance.

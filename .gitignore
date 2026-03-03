@@ -76,3 +76,6 @@ mocha.json
 
 #cypress video folder
 cypress/videos
+
+# vscode settings folder
+.vscode/
