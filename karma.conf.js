@@ -1,4 +1,4 @@
-// "resolveJsonModule": true is required to load json files in tests, e.g. meta schemas (see SchemaValidation.spec.ts)
+// "resolveJsonModule": true is required to load json files in tests, e.g. meta schemas (see schemas.spec.ts)
 const tsconfig = {
   "compilerOptions": {
     "lib": [
