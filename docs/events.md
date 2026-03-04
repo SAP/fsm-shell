@@ -1,6 +1,6 @@
 # API Documentation
 
-If this is your first time using the Shell-SDK, then we recommend to have a look on our [usage samples](./usage-sample.md).
+If this is your first time using the Shell-SDK, then we recommend to have a look at our [usage samples](./usage-sample.md).
 
 ## Events
 
@@ -64,7 +64,7 @@ Must be sent on application startup to get initial application context from the 
 
   The property `extension` is only exposed to extensions. It contains information about the requesting extension. Currently, it only contains the property `deploymentId`.
 
-  REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as describe in the ViewState section.
+  REQUIRE_CONTEXT will first return the response payload, then trigger individual ViewState object as described in the ViewState section.
 
 - ### REQUIRE_AUTHENTICATION
 
@@ -245,7 +245,7 @@ Request permissions for specified object from the Shell
     }
     ```
 
-  - Listenner
+  - Listener
 
     ```typescript
     sdk.on(SHELL_EVENTS.Version1.GET_SETTINGS, (value) => {
@@ -291,7 +291,7 @@ Request value stored under specified key in cloud storage
   }
   ```
 
-- Listenner
+- Listener
 
   ```typescript
   sdk.on(SHELL_EVENTS.Version2.GET_STORAGE_ITEM, (response) => {
@@ -334,7 +334,7 @@ Request value stored under specified key in cloud storage
   SHELL_EVENTS.Version1.SET_STORAGE_ITEM
   ```
 
-  Save value in cloud staorage under specified key
+  Save value in cloud storage under specified key
 
   - Request payload
 
@@ -355,7 +355,7 @@ Request value stored under specified key in cloud storage
 
 - ### GET_FEATURE_FLAG
 
-  Feature flags are in internally used flags in FSM to control some new features when the preview mode is off.
+  Feature flags are internally used flags in FSM to control some new features when the preview mode is off.
 
   ```
   SHELL_EVENTS.Version1.GET_FEATURE_FLAG
@@ -364,6 +364,8 @@ Request value stored under specified key in cloud storage
   Request feature flag value from shell host
 
 - Request payload
+
+  Payload can either be an object or an array
 
   type: GetFeatureFlagRequest  
   object containing key name and default value for feature flag to get
@@ -375,10 +377,20 @@ Request value stored under specified key in cloud storage
   }
   ```
 
+  type: GetFeatureFlagsRequest  
+  array of objects containing key name and default value for feature flags to get
+
+  ```typescript
+  {
+    key: string;
+    defaultValue: boolean;
+  }[]
+  ```
+
 - Response payload
 
   type: GetFeatureFlagResponse  
-  object containing key name and value for feature flag
+  object(s) containing key name and value for feature flag
 
   ```typescript
   {
@@ -387,7 +399,7 @@ Request value stored under specified key in cloud storage
   }
   ```
 
-- Listenner
+- Listener
 
   ```typescript
   sdk.on(SHELL_EVENTS.Version1.GET_FEATURE_FLAG, (response) => {
@@ -426,13 +438,13 @@ Request value stored under specified key in cloud storage
   Restore document title to the value internally stored during previous SET_TITLE
   event handling. If no stored title found, handling this event will do nothing.
 
-  - No request payload need to be provided
+  - No request payload needs to be provided
 
   - No response will be sent
 
 ## Modal specific events
 
-Applciations can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application is running inside a Shell modal.
+Applications can request do display a modal with a specified URL. Events include opening and closing. You can also use the function `isInsideShellModal()` to know if your application is running inside a Shell modal.
 
 - ### MODAL.OPEN
 
@@ -481,7 +493,7 @@ In `modalSettings` you can specify the following properties:
 
   type: `boolean`
 
-  Default is `true`. Set to `false` to disable closing teh modal by pressing the ESC key.
+  Default is `true`. Set to `false` to disable closing the modal by pressing the ESC key.
 
 - `focusTrapped`
 
@@ -571,7 +583,7 @@ this.sdk.emit(SHELL_EVENTS.Version2.MODAL.OPEN, {
   url: 'https://example.com',
   modalSettings: {
     title: 'My title', // string
-    showTitleHeader: true,
+    showHeader: true,
 
     hasBackdrop: false,
     backdropClickCloseable: false,
@@ -638,13 +650,13 @@ this.sdk.emit(SHELL_EVENTS.Version1.MODAL.OPEN, {
 
 - ### MODAL.CLOSE
 
-Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be send back to the application which opened the modal.
+Request closing of the open modal using `SHELL_EVENTS.Version1.MODAL.CLOSE` from your application or the opened modal. An object can be passed as parameter to be sent back to the application which opened the modal.
 
 ```typescript
 this.sdk.emit(SHELL_EVENTS.Version1.MODAL.CLOSE);
 ```
 
-An application can listen to the same event to trigger code on closing. This event is only received if the application emited the OPEN event.
+An application can listen to the same event to trigger code on closing. This event is only received if the application emitted the OPEN event.
 
 ```typescript
 this.sdk.on(SHELL_EVENTS.Version1.MODAL.CLOSE, (data) => {
@@ -659,15 +671,15 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
 - ### VIEW STATE
 
-  View State event provide a shared context between all local instance.
+  View State event provides a shared context between all local instances.
 
-  As you might need to share between your application and extensions a general context to provide consistent UI, ShellSdk let applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when user navigate outside of the application. ViewState is not allowed to use in an extension for security reason, and will throw generic error object.
+  As you might need to share between your application and extensions a general context to provide consistent UI, ShellSdk lets applications share any `{ key: value }` object through the ViewState entity. You can update the using the `setViewState(key, value)` method. ViewState is not persistent and will be deleted when the user navigates outside of the application. ViewState is not allowed to use in an extension for security reasons, and will throw generic error object.
 
   ```typescript
   this.sdk.setViewState('TECHNICIAN', id);
   ```
 
-  To listen on modification event, use the listenner `onViewState` with the expected key.
+  To listen on modification event, use the listener `onViewState` with the expected key.
 
   ```typescript
   this.sdk.onViewState('TECHNICIAN', id => {
@@ -675,7 +687,7 @@ ShellSdk provide a set of features which are specifically designed to allow comm
   }))
   ```
 
-  To initialise your ViewState, make sure all `.onViewState` listenners are initialise when first emitting the `REQUEST_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUEST_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listenners.
+  To initialize your ViewState, make sure all `.onViewState` listeners are initialize when first emitting the `REQUIRE_CONTEXT` event. ShellSdk will first trigger `.on(SHELL_EVENTS.Version1.REQUIRE_CONTEXT` to initialize the general context, then individually receive events on `onViewState` listeners.
 
 - ### TO_APP
 
@@ -711,7 +723,7 @@ ShellSdk provide a set of features which are specifically designed to allow comm
 
 ## Events versioning
 
-Event name includes version part which allow to keep back compatibility when data formats in request or
+Event name includes version part which allows maintaining backward compatibility when data formats in request or
 response payload needs to be changed.
 
 Below sample event name for the event which has version 2:
@@ -723,7 +735,7 @@ SHELL_EVENTS.Version2.GET_PERMISSIONS
 Events supporting new data formats will be published under next
 version, while previous data formats still available under previous version number. This way application
 able to keep using previous event version without immediate need to switch to the new data formats. Switch
-to the next event version can be done later when particular application ready for new payload data format.
+to the next event version can be done later when a particular application is ready for new payload data format.
 
-Whilst previous event versions can be used in alredy developed applications for back compatibility, it is
-recommended to use latest event versions when building new applications which using fsm-shell library.
+Whilst previous event versions can be used in already developed applications for back compatibility, it is
+recommended to use latest event versions when building new applications that use fsm-shell library.
