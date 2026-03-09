@@ -21,6 +21,7 @@ export { ModalCloseRequest } from './modal/modal-close-request.model';
 export { SettingsResponse } from './settings/settings-response.model';
 
 export { GetFeatureFlagRequest } from './feature-flag/get-feature-flag-request.model';
+export { GetFeatureFlagsRequest } from './feature-flag/get-feature-flag-request.model';
 export { GetFeatureFlagResponse } from './feature-flag/get-feature-flag-response.model';
 
 export { SetViewStateRequest } from './view-state/set-view-state-request.model';
