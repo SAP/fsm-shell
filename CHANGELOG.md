@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.22.0] - 2026-03-11
+
+### Added
+
+- Add optional `sandboxPolicies` property to `ModalOpenRequestV2` model and schema
+
 ## [1.21.1] - 2026-03-04
 
 ### Changed
@@ -29,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Context with deploymentId for extensions only works in case the respective outlet has a target extension-assignment-id. Execute logic to retrieve deploymentId only in case respective outlet has a target.
-
 
 ## [1.19.0] - 2023-09-04
 

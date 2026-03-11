@@ -75,7 +75,8 @@ export const validModalOpenRequest_v2 = {
     maxWidth: 'string',
     isScrollbarHidden: true
   },
-  data: {}
+  data: {},
+  sandboxPolicies: ['allow-scripts', 'allow-same-origin']
 };
 export const validModalCloseRequest_v1 = {};
 export const validGetPermissionsRequest_v1 = { objectName: 'string', owners: ['string'] };
@@ -165,7 +166,8 @@ export const invalidModalOpenRequest_v2 = {
     maxWidth: 123,
     isScrollbarHidden: 'no'
   },
-  data: 123
+  data: 123,
+  sandboxPolicies: [123, 456]
 };
 export const invalidModalCloseRequest_v1 = [];
 export const invalidGetPermissionsRequest_v1 = { objectName: 123, owners: 'not-array' };
