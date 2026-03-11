@@ -6,6 +6,7 @@ export interface ModalOpenRequestV2 extends DialogSettings {
     isScrollbarHidden?: boolean;
   };
   data?: any;
+  sandboxPolicies?: string[];
 }
 
 export interface DialogSettings {
