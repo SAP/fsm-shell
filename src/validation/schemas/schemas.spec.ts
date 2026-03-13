@@ -50,7 +50,7 @@ export const validGetItemRequest_v2 = 'string';
 export const validGetItemResponse_v2 = { key: 'string', value: {} };
 export const validSetItemRequest_v1 = { key: 'string', value: {} };
 export const validGetFeatureFlagRequest_v1_subschema_1 = { key: 'string', defaultValue: true };
-export const validGetFeatureFlagRequest_v1_subschema_2 = [{ key: 'string', defaultValue: true }];
+export const validGetFeatureFlagRequest_v1_subschema_2 = [{ key: 'string', defaultValue: true }, { key: 'string', defaultValue: true }];
 export const validGetFeatureFlagResponse_v1 = { key: 'string', value: true };
 export const validSetTitleRequest_v1 = { title: 'string' };
 export const validModalOpenRequest_v1 = { url: 'string', modalSettings: { title: 'string', size: 'l', backdropClickCloseable: true, isScrollbarHidden: true }, data: {} };
@@ -95,8 +95,8 @@ export const validRequireContextRequest_v1 = {
   targetExtensionAssignmentId: 'string'
 };
 export const validGetSettingsRequest_v1_subschema_1 = 'string';
-export const validGetSettingsRequest_v1_subschema_2 = ['string'];
-export const validGetSettingsRequest_v1_subschema_3 = [['string']];
+export const validGetSettingsRequest_v1_subschema_2 = ['string', 'string'];
+export const validGetSettingsRequest_v1_subschema_3 = [['string'],['string', 'string']];
 export const validGetSettingsRequest_v1_subschema_4 = ['string', ['string']];
 export const validGetSettingsResponse_v1 = { key: 'string', value: {} };
 export const validSetViewStateRequest_v1 = { key: 'string', value: {} };
