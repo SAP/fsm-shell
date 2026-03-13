@@ -18,6 +18,7 @@ export {
 } from './modal/modal-open-request.v2.model';
 export { ModalCloseRequest } from './modal/modal-close-request.model';
 
+export { SettingsRequest } from './settings/settings-request.model';
 export { SettingsResponse } from './settings/settings-response.model';
 
 export { GetFeatureFlagRequest } from './feature-flag/get-feature-flag-request.model';

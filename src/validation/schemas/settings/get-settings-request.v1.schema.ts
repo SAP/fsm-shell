@@ -1,3 +1,24 @@
 export const getSettingsRequest_v1_schema = {
-  type: 'string',
+  anyOf: [
+    {
+       type: 'string'
+    },
+    {
+      type: 'array',
+      items: {
+        type: ['string', 'array'],
+        anyOf: [
+          {
+            type: 'string'
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'string'
+            }
+          }
+        ]
+      }
+    }
+  ]
 };

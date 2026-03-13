@@ -226,17 +226,56 @@ Request permissions for specified object from the Shell
   SHELL_EVENTS.Version1.GET_SETTINGS
   ```
 
-  Request settings value for specific key from the shell
+  Request settings value for specific key from the Shell
 
   - Request payload
 
-    type: string  
-    Key to read settings from
+    type: SettingsRequest  
+    Key to read settings from or array of (nested) keys
+
+    ```typescript
+    string or Array<string | string[]>
+    ```
+
+    Some keys inside the company settings are organized in nested folders. The structure looks similar to the following:
+
+    ```typescript
+    {
+      key_1: 'value1'
+      key_2: 'value2',
+      folder_1: {
+        key_3: 'value3'
+      },
+      folder_2: {
+        key_4: 'value4'
+      }
+    }
+    ```
+
+    To fetch `key_1`, it is sufficient to provide the key as a string:
+    ```typescript
+    'key_1'
+    ```
+
+    To fetch multiple keys, provide them as an array:
+    ```typescript
+    ['key_1', 'key_2']
+    ```
+
+    To fetch nested keys, the path must be defined as an array. To distinguish nested keys from a simple array of keys, the path is wrapped in its own array:
+    ```typescript
+    [['folder_1', 'key_3']]
+    ```
+
+    It is also possible to fetch multiple keys and multiple nested keys in a single request:
+    ```typescript
+    ['key_1', 'key_2', ['folder_1', 'key_3'], ['folder_2', 'key_4']]
+    ```
 
   - Response payload
 
     type: SettingsResponse\<T\>  
-    settings value which was read from requested key
+    Settings value which was read from requested key. In case an array of (nested) keys is provided as payload, there will be a response for each key.
 
     ```typescript
     {
@@ -390,7 +429,7 @@ Request value stored under specified key in cloud storage
 - Response payload
 
   type: GetFeatureFlagResponse  
-  object(s) containing key name and value for feature flag
+  Object containing key name and value for feature flag. In case array of objects are provided as payload, there will be a response for each object.
 
   ```typescript
   {
