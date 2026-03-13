@@ -49,7 +49,8 @@ export const validGetItemRequest_v1 = 'string';
 export const validGetItemRequest_v2 = 'string';
 export const validGetItemResponse_v2 = { key: 'string', value: {} };
 export const validSetItemRequest_v1 = { key: 'string', value: {} };
-export const validGetFeatureFlagRequest_v1 = [{ key: 'string', defaultValue: true }];
+export const validGetFeatureFlagRequest_v1_subschema_1 = { key: 'string', defaultValue: true };
+export const validGetFeatureFlagRequest_v1_subschema_2 = [{ key: 'string', defaultValue: true }, { key: 'string', defaultValue: true }];
 export const validGetFeatureFlagResponse_v1 = { key: 'string', value: true };
 export const validSetTitleRequest_v1 = { title: 'string' };
 export const validModalOpenRequest_v1 = { url: 'string', modalSettings: { title: 'string', size: 'l', backdropClickCloseable: true, isScrollbarHidden: true }, data: {} };
@@ -93,7 +94,10 @@ export const validRequireContextRequest_v1 = {
   targetOutletName: 'string',
   targetExtensionAssignmentId: 'string'
 };
-export const validGetSettingsRequest_v1 = 'string';
+export const validGetSettingsRequest_v1_subschema_1 = 'string';
+export const validGetSettingsRequest_v1_subschema_2 = ['string', 'string'];
+export const validGetSettingsRequest_v1_subschema_3 = [['string'],['string', 'string']];
+export const validGetSettingsRequest_v1_subschema_4 = ['string', ['string']];
 export const validGetSettingsResponse_v1 = { key: 'string', value: {} };
 export const validSetViewStateRequest_v1 = { key: 'string', value: {} };
 export const validSetViewStateResponse_v1 = { key: 'string', value: {} };
@@ -311,7 +315,8 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, validGetItemRequest_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'getItemResponse_v2_schema', getItemResponse_v2_schema, validGetItemResponse_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'setItemRequest_v1_schema', setItemRequest_v1_schema, validSetItemRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1_subschema_1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1_subschema_2);
     validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagResponse_v1_schema', getFeatureFlagResponse_v1_schema, validGetFeatureFlagResponse_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'setTitleRequest_v1_schema', setTitleRequest_v1_schema, validSetTitleRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v1_schema', modalOpenRequest_v1_schema, validModalOpenRequest_v1);
@@ -324,7 +329,10 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v2_schema', getPermissionsResponse_v2_schema, validGetPermissionsResponse_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v3_schema', getPermissionsResponse_v3_schema, validGetPermissionsResponse_v3);
     validateValidDataAgainstSchemaHelper(ajv, 'requireContextRequest_v1_schema', requireContextRequest_v1_schema, validRequireContextRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1_subschema_1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1_subschema_2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1_subschema_3);
+    validateValidDataAgainstSchemaHelper(ajv, 'getSettingsRequest_v1_schema', getSettingsRequest_v1_schema, validGetSettingsRequest_v1_subschema_4);
     validateValidDataAgainstSchemaHelper(ajv, 'getSettingsResponse_v1_schema', getSettingsResponse_v1_schema, validGetSettingsResponse_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'setViewStateRequest_v1_schema', setViewStateRequest_v1_schema, validSetViewStateRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'setViewStateResponse_v1_schema', setViewStateResponse_v1_schema, validSetViewStateResponse_v1);

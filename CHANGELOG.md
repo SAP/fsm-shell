@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.0] - 2026-03-13
+
+### Added
+
+- Define and "publish" new model `SettingsRequest`
+- Enhance `getSettingsRequest_v1_schema` to support multiple keys as well as nested keys
+
 ## [1.22.0] - 2026-03-11
 
 ### Added
