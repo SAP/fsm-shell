@@ -247,7 +247,9 @@ Request permissions for specified object from the Shell
         key_3: 'value3'
       },
       folder_2: {
-        key_4: 'value4'
+        folder_3: {
+          key_4: 'value4'
+        }
       }
     }
     ```
@@ -267,9 +269,11 @@ Request permissions for specified object from the Shell
     [['folder_1', 'key_3']]
     ```
 
+    `Hint`: Nested keys can have any depth.
+
     It is also possible to fetch multiple keys and multiple nested keys in a single request:
     ```typescript
-    ['key_1', 'key_2', ['folder_1', 'key_3'], ['folder_2', 'key_4']]
+    ['key_1', 'key_2', ['folder_1', 'key_3'], ['folder_2', 'folder_3', 'key_4']]
     ```
 
   - Response payload
