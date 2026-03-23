@@ -22,7 +22,8 @@ jobs:
           missing_files=""
           for i in "${array[@]}"
           do
-            [[ ${FILES_CHANGED[*]} =~ $i ]] && echo "$i file found in the changeset" || missing_files="$missing_files $i"
+            i_lower=$(echo "$i" | tr '[:upper:]' '[:lower:]')
+            [[ ${FILES_CHANGED[*]} =~ $i_lower ]] && echo "$i file found in the changeset" || missing_files="$missing_files $i"
           done
           echo ""
           [ -z "$missing_files" ] && echo "All mandatory files have been modified" || echo "Following files $missing_files have not been modified"
