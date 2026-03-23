@@ -1,7 +1,7 @@
-
 import { EventType, ALL_SHELL_EVENTS_ARRAY } from './ShellEvents';
 import { EventDirection, DebugEvent } from './models/debug/debug-event';
 import { MessageLogger } from './MessageLogger';
+import { TraceEntry } from './models/trace/trace-entry.model';
 
 interface DebuggableWindow extends Window {
   fsmShellMessageLogger: MessageLogger | undefined;
@@ -10,29 +10,35 @@ interface DebuggableWindow extends Window {
 interface Routing {
   to?: string[];
   from?: string[];
+  trace?: TraceEntry[];
 }
 
 const FSM_SHELL_DEBUG_KEY = 'cs.fsm-shell.debug';
 
 export class Debugger {
-
   private debugMode: boolean = false;
 
-  constructor(
-    private winRef: Window,
-    private debugId: string
-  ) {
+  constructor(private winRef: Window, private debugId: string) {
     if (this.debugId) {
       const win = this.winRef as DebuggableWindow;
       const localStorageValue = win.localStorage.getItem(FSM_SHELL_DEBUG_KEY);
-      if (!!localStorageValue && localStorageValue.split(',').some(it => it === debugId)) {
+      if (
+        !!localStorageValue &&
+        localStorageValue.split(',').some((it) => it === debugId)
+      ) {
         this.debugMode = true;
       }
     }
   }
 
-  public traceEvent(direction: EventDirection, type: EventType, payload: any, routing: Routing, hasHandler: boolean) {
-    if (this.debugMode && ALL_SHELL_EVENTS_ARRAY.some(it => it === type)) {
+  public traceEvent(
+    direction: EventDirection,
+    type: EventType,
+    payload: any,
+    routing: Routing,
+    hasHandler: boolean
+  ) {
+    if (this.debugMode && ALL_SHELL_EVENTS_ARRAY.some((it) => it === type)) {
       const debugEvent: DebugEvent<any> = {
         timestamp: new Date(),
         component: this.debugId,
@@ -41,8 +47,9 @@ export class Debugger {
         handled: direction === 'incoming' ? (hasHandler ? 'yes' : 'no') : 'n/a',
         to: routing.to,
         from: routing.from,
-        payload
-      }
+        trace: routing.trace,
+        payload,
+      };
       this.logEvent(debugEvent);
     }
   }
@@ -54,5 +61,4 @@ export class Debugger {
     }
     win.fsmShellMessageLogger.push(debugEvent, this.debugId);
   }
-
 }

@@ -2,6 +2,7 @@ import { EventType, ErrorType, SHELL_EVENTS } from './ShellEvents';
 import { SHELL_VERSION_INFO } from './ShellVersionInfo';
 import { Debugger } from './Debugger';
 import { Outlet } from './models/outlets/outlet.model';
+import { TraceEntry } from './models/trace/trace-entry.model';
 import { PayloadValidator } from './validation/interfaces/payload-validator';
 import {
   getEventValidationConfiguration,
@@ -23,13 +24,28 @@ function uuidv4() {
 
 const DEFAULT_MAXIMUM_DEPTH = 1;
 
+/**
+ * Safely get location.href from a window.
+ * Returns undefined for cross-origin windows (security restriction).
+ */
+function getLocationHref(win: Window | null | undefined): string | undefined {
+  if (!win) {
+    return undefined;
+  }
+  try {
+    return win.location.href;
+  } catch {
+    return undefined;
+  }
+}
+
 export class ShellSdk {
   public static VERSION = SHELL_VERSION_INFO.VERSION;
   public static BUILD_TS = SHELL_VERSION_INFO.BUILD_TS;
 
   private static _instance: ShellSdk;
   private isRoot: boolean; // Is root if on `init`, target value is null.
-  private isInsideModal: boolean;
+  private isInsideModal: boolean | undefined; // undefined until first REQUIRE_CONTEXT response, then true/false based on context
   private validator: null | PayloadValidator = null;
   private validationMode: ValidationMode = 'client';
   private eventValidationConfiguration: EventValidationConfiguration;
@@ -48,6 +64,7 @@ export class ShellSdk {
 
   private allowedOrigins: string[] = [];
   private ignoredOrigins: string[] = [];
+  private selfUrl: string = ''; // Captured at init for trace
 
   private constructor(
     private target: Window,
@@ -62,8 +79,14 @@ export class ShellSdk {
     this.initMessageApi();
     this.debugger = new Debugger(winRef, debugId);
     this.isRoot = target == null;
-    this.isInsideModal = false;
     this.eventValidationConfiguration = getEventValidationConfiguration();
+
+    // Capture self URL at init time for trace
+    try {
+      this.selfUrl = window.location.href;
+    } catch {
+      // May not be accessible in some environments
+    }
   }
 
   public static init(
@@ -101,7 +124,7 @@ export class ShellSdk {
   }
 
   public isInsideShellModal(): boolean {
-    return this.isInsideModal;
+    return !!this.isInsideModal;
   }
 
   public setAllowedOrigins(allowedOrigins: string[] | '*' = []) {
@@ -314,8 +337,19 @@ export class ShellSdk {
         throw new Error("ShellSdk wasn't initialized, origin is missing.");
       }
 
-      this.debugger.traceEvent('outgoing', type, value, { to }, true);
-      this.target.postMessage({ type, value, to }, this.origin);
+      // Non-root: start trace chain with self-reported data
+      const trace: TraceEntry[] | undefined = this.isRoot
+        ? undefined
+        : [
+            {
+              initHref: this.selfUrl,
+              locationHref: getLocationHref(window),
+              isModal: this.isInsideModal,
+            },
+          ];
+
+      this.debugger.traceEvent('outgoing', type, value, { to, trace }, true);
+      this.target.postMessage({ type, value, to, trace }, this.origin);
     };
     this.winRef.addEventListener('message', this.onMessage);
   }
@@ -366,6 +400,7 @@ export class ShellSdk {
       value: any;
       from?: string[];
       to?: string[];
+      trace?: TraceEntry[];
     };
 
     // we ignore LOADING SUCCESS as it is handled by the outlet component itself
@@ -445,22 +480,75 @@ export class ShellSdk {
                 outlet.name !== undefined
               ) {
                 payload.value.targetOutletName = outlet.name;
-                const extensionAssignmentId = (iFrameElement as any).extensionAssignmentId;
-                if(extensionAssignmentId){
-                  payload.value.targetExtensionAssignmentId = extensionAssignmentId;
+                const extensionAssignmentId = (iFrameElement as any)
+                  .extensionAssignmentId;
+                if (extensionAssignmentId) {
+                  payload.value.targetExtensionAssignmentId =
+                    extensionAssignmentId;
                 }
               }
-              // this is the uuid outlet used for routing of source object
               from = [...from, outlet.uuid];
+
+              /*
+               * trace accumulates at each hop (like `from` array).
+               * - Old SDK: create full entry with all data we can capture
+               * - New SDK: enrich child's last entry with parent-only data (iframeSrc, uuid, etc.)
+               * Then add this forwarder's own entry for the next parent to enrich.
+               */
+              const forwardingTrace: TraceEntry[] = payload.trace || [];
+
+              if (forwardingTrace.length === 0) {
+                // Old SDK: child didn't send trace, create entry with outlet data
+                forwardingTrace.push({
+                  uuid: outlet.uuid,
+                  outletName: outlet.name,
+                  extensionAssignmentId: (iFrameElement as any)
+                    .extensionAssignmentId,
+                  iframeSrc: iFrameElement.src,
+                  locationHref: getLocationHref(iFrameElement.contentWindow),
+                });
+              } else {
+                // New SDK: enrich child's entry with data only parent knows
+                const lastEntry = forwardingTrace[forwardingTrace.length - 1];
+                if (lastEntry) {
+                  if (!lastEntry.iframeSrc) {
+                    lastEntry.iframeSrc = iFrameElement.src;
+                  }
+                  if (!lastEntry.uuid) {
+                    lastEntry.uuid = outlet.uuid;
+                  }
+                  if (!lastEntry.outletName && outlet.name) {
+                    lastEntry.outletName = outlet.name;
+                  }
+                  if (!lastEntry.extensionAssignmentId) {
+                    lastEntry.extensionAssignmentId = (
+                      iFrameElement as any
+                    ).extensionAssignmentId;
+                  }
+                }
+              }
+
+              // Add this forwarder's entry (parent will enrich with iframeSrc, uuid, etc.)
+              forwardingTrace.push({
+                initHref: this.selfUrl,
+                locationHref: getLocationHref(window),
+                isModal: this.isInsideModal,
+              });
+
               this.debugger.traceEvent(
                 'outgoing',
                 payload.type,
                 payload.value,
-                { from },
+                { from, trace: forwardingTrace },
                 true
               );
               this.target.postMessage(
-                { type: payload.type, value: payload.value, from },
+                {
+                  type: payload.type,
+                  value: payload.value,
+                  from,
+                  trace: forwardingTrace,
+                },
                 this.origin
               );
             }
@@ -559,11 +647,36 @@ export class ShellSdk {
 
     // If isRoot or message is for me, we send to subscribers/handlers
     const subscribers = this.subscribersMap.get(payload.type);
+
+    /*
+     * Root: finalize trace chain.
+     * - Old SDK: create fallback entry using event.origin (limited info)
+     * - Always: add root's own entry to complete the chain
+     */
+    const trace: TraceEntry[] = payload.trace ? [...payload.trace] : [];
+
+    if (this.isRoot) {
+      const source: Window = event.source as Window;
+
+      if (source && trace.length === 0) {
+        // Old SDK fallback: capture origin (full URL if same-origin, origin only if cross-origin)
+        trace.push({
+          locationHref: getLocationHref(source) || event.origin,
+        });
+      }
+
+      // Complete the chain with root's entry
+      trace.push({
+        initHref: this.selfUrl || undefined,
+        locationHref: getLocationHref(window),
+      });
+    }
+
     this.debugger.traceEvent(
       'incoming',
       payload.type,
       payload.value,
-      { from: payload.from },
+      { from: payload.from, trace },
       !!subscribers
     );
 
@@ -587,7 +700,8 @@ export class ShellSdk {
           payload.type === SHELL_EVENTS.Version1.SET_VIEW_STATE
             ? null
             : payload.from,
-          event
+          event,
+          trace
         );
       }
     }

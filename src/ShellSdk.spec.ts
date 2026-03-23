@@ -102,8 +102,8 @@ describe('Shell Sdk', () => {
     const MOCK_IFRAME: any = {
       src: ORIGIN1,
       contentWindow: ORIGIN1,
-      extensionAssignmentId: outletExtensionAssignmentId
-    }
+      extensionAssignmentId: outletExtensionAssignmentId,
+    };
     sdk.registerOutlet(MOCK_IFRAME, outletName);
 
     windowMockCallback({
@@ -114,7 +114,7 @@ describe('Shell Sdk', () => {
         },
       },
       source: ORIGIN1,
-      origin: ORIGIN1
+      origin: ORIGIN1,
     });
 
     const arg1 = sdkTarget.postMessage.getCall(0).args[0];
@@ -124,8 +124,287 @@ describe('Shell Sdk', () => {
     expect(arg1.type).toBe(SHELL_EVENTS.Version1.REQUIRE_CONTEXT);
     expect(arg1.value.message).toBe('test data');
     expect(arg1.value.targetOutletName).toBe(outletName);
-    expect(arg1.value.targetExtensionAssignmentId).toBe(outletExtensionAssignmentId);
+    expect(arg1.value.targetExtensionAssignmentId).toBe(
+      outletExtensionAssignmentId
+    );
     expect(arg2).toBe(sdkOrigin);
+  });
+
+  it('should include trace when forwarding messages from outlet (old SDK)', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const outletName = 'my-outlet';
+    const extensionAssignmentId = 'ext-123';
+    const iframeSrc = ORIGIN1 + '/app';
+    const MOCK_IFRAME: any = {
+      src: iframeSrc,
+      contentWindow: 'mock-window',
+      extensionAssignmentId,
+    };
+    sdk.registerOutlet(MOCK_IFRAME, outletName);
+
+    // Old SDK: message without trace
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'test' },
+      },
+      source: 'mock-window',
+      origin: ORIGIN1,
+    });
+
+    const arg1 = sdkTarget.postMessage.getCall(0).args[0];
+
+    // trace has 2 entries: outlet entry (created by forwarder) + forwarder's own entry
+    expect(arg1.trace).toBeDefined();
+    expect(arg1.trace.length).toBe(2);
+    // First entry is created for the outlet (old SDK didn't send trace)
+    expect(arg1.trace[0].uuid).toBeDefined();
+    expect(arg1.trace[0].outletName).toBe(outletName);
+    expect(arg1.trace[0].extensionAssignmentId).toBe(extensionAssignmentId);
+    expect(arg1.trace[0].iframeSrc).toBe(iframeSrc);
+    // Second entry is the forwarder itself (isModal undefined until REQUIRE_CONTEXT received)
+    expect(arg1.trace[1].initHref).toBeDefined();
+    expect(arg1.trace[1].locationHref).toBeDefined();
+    expect(arg1.trace[1].isModal).toBeUndefined();
+  });
+
+  it('should include trace when forwarding messages from outlet (new SDK)', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const outletName = 'my-outlet';
+    const extensionAssignmentId = 'ext-123';
+    const iframeSrc = ORIGIN1 + '/app';
+    const MOCK_IFRAME: any = {
+      src: iframeSrc,
+      contentWindow: 'mock-window',
+      extensionAssignmentId,
+    };
+    sdk.registerOutlet(MOCK_IFRAME, outletName);
+
+    // New SDK: message with trace (child's self-reported data, missing iframeSrc)
+    const incomingTrace = [
+      {
+        initHref: 'https://child.example.com/init',
+        locationHref: 'https://child.example.com/current',
+        isModal: false,
+      },
+    ];
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'test' },
+        trace: incomingTrace,
+      },
+      source: 'mock-window',
+      origin: ORIGIN1,
+    });
+
+    const arg1 = sdkTarget.postMessage.getCall(0).args[0];
+
+    // trace has 2 entries: enriched child entry + forwarder's own entry
+    expect(arg1.trace).toBeDefined();
+    expect(arg1.trace.length).toBe(2);
+    // First entry is child's entry, enriched by parent with iframeSrc, uuid, etc.
+    expect(arg1.trace[0].initHref).toBe('https://child.example.com/init');
+    expect(arg1.trace[0].locationHref).toBe(
+      'https://child.example.com/current'
+    );
+    expect(arg1.trace[0].isModal).toBe(false); // Preserved from child
+    expect(arg1.trace[0].iframeSrc).toBe(iframeSrc); // Parent added this
+    expect(arg1.trace[0].uuid).toBeDefined(); // Parent added this
+    expect(arg1.trace[0].outletName).toBe(outletName); // Parent added this
+    expect(arg1.trace[0].extensionAssignmentId).toBe(extensionAssignmentId); // Parent added this
+    // Second entry is the forwarder itself (isModal undefined until REQUIRE_CONTEXT received)
+    expect(arg1.trace[1].initHref).toBeDefined();
+    expect(arg1.trace[1].locationHref).toBeDefined();
+    expect(arg1.trace[1].isModal).toBeUndefined();
+  });
+
+  it('should handle undefined outlet properties in trace', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const MOCK_IFRAME: any = {
+      src: ORIGIN1,
+      contentWindow: ORIGIN1,
+      // No extensionAssignmentId
+    };
+    sdk.registerOutlet(MOCK_IFRAME, undefined); // No outlet name
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'test' },
+      },
+      source: ORIGIN1,
+      origin: ORIGIN1,
+    });
+
+    const arg1 = sdkTarget.postMessage.getCall(0).args[0];
+
+    // trace has 2 entries: outlet entry + forwarder's own entry
+    expect(arg1.trace).toBeDefined();
+    expect(arg1.trace.length).toBe(2);
+    // First entry is the outlet (with undefined optional properties)
+    expect(arg1.trace[0].outletName).toBeUndefined();
+    expect(arg1.trace[0].extensionAssignmentId).toBeUndefined();
+    expect(arg1.trace[0].iframeSrc).toBe(ORIGIN1);
+    expect(arg1.trace[0].uuid).toBeDefined();
+    // Second entry is the forwarder itself (isModal undefined until REQUIRE_CONTEXT received)
+    expect(arg1.trace[1].initHref).toBeDefined();
+    expect(arg1.trace[1].locationHref).toBeDefined();
+    expect(arg1.trace[1].isModal).toBeUndefined();
+  });
+
+  it('should accumulate trace through multiple hops', () => {
+    sdk = ShellSdk.init(sdkTarget, sdkOrigin, windowMock);
+
+    const outletName = 'middle-outlet';
+    const MOCK_IFRAME: any = {
+      src: ORIGIN1,
+      contentWindow: ORIGIN1,
+      extensionAssignmentId: 'ext-middle',
+    };
+    sdk.registerOutlet(MOCK_IFRAME, outletName);
+
+    // Simulate message from nested outlet that already has 2 trace entries
+    // (original sender + first forwarder)
+    const incomingTrace = [
+      {
+        uuid: 'nested-uuid',
+        outletName: 'nested-outlet',
+        extensionAssignmentId: 'ext-nested',
+        iframeSrc: 'https://nested.example.com/app',
+        initHref: 'https://nested.example.com/init',
+        locationHref: 'https://nested.example.com/current',
+        isModal: false,
+      },
+      {
+        initHref: 'https://first-forwarder.example.com/init',
+        locationHref: 'https://first-forwarder.example.com/current',
+        isModal: false,
+      },
+    ];
+
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'test' },
+        trace: incomingTrace,
+      },
+      source: ORIGIN1,
+      origin: ORIGIN1,
+    });
+
+    const arg1 = sdkTarget.postMessage.getCall(0).args[0];
+
+    // Should have 3 entries: 2 incoming + this forwarder's entry
+    expect(arg1.trace).toBeDefined();
+    expect(arg1.trace.length).toBe(3);
+
+    // First entry preserved from original sender
+    expect(arg1.trace[0].outletName).toBe('nested-outlet');
+    expect(arg1.trace[0].iframeSrc).toBe('https://nested.example.com/app');
+    expect(arg1.trace[0].isModal).toBe(false);
+
+    // Second entry (first forwarder) enriched by this forwarder
+    expect(arg1.trace[1].initHref).toBe(
+      'https://first-forwarder.example.com/init'
+    );
+    expect(arg1.trace[1].iframeSrc).toBe(ORIGIN1); // This forwarder added iframeSrc
+    expect(arg1.trace[1].isModal).toBe(false); // Preserved from incoming
+
+    // Third entry is this forwarder's own entry (isModal undefined until REQUIRE_CONTEXT received)
+    expect(arg1.trace[2].initHref).toBeDefined();
+    expect(arg1.trace[2].locationHref).toBeDefined();
+    expect(arg1.trace[2].isModal).toBeUndefined();
+  });
+
+  it('should build trace at root level (old SDK fallback)', (done) => {
+    // Initialize as root (shell-host) - no registered outlets like in production
+    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
+
+    const mockSenderWindow = { postMessage: () => {} };
+
+    sdk.on(
+      SHELL_EVENTS.Version1.GET_PERMISSIONS,
+      (value, origin, from, event, trace) => {
+        // trace has 2 entries: old SDK fallback + root's own entry
+        expect(trace).toBeDefined();
+        expect(trace.length).toBe(2);
+        // First entry is fallback for old SDK (uses event.origin since cross-origin)
+        expect(trace[0].locationHref).toBe('https://sender.example.com');
+        // Second entry is root's own entry
+        expect(trace[1].initHref).toBeDefined();
+        expect(trace[1].locationHref).toBeDefined();
+        done();
+      }
+    );
+
+    // Message from old SDK (no trace)
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'ServiceCall' },
+      },
+      source: mockSenderWindow,
+      origin: 'https://sender.example.com',
+    });
+  });
+
+  it('should build trace at root level (new SDK with trace)', (done) => {
+    // Initialize as root (shell-host)
+    sdk = ShellSdk.init(null as any as Window, sdkOrigin, windowMock);
+
+    const mockSenderWindow = { postMessage: () => {} };
+
+    // Incoming trace from sender through forwarders
+    const incomingTrace = [
+      {
+        uuid: 'sender-uuid',
+        outletName: 'sender-outlet',
+        iframeSrc: 'https://sender.example.com/app',
+        initHref: 'https://sender.example.com/init',
+        locationHref: 'https://sender.example.com/current',
+        isModal: false,
+      },
+      {
+        iframeSrc: 'https://forwarder.example.com/app',
+        initHref: 'https://forwarder.example.com/init',
+        locationHref: 'https://forwarder.example.com/current',
+        isModal: false,
+      },
+    ];
+
+    sdk.on(
+      SHELL_EVENTS.Version1.GET_PERMISSIONS,
+      (_value, _origin, _from, _event, trace) => {
+        // trace has 3 entries: 2 incoming + root's own entry
+        expect(trace).toBeDefined();
+        expect(trace.length).toBe(3);
+        // First two entries preserved from incoming
+        expect(trace[0].outletName).toBe('sender-outlet');
+        expect(trace[0].isModal).toBe(false);
+        expect(trace[1].iframeSrc).toBe('https://forwarder.example.com/app');
+        expect(trace[1].isModal).toBe(false);
+        // Third entry is root's own entry (root has no isModal)
+        expect(trace[2].initHref).toBeDefined();
+        expect(trace[2].locationHref).toBeDefined();
+        done();
+      }
+    );
+
+    // Message from new SDK (has trace)
+    windowMockCallback({
+      data: {
+        type: SHELL_EVENTS.Version1.GET_PERMISSIONS,
+        value: { objectName: 'ServiceCall' },
+        trace: incomingTrace,
+      },
+      source: mockSenderWindow,
+      origin: 'https://forwarder.example.com',
+    });
   });
 
   it('should call multiple subscribers on message event', () => {
