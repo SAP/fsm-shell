@@ -1,5 +1,5 @@
 export const getSettingsRequest_v1_schema = {
-  anyOf: [
+  oneOf: [
     {
        type: 'string'
     },
@@ -7,7 +7,7 @@ export const getSettingsRequest_v1_schema = {
       type: 'array',
       items: {
         type: ['string', 'array'],
-        anyOf: [
+        oneOf: [
           {
             type: 'string'
           },

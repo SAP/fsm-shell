@@ -5,6 +5,7 @@ export { PermissionResponseV3 } from './permissions/permission-response.v3.model
 export { Permission } from './permissions/permission.model';
 export { UiPermissions } from './permissions/ui-permissions.model';
 
+export { GetItemRequest } from './cloud-storage/get-item-request.model';
 export { GetItemResponse } from './cloud-storage/get-item-response.model';
 export { SetItemRequest } from './cloud-storage/set-item-request.model';
 
