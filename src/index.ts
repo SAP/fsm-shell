@@ -50,7 +50,8 @@ import {
   SetTitleRequest,
   SetViewStateRequest,
   SetViewStateResponse,
-  UiPermissions
+  TraceEntry,
+  UiPermissions,
 } from './models/index';
 
 export {
@@ -85,5 +86,6 @@ export {
   SetTitleRequest,
   SetViewStateRequest,
   SetViewStateResponse,
-  UiPermissions
+  TraceEntry,
+  UiPermissions,
 };
