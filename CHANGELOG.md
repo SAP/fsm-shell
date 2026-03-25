@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Define and "publish" new model `GetItemRequest`
-- Enhance `getItemRequest_v2_schema` to support multiple keys
+- Enhance schema `getItemRequest_v2_schema` to support multiple keys
 - Improve schemas `getFeatureFlagRequest_v1_schema` and `getSettingsRequest_v1_schema` by replacing anyOf with oneOf
 - Improve documentation for the events `GET_STORAGE_ITEM` and `SET_STORAGE_ITEM`
+- Fix model `RequireContextRequest` and the respected schema as the optional property cloudStorageKeys should conatin an array of objects and not an array of strings
 
 ## [1.24.0] - 2026-03-23
 

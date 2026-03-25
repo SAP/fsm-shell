@@ -90,7 +90,7 @@ export const validGetPermissionsResponse_v3 = { objectName: 'string', permission
 export const validRequireContextRequest_v1 = {
   clientIdentifier: 'string',
   clientSecret: 'string',
-  cloudStorageKeys: ['string'],
+  cloudStorageKeys: [{ name: 'string', dataVersion: 1, companyDependent: true }],
   auth: validAuthRequest_v1,
   targetOutletName: 'string',
   targetExtensionAssignmentId: 'string'
