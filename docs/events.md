@@ -298,6 +298,15 @@ Request permissions for specified object from the Shell
     }
     ```
 
+    **Important:** When nested keys are used, the response key is returned as a dot-separated string (combining the individual parts). This approach was chosen to simplify comparison, as working with array-based keys in responses would be less practical:
+
+    ```typescript
+    {
+      key: 'folder_2.folder_3.key_4',
+      value: 'value4'
+    }
+    ```
+
   - Listener
 
     ```typescript
