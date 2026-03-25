@@ -46,7 +46,8 @@ import { outletsRequestDynamicContextResponse_v1_schema } from './outlets/outlet
 export const validAuthRequest_v1 = { response_type: 'token' };
 export const validAuthResponse_v1 = { access_token: 'string', expires_in: 123, token_type: 'string' };
 export const validGetItemRequest_v1 = 'string';
-export const validGetItemRequest_v2 = 'string';
+export const validGetItemRequest_v2_subschema_1 = 'string';
+export const validGetItemRequest_v2_subschema_2 = ['string', 'string'];
 export const validGetItemResponse_v2 = { key: 'string', value: {} };
 export const validSetItemRequest_v1 = { key: 'string', value: {} };
 export const validGetFeatureFlagRequest_v1_subschema_1 = { key: 'string', defaultValue: true };
@@ -89,7 +90,7 @@ export const validGetPermissionsResponse_v3 = { objectName: 'string', permission
 export const validRequireContextRequest_v1 = {
   clientIdentifier: 'string',
   clientSecret: 'string',
-  cloudStorageKeys: ['string'],
+  cloudStorageKeys: [{ name: 'string', dataVersion: 1, companyDependent: true }],
   auth: validAuthRequest_v1,
   targetOutletName: 'string',
   targetExtensionAssignmentId: 'string'
@@ -312,7 +313,8 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema, validAuthRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema, validAuthResponse_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema, validGetItemRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, validGetItemRequest_v2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, validGetItemRequest_v2_subschema_1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v2_schema', getItemRequest_v2_schema, validGetItemRequest_v2_subschema_2);
     validateValidDataAgainstSchemaHelper(ajv, 'getItemResponse_v2_schema', getItemResponse_v2_schema, validGetItemResponse_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'setItemRequest_v1_schema', setItemRequest_v1_schema, validSetItemRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'getFeatureFlagRequest_v1_schema', getFeatureFlagRequest_v1_schema, validGetFeatureFlagRequest_v1_subschema_1);

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.25.0] - 2026-03-25
+
+### Added
+
+- Define and "publish" new model `GetItemRequest`
+- Enhance schema `getItemRequest_v2_schema` to support multiple keys
+- Improve schemas `getFeatureFlagRequest_v1_schema` and `getSettingsRequest_v1_schema` by replacing anyOf with oneOf
+- Improve documentation for the events `GET_STORAGE_ITEM` and `SET_STORAGE_ITEM`
+- Fix model `RequireContextRequest` and the respected schema as the optional property cloudStorageKeys should conatin an array of objects and not an array of strings
+
 ## [1.24.0] - 2026-03-23
 
 ### Added

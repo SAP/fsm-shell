@@ -28,7 +28,17 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `targetOutletName` is added automatically by the FSM-Shell in case the request is sent by an extension inside an outlet. It should not be added by the extension itself.
+  The property `targetOutletName` is automatically added by the FSM Shell when the request originates from an extension within an outlet. It should not be set manually by the extension. The property `cloudStorageKeys` allows you to register user setting keys that would otherwise not be accessible (see `GET_STORAGE_ITEM` and `SET_STORAGE_ITEM` for more information).
+
+  A `CloudStorageKey` is defined as follows:
+
+  ```typescript
+  {
+    name: string;
+    dataVersion: number;
+    companyDependent: boolean;
+  }
+  ```
 
 * Response payload
 
@@ -305,7 +315,7 @@ Request permissions for specified object from the Shell
 
 - ### GET_STORAGE_ITEM
 
-With this event you can get user specific settings. You can find the available settings in the FSM admin page in "Users -> select a user -> User Settings". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html) you can find more information about users.
+Retrieve user-specific settings from cloud storage. Available settings can be found in the FSM Admin page under "Users -> select a user -> User Settings". More details: [User Documentation](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html)
 
 <!-- tabs:start -->
 
@@ -315,17 +325,21 @@ With this event you can get user specific settings. You can find the available s
 SHELL_EVENTS.Version2.GET_STORAGE_ITEM
 ```
 
-Request value stored under specified key in cloud storage
+Requests values stored under one or more keys in cloud storage.
 
 - Request payload
 
-  type: string  
-  Key to read value from
+  type: GetItemRequest  
+  Key(s) to read value from:
+
+  ```typescript
+  string | string[]
+  ```
 
 - Response payload
 
   type: GetItemResponse\<T\>  
-  object containing key name and value which was read from requested key
+  Returns key-value pairs for each requested key:
 
   ```typescript
   {
@@ -348,7 +362,7 @@ Request value stored under specified key in cloud storage
 SHELL_EVENTS.Version1.GET_STORAGE_ITEM
 ```
 
-Request value stored under specified key in cloud storage
+Requests a value stored under a single key in cloud storage.
 
 - Request payload
 
@@ -364,12 +378,36 @@ Request value stored under specified key in cloud storage
 
 <!-- tabs:end -->
 
-> Note: Below in the table you can see some common keys.
+Currently, the following keys are supported out of the box:
 
-| Key                         | value type | Description                          |
-| --------------------------- | ---------- | ------------------------------------ |
-| Cockpit_SelectedCompanyName | string     | Name of the current selected company |
-| Cockpit_SelectedLocale      | string     | Current selected locale              |
+| Key                             | value type | company-dependent | Description                          |
+| ------------------------------- | ---------- | ----------------- | ------------------------------------ |
+| Cockpit_SelectedCompanyName     | string     | no                | Name of the current selected company |
+| Cockpit_SelectedLanguage        | string     | no                | Current selected language code       |
+| Cockpit_SelectedLocale          | string     | no                | Current selected locale              |
+| Shell_IsSideNavigationCollapsed | boolean    | no                | Side navigation state                |
+| Shell_SelectedThemeId           | string     | no                | Current selected appearance          |
+
+The keys listed above are preloaded by the Shell, as they are also used internally. Therefore, they are immediately available.
+
+Keys can be either **company-dependent** or **company-independent**:
+- **Company-dependent keys** store a separate value for each company. The value returned depends on the currently selected company.
+- **Company-independent keys** share the same value across all companies.
+
+It is also possible to fetch values for additional keys defined for a user in the Admin app. To do so, the keys must first be **registered** via the `REQUIRE_CONTEXT` event:
+- The request payload of `REQUIRE_CONTEXT` includes the optional property `cloudStorageKeys`, which allows you to register non-preloaded keys.
+- Once a key has been registered, its value can be retrieved using `Version2.GET_STORAGE_ITEM`.
+
+The event `REQUIRE_CONTEXT` also allows you to register non-existing keys, which is useful for key-value pairs created at runtime:
+- After registering a non-existing key, it can be accessed via `Version2.GET_STORAGE_ITEM`.
+- As long as the key-value pair has not been created, the returned value will be `null`.
+- Once the key-value pair is created and becomes visible in the Admin app, the actual value will be returned.
+
+**Upcoming Change**
+
+> **Note:** This change is currently only active when Preview Mode is enabled.
+
+Registering keys via the `REQUIRE_CONTEXT` event will only be required for non-existing keys. All existing keys — including those not preloaded by the Shell — can be accessed directly using `Version2.GET_STORAGE_ITEM`.
 
 - ### SET_STORAGE_ITEM
 
@@ -395,6 +433,18 @@ Request value stored under specified key in cloud storage
 
     type: boolean
     flag indicating if value was saved successfully
+
+  Only key-value pairs that are **preloaded by the Shell** can be updated directly. Other user settings must first be registered via the `REQUIRE_CONTEXT` event before they can be updated using `SET_STORAGE_ITEM` (see `GET_STORAGE_ITEM` for more details).
+  
+  It is also possible to create new user settings:
+  - Like non-preloaded settings, new keys must first be registered via `REQUIRE_CONTEXT`.
+  - Once registered, they can be created and assigned a value using `SET_STORAGE_ITEM`.
+
+  **Upcoming Change**
+
+  > **Note:** This change is currently only active when Preview Mode is enabled.
+
+  Registering via the `REQUIRE_CONTEXT` event will only be required for new keys. All existing keys — including those not preloaded by the Shell — can be updated directly using the `SET_STORAGE_ITEM` event.
 
 - ### GET_FEATURE_FLAG
 

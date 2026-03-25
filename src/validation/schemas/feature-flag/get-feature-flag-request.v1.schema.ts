@@ -13,7 +13,7 @@ export const getFeatureFlagRequest_v1_schema = {
       required: ['key', 'defaultValue']
     }
   },
-  anyOf: [
+  oneOf: [
     {
       $ref: '#/$defs/payload'
     },
