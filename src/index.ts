@@ -42,6 +42,7 @@ import {
   OutletsRequestDynamicContextResponse,
   Permission,
   PermissionRequest,
+  PermissionRequestV2,
   PermissionRequestV3,
   PermissionResponse,
   PermissionResponseV3,
@@ -54,6 +55,7 @@ import {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
+  ValidationMode
 } from './models/index';
 
 export {
@@ -80,6 +82,7 @@ export {
   OutletsRequestDynamicContextResponse,
   Permission,
   PermissionRequest,
+  PermissionRequestV2,
   PermissionRequestV3,
   PermissionResponse,
   PermissionResponseV3,
@@ -92,4 +95,5 @@ export {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
+  ValidationMode
 };

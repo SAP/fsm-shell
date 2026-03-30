@@ -1,15 +1,30 @@
 export const getPermissionsRequest_v2_schema = {
-  type: 'object',
-  properties: {
-    objectName: {
-      type: 'string',
+  $defs: {
+    payload: {
+      type: 'object',
+      properties: {
+        objectName: {
+          type: 'string',
+        },
+      },
+      owners: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      },
+      required: ['objectName'],
+    }
+  },
+  oneOf: [
+    {
+      $ref: '#/$defs/payload',
     },
-    owners: {
+    {
       type: 'array',
       items: {
-        type: 'string',
-      },
-    },
-  },
-  required: ['objectName'],
+        $ref: '#/$defs/payload',
+      }
+    }
+  ],
 };
