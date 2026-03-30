@@ -82,8 +82,10 @@ export const validModalOpenRequest_v2 = {
 };
 export const validModalCloseRequest_v1 = {};
 export const validGetPermissionsRequest_v1 = { objectName: 'string', owners: ['string'] };
-export const validGetPermissionsRequest_v2 = { objectName: 'string', owners: ['string'] };
-export const validGetPermissionsRequest_v3 = { objectName: 'string' };
+export const validGetPermissionsRequest_v2_subschema_1 = { objectName: 'string', owners: ['string'] };
+export const validGetPermissionsRequest_v2_subschema_2 = [{ objectName: 'string', owners: ['string'] }, { objectName: 'string', owners: ['string'] }];
+export const validGetPermissionsRequest_v3_subschema_1 = { objectName: 'string' };
+export const validGetPermissionsRequest_v3_subschema_2 = [{ objectName: 'string' }, { objectName: 'string' }];
 export const validGetPermissionsResponse_v1 = { CREATE: true, READ: true, UPDATE: true, DELETE: true, UI_PERMISSIONS: [1] };
 export const validGetPermissionsResponse_v2 = { objectName: 'string', owners: ['string'], permission: validGetPermissionsResponse_v1 };
 export const validGetPermissionsResponse_v3 = { objectName: 'string', permission: validGetPermissionsResponse_v1 };
@@ -325,8 +327,10 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'modalOpenRequest_v2_schema', modalOpenRequest_v2_schema, validModalOpenRequest_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'modalCloseRequest_v1_schema', modalCloseRequest_v1_schema, validModalCloseRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v1_schema', getPermissionsRequest_v1_schema, validGetPermissionsRequest_v1);
-    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema, validGetPermissionsRequest_v2);
-    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema, validGetPermissionsRequest_v3);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema, validGetPermissionsRequest_v2_subschema_1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v2_schema', getPermissionsRequest_v2_schema, validGetPermissionsRequest_v2_subschema_2);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema, validGetPermissionsRequest_v3_subschema_1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsRequest_v3_schema', getPermissionsRequest_v3_schema, validGetPermissionsRequest_v3_subschema_2);
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v1_schema', getPermissionsResponse_v1_schema, validGetPermissionsResponse_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v2_schema', getPermissionsResponse_v2_schema, validGetPermissionsResponse_v2);
     validateValidDataAgainstSchemaHelper(ajv, 'getPermissionsResponse_v3_schema', getPermissionsResponse_v3_schema, validGetPermissionsResponse_v3);

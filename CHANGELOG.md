@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2026-03-30
+
+### Changed
+
+- Change model `PermissionRequestV3` from `interface` to `type` to support multiple permissions at once for event `Version3.GET_PERMISSIONS`
+- Define new model `PermissionRequestV2` to support multiple permissions at once for event `Version2.GET_PERMISSIONS`
+  - So far the events `Version2.GET_PERMISSIONS` and `Version1.GET_PERMISSIONS` shared the model `PermissionRequest` as request payload model. However, as only the event `Version2.GET_PERMISSIONS` is enhanced the new model is introduced to distiguish the request payload between the two events. The event `Version1.GET_PERMISSIONS` is not enhanced as it is deprecated.
+
 ## [1.25.1] - 2026-03-25
 
 ### Added

@@ -1,5 +1,6 @@
 export { PermissionRequest } from './permissions/permission-request.model';
 export { PermissionResponse } from './permissions/permission-response.model';
+export { PermissionRequestV2 } from './permissions/permission-request.v2.model';
 export { PermissionRequestV3 } from './permissions/permission-request.v3.model';
 export { PermissionResponseV3 } from './permissions/permission-response.v3.model';
 export { Permission } from './permissions/permission.model';

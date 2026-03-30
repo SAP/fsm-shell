@@ -124,15 +124,27 @@ Request permissions for specified object from the Shell. The version 3 uses a di
 
   type: PermissionRequestV3
 
+  Supports object or array of objects as request payload:
+
   ```typescript
   {
     objectName: string; // permission object type
   }
   ```
 
+  or
+
+  ```typescript
+  {
+    objectName: string; // permission object type
+  } []
+  ```
+
 - Response payload
 
   type: PermissionResponseV3
+
+  In case array of objects are provided as payload, there will be a response for each object.
 
   ```typescript
   {
@@ -158,7 +170,9 @@ Request permissions for specified object from the Shell
 
 - Request payload
 
-  type: PermissionRequest
+  type: PermissionRequestV2
+
+  Supports object or array of objects as request payload:
 
   ```typescript
   {
@@ -167,9 +181,20 @@ Request permissions for specified object from the Shell
   }
   ```
 
+  or
+
+  ```typescript
+  {
+    objectName: string; // permission object type
+    owners?: string[]; // person Ids
+  } []
+  ```
+
 - Response payload
 
   type: PermissionResponse
+
+  In case array of objects are provided as payload, there will be a response for each object.
 
   ```typescript
   {
