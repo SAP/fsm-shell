@@ -54,3 +54,5 @@ export { Outlet } from './outlets/outlet.model';
 export { TraceEntry } from './trace/trace-entry.model';
 
 export { CloudStorageKey } from './cloud-storage/cloud-storage-key.model';
+
+export { ValidationMode } from '../ShellSdk';

@@ -55,6 +55,7 @@ import {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
+  ValidationMode
 } from './models/index';
 
 export {
@@ -94,4 +95,5 @@ export {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
+  ValidationMode
 };
