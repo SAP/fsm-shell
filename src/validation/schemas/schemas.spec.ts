@@ -42,6 +42,9 @@ import { outletsRemovePluginRequest_v1_schema } from './outlets/outlets-remove-p
 import { outletsRequestDynamicContextRequest_v1_schema } from './outlets/outlets-request-dynamic-context-request.v1.schema';
 import { outletsRequestDynamicContextResponse_v1_schema } from './outlets/outlets-request-dynamic-context-response.v1.schema';
 
+import { getOrgDataRequest_v1_schema } from './org-data/get-org-data-request.v1.schema';
+import { getOrgDataResponse_v1_schema } from './org-data/get-org-data-response.v1.schema';
+
 // Valid objects for each schema
 export const validAuthRequest_v1 = { response_type: 'token' };
 export const validAuthResponse_v1 = { access_token: 'string', expires_in: 123, token_type: 'string' };
@@ -139,6 +142,50 @@ export const validOutletsRequestDynamicContextResponse_v1 = {
     assignmentId: 'string'
   }]
 };
+export const validGetOrgDataRequest_v1 = { key: 'current_user' };
+export const validGetOrgDataResponse_v1_orgLevel = {
+  key: 'all',
+  data: {
+    id: 'level-1',
+    externalId: 'ext-1',
+    name: 'Root Level',
+    shortDescription: 'Root',
+    longDescription: 'Root Level Description',
+    validFrom: '2024-01-01',
+    validTo: null,
+    status: 'ENABLED',
+    subLevels: [{
+      id: 'level-2',
+      externalId: 'ext-2',
+      name: 'Child Level',
+      shortDescription: 'Child',
+      longDescription: 'Child Level Description',
+      validFrom: '2024-01-01',
+      validTo: null,
+      status: 'ENABLED',
+      subLevels: []
+    }]
+  }
+};
+export const validGetOrgDataResponse_v1_allocations = {
+  key: 'current_user',
+  data: [{
+    id: 'alloc-1',
+    externalId: 'ext-alloc-1',
+    level: {
+      id: 'level-1',
+      externalId: 'ext-1',
+      name: 'Root Level',
+      shortDescription: null,
+      longDescription: null,
+      validFrom: null,
+      validTo: null,
+      status: 'ENABLED'
+    },
+    role: 'MEMBER',
+    unifiedPersonId: 'bff35ef6-ee07-4292-9bdd-3ca5de50314f'
+  }]
+};
 
 // Invalid objects for each schema
 export const invalidAuthRequest_v1 = { response_type: 123 };
@@ -230,6 +277,10 @@ export const invalidOutletsRequestDynamicContextResponse_v1 = {
     assignmentId: 123
   }]
 };
+export const invalidGetOrgDataRequest_v1 = { key: 'invalid_key' };
+export const invalidGetOrgDataResponse_v1_wrongKeyType = { key: 123, data: {} };
+export const invalidGetOrgDataResponse_v1_missingData = { key: 'all' };
+export const invalidGetOrgDataResponse_v1_invalidStatus = { key: 'all', data: { id: 'level-1', name: 'Root', status: 'INVALID_STATUS' } };
 
 describe('Schemas', () => {
 
@@ -283,6 +334,8 @@ describe('Schemas', () => {
     validateSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema);
     validateSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema);
     validateSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getOrgDataRequest_v1_schema', getOrgDataRequest_v1_schema);
+    validateSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema);
   }
 
   function validateSchemasSupportingOnly06and07(ajv: Ajv.Ajv) {
@@ -347,6 +400,9 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema, validOutletsAddPluginRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema, validOutletsRemovePluginRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema, validOutletsRequestDynamicContextRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getOrgDataRequest_v1_schema', getOrgDataRequest_v1_schema, validGetOrgDataRequest_v1);
+    validateValidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, validGetOrgDataResponse_v1_orgLevel);
+    validateValidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, validGetOrgDataResponse_v1_allocations);
   }
 
   function validateValidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {
@@ -400,6 +456,10 @@ describe('Schemas', () => {
     validateInvalidDataAgainstSchemaHelper(ajv, 'outletsAddPluginRequest_v1_schema', outletsAddPluginRequest_v1_schema, invalidOutletsAddPluginRequest_v1);
     validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRemovePluginRequest_v1_schema', outletsRemovePluginRequest_v1_schema, invalidOutletsRemovePluginRequest_v1);
     validateInvalidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextRequest_v1_schema', outletsRequestDynamicContextRequest_v1_schema, invalidOutletsRequestDynamicContextRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getOrgDataRequest_v1_schema', getOrgDataRequest_v1_schema, invalidGetOrgDataRequest_v1);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, invalidGetOrgDataResponse_v1_wrongKeyType);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, invalidGetOrgDataResponse_v1_missingData);
+    validateInvalidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, invalidGetOrgDataResponse_v1_invalidStatus);
   }
 
   function validateInvalidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {

@@ -1,7 +1,13 @@
 export { PermissionRequest } from './permissions/permission-request.model';
 export { PermissionResponse } from './permissions/permission-response.model';
-export { PermissionRequestV2, PermissionRequestV2Payload } from './permissions/permission-request.v2.model';
-export { PermissionRequestV3, PermissionRequestV3Payload } from './permissions/permission-request.v3.model';
+export {
+  PermissionRequestV2,
+  PermissionRequestV2Payload,
+} from './permissions/permission-request.v2.model';
+export {
+  PermissionRequestV3,
+  PermissionRequestV3Payload,
+} from './permissions/permission-request.v3.model';
 export { PermissionResponseV3 } from './permissions/permission-response.v3.model';
 export { Permission } from './permissions/permission.model';
 export { UiPermissions } from './permissions/ui-permissions.model';
@@ -26,6 +32,15 @@ export { SettingsResponse } from './settings/settings-response.model';
 export { GetFeatureFlagRequest } from './feature-flag/get-feature-flag-request.model';
 export { GetFeatureFlagsRequest } from './feature-flag/get-feature-flag-request.model';
 export { GetFeatureFlagResponse } from './feature-flag/get-feature-flag-response.model';
+
+export { OrgDataFilterKey } from './org-data/org-data-filter-key.enum';
+export {
+  OrgLevel,
+  OrgLevelAllocation,
+  OrgLevelAllocationRole,
+} from './org-data/org-level.model';
+export { GetOrgDataRequest } from './org-data/get-org-data-request.model';
+export { GetOrgDataResponse } from './org-data/get-org-data-response.model';
 
 export { SetViewStateRequest } from './view-state/set-view-state-request.model';
 export { SetViewStateResponse } from './view-state/set-view-state-response.model';

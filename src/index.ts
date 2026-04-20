@@ -29,10 +29,16 @@ import {
   GetFeatureFlagResponse,
   GetItemRequest,
   GetItemResponse,
+  GetOrgDataRequest,
+  GetOrgDataResponse,
   ModalCloseRequest,
   ModalOpenRequest,
   ModalOpenRequestV2,
   ModalSize,
+  OrgDataFilterKey,
+  OrgLevel,
+  OrgLevelAllocation,
+  OrgLevelAllocationRole,
   Outlet,
   OutletsDeleteAssignmentRequest,
   OutletsDeleteAssignmentResponse,
@@ -57,7 +63,7 @@ import {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
-  ValidationMode
+  ValidationMode,
 } from './models/index';
 
 export {
@@ -71,10 +77,16 @@ export {
   GetFeatureFlagResponse,
   GetItemRequest,
   GetItemResponse,
+  GetOrgDataRequest,
+  GetOrgDataResponse,
   ModalCloseRequest,
   ModalOpenRequest,
   ModalOpenRequestV2,
   ModalSize,
+  OrgDataFilterKey,
+  OrgLevel,
+  OrgLevelAllocation,
+  OrgLevelAllocationRole,
   Outlet,
   OutletsDeleteAssignmentRequest,
   OutletsDeleteAssignmentResponse,
@@ -99,5 +111,5 @@ export {
   SetViewStateResponse,
   TraceEntry,
   UiPermissions,
-  ValidationMode
+  ValidationMode,
 };
