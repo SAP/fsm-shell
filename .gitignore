@@ -79,3 +79,6 @@ cypress/videos
 
 # vscode settings folder
 .vscode/
+
+# claude settings folder
+.claude/

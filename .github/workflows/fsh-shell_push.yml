@@ -5,14 +5,18 @@ on:
   push:
     branches: [master]
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # Required to clone the repository
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: '18'
+          node-version: '24'
       - name: Install dependencies
         run: npm i
       - name: Unit tests
@@ -23,21 +27,15 @@ jobs:
     needs:
       - test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: '18'
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
       - name: Install dependencies
         run: npm i
       - name: Run build
         run: npm run build
-      - name: Prepare files
-        run: |
-          mkdir npm_public
-          mv release package.json package-lock.json LICENSE npm_public
-          cd npm_public
-          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }} > .npmrc
       - name: Publish
-        run: |
-          cd npm_public
-          npm publish
+        run: npm publish
