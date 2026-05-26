@@ -1,26 +1,21 @@
 // "resolveJsonModule": true is required to load json files in tests, e.g. meta schemas (see schemas.spec.ts)
 const tsconfig = {
-  "compilerOptions": {
-    "lib": [
-      "es2015",
-      "dom"
-    ],
-    "resolveJsonModule": true
+  compilerOptions: {
+    lib: ['es2015', 'dom'],
+    resolveJsonModule: true,
   },
-  "reports": {
-    "html": "coverage",
-    "lcovonly": "coverage"
-  }
+  reports: {
+    html: 'coverage',
+    lcovonly: 'coverage',
+  },
 };
 
 module.exports = function (config) {
   config.set({
     basePath: '',
-    files: [
-      'src/**/*.ts'
-    ],
+    files: ['src/**/*.ts'],
     preprocessors: {
-      '**/*.ts': 'karma-typescript'
+      '**/*.ts': 'karma-typescript',
     },
     frameworks: ['jasmine', 'karma-typescript'],
     karmaTypescriptConfig: tsconfig,
@@ -29,33 +24,37 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-bamboo-reporter'),
-      require('karma-mocha-reporter')
+      require('karma-mocha-reporter'),
     ],
     client: {
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     random: false,
     port: 9876,
     colors: true,
     reporters: ['progress', 'mocha', 'bamboo', 'karma-typescript'],
     bambooReporter: {
-      filename: 'mocha.json'
+      filename: 'mocha.json',
     },
     browsers: ['MyChromeHeadless'], // use Chrome to see UI, available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     customLaunchers: {
       MyChromeHeadless: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
-      }
+        flags: [
+          '--no-sandbox',
+          '--disable-site-isolation-trials',
+          '--disable-features=IsolateOrigins,site-per-process',
+        ],
+      },
     },
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      type: 'html',
+      dir: 'coverage/',
     },
     singleRun: false,
     autoWatch: true,
     concurrency: Infinity, // how many browser should be started simultanous
     browserNoActivityTimeout: 100000,
-    browserDisconnectTolerance: 2
+    browserDisconnectTolerance: 2,
   });
 };
