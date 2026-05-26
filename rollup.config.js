@@ -1,7 +1,8 @@
 import typescript from 'rollup-plugin-typescript2'
 import filesize from 'rollup-plugin-filesize'
+import typescriptLib from 'typescript'
 
-import pkg from './package.json'
+import pkg from './package.json' with { type: 'json' }
 
 export default {
   input: 'src/index.ts',
@@ -20,9 +21,12 @@ export default {
   ],
   plugins: [
     typescript({
-      typescript: require('typescript'),
+      typescript: typescriptLib,
       tsconfigDefaults: {
-        sourceMap: true
+        sourceMap: true,
+        compilerOptions: {
+          importHelpers: false
+        }
       }
     }),
     filesize()
