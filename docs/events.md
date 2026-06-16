@@ -28,7 +28,7 @@ Must be sent on application startup to get initial application context from the 
   }
   ```
 
-  The property `targetOutletName` is automatically added by the FSM Shell when the request originates from an extension within an outlet. It should not be set manually by the extension. The property `cloudStorageKeys` allows you to register user setting keys that would otherwise not be accessible (see `GET_STORAGE_ITEM` and `SET_STORAGE_ITEM` for more information).
+  The property `targetOutletName` is automatically added by the SAP Field Service and Asset Management Shell when the request originates from an extension within an outlet. It should not be set manually by the extension. The property `cloudStorageKeys` allows you to register user setting keys that would otherwise not be accessible (see `GET_STORAGE_ITEM` and `SET_STORAGE_ITEM` for more information).
 
   A `CloudStorageKey` is defined as follows:
 
@@ -108,7 +108,7 @@ Request restricted token for using by an extension
 
 - ### GET_PERMISSIONS
 
-  With this event you can get permission objects. You can find the available permission object types in the FSM admin page in "User Groups -> select an item -> Permissions -> Object Type". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/permissions-objects.html) you can also find more information about the permission objects.
+  With this event you can get permission objects. You can find the available permission object types in the SAP Field Service and Asset Management Admin app in "User Groups -> select an item -> Permissions -> Object Type". [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/permissions-objects.html) you can also find more information about the permission objects.
 
 <!-- tabs:start -->
 
@@ -255,7 +255,7 @@ Request permissions for specified object from the Shell
 
 - ### GET_SETTINGS
 
-  With this event you can get company specific settings. You can find the available settings in the FSM admin page in "Companies -> select a company -> Company Settings". Here you can create your own settings and fetch them with this event. You can also fetch the existing settings, but consider that many of them are more specific to FSM applications and have a internal mapping. Therefore, you can not fetch them with the key of the company settings from the admin page. In case you need some of these settings, then please contact us. [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find more information about companies.
+  With this event you can get company specific settings. You can find the available settings in the SAP Field Service and Asset Management Admin app in "Companies -> select a company -> Company Settings". Here you can create your own settings and fetch them with this event. You can also fetch the existing settings, but consider that many of them are more specific to FSA applications and have an internal mapping. Therefore, you can not fetch them with the key of the company settings from the admin page. In case you need some of these settings, then please contact us. [Here](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/companies.html) you can find more information about companies.
 
   ```
   SHELL_EVENTS.Version1.GET_SETTINGS
@@ -349,7 +349,7 @@ Request permissions for specified object from the Shell
 
 - ### GET_STORAGE_ITEM
 
-Retrieve user-specific settings from cloud storage. Available settings can be found in the FSM Admin page under "Users -> select a user -> User Settings". More details: [User Documentation](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html)
+Retrieve user-specific settings from cloud storage. Available settings can be found in the SAP Field Service and Asset Management Admin app under "Users -> select a user -> User Settings". More details: [User Documentation](https://help.sap.com/viewer/fsm_admin/Cloud/en-US/users.html)
 
 <!-- tabs:start -->
 
@@ -482,7 +482,7 @@ Registering keys via the `REQUIRE_CONTEXT` event will only be required for non-e
 
 - ### GET_FEATURE_FLAG
 
-  Feature flags are internally used flags in FSM to control some new features when the preview mode is off.
+  Feature flags are internally used flags in SAP Field Service and Asset Management to control some new features when the preview mode is off.
 
   ```
   SHELL_EVENTS.Version1.GET_FEATURE_FLAG
