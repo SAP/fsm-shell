@@ -1,13 +1,13 @@
-# Client library for applications rendered in FSM shell host
+# Client library for applications rendered in SAP Field Service and Asset Management Shell Host
 
 [![Build Status](https://travis-ci.com/SAP/fsm-shell.svg?branch=master)](https://travis-ci.com/SAP/fsm-shell)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/fsm-shell/badge.svg?branch=master)](https://coveralls.io/github/SAP/fsm-shell?branch=master)
 
 ## Description
 
-[SAP FSM (Field Service Management)](https://www.sap.com/products/field-service-management.html) shell is an extendable Web-Application. FSM shell _host_ is the extendable part of the Web-Application and a FSM shell _client_ is the extension. For more information regarding SAP FSM, check out the [SAP Field Service Management Help Portal](https://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US).
+[SAP Field Service and Asset Management](https://www.sap.com/products/crm/customer-service/field-service-management.html) Shell is an extendable Web-Application. SAP Field Service and Asset Management Shell _host_ is the extendable part of the Web-Application and a Shell _client_ is the extension.
 
-FSM-SHELL is a library which is designed to be used in FSM shell clients' applications
+FSM-SHELL is a library which is designed to be used in SAP Field Service and Asset Management Shell client applications
 and plugins to communicate with the shell host by using set of predefined events and api described
 below in API Documentation.
 
@@ -23,7 +23,7 @@ Minimal supported JavaScript version: ES5
 
 ## Support
 
-In case you need further help, check out the [SAP Field Service Management Help Portal](https://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
+In case you need further help, check out the [SAP Field Service and Asset Management Help Portal](https://help.sap.com/viewer/product/SAP_FIELD_SERVICE_MANAGEMENT/Cloud/en-US) or report and incident in [SAP Support Portal](https://support.sap.com) with the component "CEC-SRV-FSM".
 
 ## License
 

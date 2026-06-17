@@ -45,7 +45,7 @@ Filtering options object may include following keys:
 
 | Key name  | type               | possible values                | description                                                                                                                  |
 | --------- | ------------------ | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| type      | string or string[] | any fsm shell event identifier | include only specific fsm-shell event types                                                                                  |
+| type      | string or string[] | any fsm-shell event identifier | include only specific fsm-shell event types                                                                                  |
 | direction | string             | `incoming`, `outgoing`         | include only received or sent events                                                                                         |
 | component | string             | `fsm-shell`                    | include only events going thru specific component                                                                            |
 | handled   | boolean            | `true` or `false`              | include only events handled by component (component may have no handlers set for specific event type and ignore some events) |
