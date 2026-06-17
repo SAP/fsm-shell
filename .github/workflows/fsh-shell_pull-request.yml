@@ -4,14 +4,23 @@ run-name: '[ON_PR fsm-shell] ${{ github.sha }}'
 on:
   pull_request:
     branches: [master]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
 
 jobs:
   ensure-mandatory-files:
     runs-on: ubuntu-latest
     continue-on-error: true # Some changes are only relevant for the documentation page
     steps:
+      - name: Skip if label 'skip-ensure-mandatory-files' is present
+        if: contains(github.event.pull_request.labels.*.name, 'skip-ensure-mandatory-files')
+        run: |
+          echo "Label 'skip-ensure-mandatory-files' detected, skipping check."
+          exit 0
       - uses: actions/checkout@v4
+        if: "!contains(github.event.pull_request.labels.*.name, 'skip-ensure-mandatory-files')"
       - name: Check
+        if: "!contains(github.event.pull_request.labels.*.name, 'skip-ensure-mandatory-files')"
         env:
           REQUIRED_FILES: CHANGELOG.md package.json package-lock.json
         run: |

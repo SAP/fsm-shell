@@ -18,7 +18,7 @@ exception will be raised and event to the host application will not be sent.
 
 ## Providing validation library
 
-Application consuming fsm shell library can provide validation logic based on external JSON schema
+Application consuming the fsm-shell library can provide validation logic based on external JSON schema
 validation library by service which implements `PayloadValidator` interface defined in fsm-shell
 
 `PayloadValidator` interface has following definition
@@ -57,6 +57,7 @@ where:
   include in this property.
 
 **Important:** All schemas within fsm-shell support the following JSON Schema standards [^1]:
+
 - draft-06
 - draft-07
 
