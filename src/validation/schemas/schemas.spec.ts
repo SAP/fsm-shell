@@ -309,7 +309,7 @@ export const invalidGetPermissionsRequest_v1 = {
   owners: 'not-array',
 };
 export const invalidGetPermissionsRequest_v2 = {
-  objectName: 123,
+  objectName: 'string',
   owners: [123],
 };
 export const invalidGetPermissionsRequest_v3 = { objectName: 123 };
@@ -395,9 +395,9 @@ export const invalidGetOrgDataResponse_v1_invalidStatus = {
 };
 
 describe('Schemas', () => {
-  let ajv07 = new Ajv(); // Ajv v8 supports draft-07 by default
-  let ajv06 = new Ajv({ meta: draft6MetaSchema });
-  let ajv04 = new Ajv04();
+  let ajv07 = new Ajv({ strict: false }); // Ajv v8 supports draft-07 by default
+  let ajv06 = new Ajv({ meta: draft6MetaSchema, strict: false });
+  let ajv04 = new Ajv04({ strict: false });
 
   function validateSchemaHelper(ajv: Ajv, schemaName: string, schema: object) {
     const isValid = ajv.validateSchema(schema);
