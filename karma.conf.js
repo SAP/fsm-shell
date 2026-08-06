@@ -3,6 +3,7 @@ const tsconfig = {
   compilerOptions: {
     lib: ['es2015', 'dom'],
     resolveJsonModule: true,
+    skipLibCheck: true,
   },
   reports: {
     html: 'coverage',
