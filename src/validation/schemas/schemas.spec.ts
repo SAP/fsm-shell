@@ -309,7 +309,7 @@ export const invalidGetPermissionsRequest_v1 = {
   owners: 'not-array',
 };
 export const invalidGetPermissionsRequest_v2 = {
-  objectName: 'string',
+  objectName: 123,
   owners: [123],
 };
 export const invalidGetPermissionsRequest_v3 = { objectName: 123 };
