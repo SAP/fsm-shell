@@ -282,6 +282,7 @@ export const invalidGetOrgDataResponse_v1_wrongKeyType = { key: 123, data: {} };
 export const invalidGetOrgDataResponse_v1_missingData = { key: 'all' };
 export const invalidGetOrgDataResponse_v1_invalidStatus = { key: 'all', data: { id: 'level-1', name: 'Root', status: 'INVALID_STATUS' } };
 
+
 describe('Schemas', () => {
 
   let ajv07 = new Ajv(); // Ajv v8 supports draft-07 by default
