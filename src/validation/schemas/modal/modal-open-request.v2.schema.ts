@@ -66,14 +66,14 @@ export const modalOpenRequest_v2_schema = {
         },
       },
     },
-  },
-  data: {
-    type: 'object',
-  },
-  sandboxPolicies: {
-    type: 'array',
-    items: {
-      type: 'string',
+    data: {
+      type: 'object',
+    },
+    sandboxPolicies: {
+      type: 'array',
+      items: {
+        type: 'string',
+      },
     },
   },
   required: ['url'],

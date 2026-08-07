@@ -6,11 +6,11 @@ export const getPermissionsRequest_v2_schema = {
         objectName: {
           type: 'string',
         },
-      },
-      owners: {
-        type: 'array',
-        items: {
-          type: 'string',
+        owners: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
         },
       },
       required: ['objectName'],

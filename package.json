@@ -1,6 +1,6 @@
 {
   "name": "fsm-shell",
-  "version": "1.27.1",
+  "version": "1.27.2",
   "description": "client library for FSM shell",
   "main": "release/fsm-shell-client.js",
   "module": "release/fsm-shell-client.es.js",
@@ -39,7 +39,8 @@
     "@types/jasmine": "^3.5.12",
     "@types/jasminewd2": "^2.0.8",
     "@types/sinon": "^9.0.4",
-    "ajv": "~6.12.6",
+    "ajv": "^8.20.0",
+    "ajv-draft-04": "^1.0.0",
     "copyfiles": "^2.3.0",
     "coveralls": "^3.1.0",
     "cypress": "^4.12.1",

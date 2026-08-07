@@ -1,6 +1,6 @@
-import * as Ajv from 'ajv';
-import * as draft6MetaSchema from 'ajv/lib/refs/json-schema-draft-06.json';
-import * as draft4MetaSchema from 'ajv/lib/refs/json-schema-draft-04.json';
+import Ajv from 'ajv';
+import Ajv04 from 'ajv-draft-04';
+import * as draft6MetaSchema from 'ajv/dist/refs/json-schema-draft-06.json';
 
 import { authRequest_v1_schema } from './authentication/auth-request.v1.schema';
 import { authResponse_v1_schema } from './authentication/auth-response.v1.schema';
@@ -282,15 +282,14 @@ export const invalidGetOrgDataResponse_v1_wrongKeyType = { key: 123, data: {} };
 export const invalidGetOrgDataResponse_v1_missingData = { key: 'all' };
 export const invalidGetOrgDataResponse_v1_invalidStatus = { key: 'all', data: { id: 'level-1', name: 'Root', status: 'INVALID_STATUS' } };
 
+
 describe('Schemas', () => {
 
-  let ajv07 = new Ajv(); // Ajv v6 supports draft-07 by default
+  let ajv07 = new Ajv(); // Ajv v8 supports draft-07 by default
   let ajv06 = new Ajv({ meta: draft6MetaSchema });
+  let ajv04 = new Ajv04();
 
-  (draft4MetaSchema as any).$id = 'http://json-schema.org/draft-04/schema#';
-  let ajv04 = new Ajv({ meta: draft4MetaSchema });
-
-  function validateSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object) {
+  function validateSchemaHelper(ajv: Ajv, schemaName: string, schema: object) {
     const isValid = ajv.validateSchema(schema);
     // If the schema is invalid, throw an error with the validation errors from Ajv. This will help us identify and fix any issues with the schemas.
     if (isValid === false) {
@@ -304,7 +303,7 @@ describe('Schemas', () => {
     }
   }
 
-  function validateSchemasSupporting04and06and07(ajv: Ajv.Ajv) {
+  function validateSchemasSupporting04and06and07(ajv: Ajv) {
     validateSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema);
     validateSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema);
     validateSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema);
@@ -338,14 +337,14 @@ describe('Schemas', () => {
     validateSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema);
   }
 
-  function validateSchemasSupportingOnly06and07(ajv: Ajv.Ajv) {
+  function validateSchemasSupportingOnly06and07(ajv: Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
     validateSchemaHelper(ajv, 'outletsRequestDynamicContextResponse_v1_schema', outletsRequestDynamicContextResponse_v1_schema);
   }
 
-  function validateValidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object, data: any) {
+  function validateValidDataAgainstSchemaHelper(ajv: Ajv, schemaName: string, schema: object, data: any) {
     const validationFunction = ajv.compile(schema);
     const isValid = validationFunction(data);
     // If the data is invalid, throw an error with the validation errors from Ajv. This will help us identify and fix any issues with the schemas or the test data.
@@ -364,7 +363,7 @@ describe('Schemas', () => {
    * getItemResponse_v1_schema is an empty schema, which means that any data (valid or invalid) would pass validation against it.
    * Therefore, we are not including it in the valid data tests since it would not be meaningful.
    */
-  function validateValidDataAgainstSchemaSupporting04and06and07(ajv: Ajv.Ajv) {
+  function validateValidDataAgainstSchemaSupporting04and06and07(ajv: Ajv) {
     validateValidDataAgainstSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema, validAuthRequest_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema, validAuthResponse_v1);
     validateValidDataAgainstSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema, validGetItemRequest_v1);
@@ -405,14 +404,14 @@ describe('Schemas', () => {
     validateValidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, validGetOrgDataResponse_v1_allocations);
   }
 
-  function validateValidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {
+  function validateValidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
     validateValidDataAgainstSchemaHelper(ajv, 'outletsRequestDynamicContextResponse_v1_schema', outletsRequestDynamicContextResponse_v1_schema, validOutletsRequestDynamicContextResponse_v1);
   }
 
-  function validateInvalidDataAgainstSchemaHelper(ajv: Ajv.Ajv, schemaName: string, schema: object, data: any) {
+  function validateInvalidDataAgainstSchemaHelper(ajv: Ajv, schemaName: string, schema: object, data: any) {
     const validationFunction = ajv.compile(schema);
     const isValid = validationFunction(data);
     // If the data is valid even if it is expected to be invalid, throw an error with the schema name to indicate the test failure.
@@ -427,7 +426,7 @@ describe('Schemas', () => {
    * getItemResponse_v1_schema is an empty schema, which means that any data (valid or invalid) would pass validation against it.
    * Therefore, we are not including it in the invalid data tests since it would not be meaningful.
    */
-  function validateInvalidDataAgainstSchemaSupporting04and06and07(ajv: Ajv.Ajv) {
+  function validateInvalidDataAgainstSchemaSupporting04and06and07(ajv: Ajv) {
     validateInvalidDataAgainstSchemaHelper(ajv, 'authRequest_v1_schema', authRequest_v1_schema, invalidAuthRequest_v1);
     validateInvalidDataAgainstSchemaHelper(ajv, 'authResponse_v1_schema', authResponse_v1_schema, invalidAuthResponse_v1);
     validateInvalidDataAgainstSchemaHelper(ajv, 'getItemRequest_v1_schema', getItemRequest_v1_schema, invalidGetItemRequest_v1);
@@ -462,7 +461,7 @@ describe('Schemas', () => {
     validateInvalidDataAgainstSchemaHelper(ajv, 'getOrgDataResponse_v1_schema', getOrgDataResponse_v1_schema, invalidGetOrgDataResponse_v1_invalidStatus);
   }
 
-  function validateInvalidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv.Ajv) {
+  function validateInvalidDataAgainstSchemaSupportingOnly06and07(ajv: Ajv) {
     // outletsRequestDynamicContextResponse_v1_schema has an optional array property called "plugins",
     // which contains objects with an optional array property called "sandboxPolicies". Draft-04 does not
     // support this "optional array" inside "optional array", while draft-06 and draft-07 do.
